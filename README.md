@@ -47,6 +47,19 @@ Our team collaborated to design and implement a functional mobile application th
 | **3** | **Sponsorship & Partnership Module** | **Page:**<br>- Sponsorship Program Page<br>- Partnership Registration Page<br><br>**Component:**<br>- Sponsor Information Form<br>- Partnership Card Display<br><br>**Service:**<br>- Sponsorship Management Service<br>- Partner Inquiry Handling Service | **Controller:**<br>- Sponsorship Controller<br><br>**Routes:**<br>- /sponsorship/programs<br>- /partnership/register<br><br>**Entity:**<br>- Sponsor Model<br>- Partner Model |
 | **4** | **Integration & Testing** | **Page:**<br>- Donation Integration Dashboard<br><br>**Component:**<br>- System Testing Interface<br>- Donation Summary Report<br><br>**Service:**<br>- Integration Testing Service | **Controller:**<br>- Integration Controller<br><br>**Routes:**<br>- /integration/test<br>- /integration/report<br><br>**Entity:**<br>- System Log Model |
 
+<br><br>
+
+## 🧩 __Tan Qing Qing’s Contribution__ 
+## Volunteer and Community Subsystem
+
+| **Sprint** | **Module Name** | **Frontend** | **Backend** |
+|-------------|-----------------|---------------|--------------|
+| **1** | **Volunteer Registration Module** | **Page:**<br>- Volunteer Registration Page<br><br>**Component:**<br>- Volunteer Registration Form<br>- Form Validation Alert<br><br>**Service:**<br>- Input Validation Service<br>- User Session Service | **Controller:**<br>- Volunteer Registration Controller<br><br>**Routes:**<br>- /volunteer/register<br><br>**Entity:**<br>-Volunteer Application Model |
+| **2** | **Volunteer Assignment Module** | **Page:**<br>- Rescue Task Page<br>- Task Assignment Page<br><br>**Component:**<br>- Task Card Display<br>- Volunteer Task List<br><br>**Service:**<br>- Task Filter Service | **Controller:**<br>- Rescue Task Controller<br><br>**Routes:**<br>- /rescue/assign<br>- /rescue/tasks<br><br>**Entity:**<br>- Rescue Task Model |
+| **3** | **Community Sharing Module** | **Page:**<br>- Rescue Progress Page<br><br>**Component:**<br>- Progress Update Form<br>- Rescue Status Card<br><br>**Service:**<br>- Notification Trigger Service | **Controller:**<br>- Rescue Update Controller<br><br>**Routes:**<br>- /rescue/update<br>- /rescue/status<br><br>**Entity:**<br>- Rescue Update Model |
+| **4** | **Integration & Testing** | **Page:**<br>- Integration Dashboard<br><br>**Component:**<br>- Module Testing Interface<br>- Summary Display<br><br>**Service:**<br>- System Testing Service | **Controller:**<br>- Integration Controller<br><br>**Routes:**<br>- /integration/test<br>- /integration/report<br><br>**Entity:**<br>- System Log Model |
+
+<br><br>
 
 
 
