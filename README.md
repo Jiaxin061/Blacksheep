@@ -1,50 +1,122 @@
-# Welcome to your Expo app 👋
+# SavePaws - Donation Portal Module (Sprint 1)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is the SavePaws animal rescue system's Donation Portal Module, implementing UC010 (Browse Donation List), UC011 (Make Donation), and UC012 (Manage Donation List).
 
-## Get started
+## Tech Stack
 
-1. Install dependencies
+- **Frontend**: React Native + Expo (Android)
+- **Backend**: Node.js + Express.js
+- **Database**: MySQL
+- **Payment**: PayPal API (Sandbox mode)
+
+## Quick Start
+
+### 1. Install Frontend Dependencies
 
    ```bash
    npm install
    ```
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### 2. Set Up Backend Server
 
 ```bash
-npm run reset-project
+cd server
+npm install
+cp env.example .env
+# Edit .env with your database and PayPal credentials
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 3. Set Up Database
+
+   ```bash
+mysql -u root -p < server/database/schema.sql
+mysql -u root -p < server/database/seed.sql
+```
+
+### 4. Start Backend Server
+
+```bash
+cd server
+npm start
+# or for development with auto-reload
+npm run dev
+```
+
+### 5. Configure API URL
+
+Edit `config/api.ts` and update `API_BASE_URL`:
+- For Android emulator: `http://10.0.2.2:3000`
+- For physical device: `http://YOUR_COMPUTER_IP:3000`
+
+### 6. Start Frontend App
+
+```bash
+npm start
+# or for Android
+npm run android
+```
+
+### 7. Launch the App
+
+- Landing screen lets you choose **User** (donor flow) or **Admin** (UC012 management).
+- Admin actions immediately hit the live API—keep the backend running while testing.
+
+## Documentation
+
+- **[Setup Instructions](SETUP_INSTRUCTIONS.md)** - Complete setup guide
+- **[API Documentation](API_DOCUMENTATION.md)** - API endpoint reference
+- **[PayPal Setup](PAYPAL_SETUP.md)** - PayPal sandbox integration guide
+
+## Project Structure
+
+```
+SavePaws-Sprint1/
+├── app/                    # React Native screens (Expo Router)
+│   ├── index.tsx          # Landing / role selection screen
+│   ├── animal-list.tsx    # Animal List Screen (UC010)
+│   ├── animal-details.tsx # Animal Details Screen (UC010)
+│   ├── donation.tsx       # Donation Screen (UC011)
+│   └── admin/             # Admin portal (UC012)
+│       ├── dashboard.tsx
+│       ├── add-animal.tsx
+│       └── edit-animal.tsx
+├── config/
+│   └── api.ts             # API configuration
+├── services/
+│   └── api.ts             # Shared API helpers (user & admin)
+├── server/                # Backend server
+│   ├── server.js          # Express server entry point
+│   ├── config/            # Database configuration
+│   ├── controllers/       # Request handlers
+│   ├── routes/            # API routes
+│   ├── services/          # Business logic (PayPal)
+│   └── database/          # SQL scripts
+└── package.json           # Frontend dependencies
+```
+
+## Features
+
+- ✅ Browse list of animals needing donations
+- ✅ View detailed animal profiles with funding progress
+- ✅ Make donations with PayPal integration
+- ✅ Real-time funding progress tracking
+- ✅ Automatic status updates when funding goals are reached
+- ✅ Pull-to-refresh functionality
+- ✅ Error handling and validation
+- ✅ Loading states and user feedback
+- ✅ Admin dashboard with add/edit/delete/archive
+- ✅ Validation on both frontend and backend for admin workflows
+- ✅ Landing page for quick role selection
+
+## Requirements
+
+- Node.js (v16+)
+- MySQL (v8.0+)
+- Expo CLI
+- PayPal Developer Account (for sandbox testing)
 
 ## Learn more
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- [Expo documentation](https://docs.expo.dev/)
+- [React Native documentation](https://reactnative.dev/)
+- [Express.js documentation](https://expressjs.com/)

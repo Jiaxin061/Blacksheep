@@ -1,0 +1,67 @@
+const db = require("../config/database");
+
+exports.getAllAnimals = async (req, res, next) => {
+  try {
+    const [animals] = await db.query(
+      `SELECT 
+        animalID,
+        name,
+        type,
+        story,
+        fundingGoal,
+        amountRaised,
+        status,
+        photoURL,
+        createdAt
+      FROM animal_profile
+      WHERE status = 'Active'
+      ORDER BY createdAt DESC`
+    );
+
+    res.json(animals);
+  } catch (error) {
+    console.error("Error fetching animals:", error);
+    next({
+      status: 500,
+      message: "Failed to fetch animals from database",
+    });
+  }
+};
+
+exports.getAnimalById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const [animals] = await db.query(
+      `SELECT 
+        animalID,
+        name,
+        type,
+        story,
+        fundingGoal,
+        amountRaised,
+        status,
+        photoURL,
+        createdAt
+      FROM animal_profile
+      WHERE animalID = ?`,
+      [id]
+    );
+
+    if (animals.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Animal not found",
+      });
+    }
+
+    res.json(animals[0]);
+  } catch (error) {
+    console.error("Error fetching animal:", error);
+    next({
+      status: 500,
+      message: "Failed to fetch animal from database",
+    });
+  }
+};
+
