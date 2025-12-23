@@ -1,0 +1,1 @@
+app/modal.tsx(11,13): error TS2322: Type '"/"' is not assignable to type 'RelativePathString | ExternalPathString | "/modal" | `/modal?${string}` | `/modal#${string}` | "/../src/models/VolunteerRegistration" | `/../src/models/VolunteerRegistration?${string}` | `/../src/models/VolunteerRegistration#${string}` | ... 40 more ... | { ...; }'.
