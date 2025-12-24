@@ -1,6 +1,6 @@
 # Blacksheep
 
-# 📱 App Development Project — Section 02
+# 📱 Application Development Project — Section 02
 
 ## 👥 Group Members
 - **Yap Jia Xin**  
@@ -9,7 +9,7 @@
 - **Tan Qing Qing**
 
 ## 🧩 Project Overview
-This project was developed as part of **Section 02’s App Development coursework**.  
+This project was developed as part of **Section 02’s Application Development coursework**.  
 Our team collaborated to design and implement an application that designed to replace the current, fragmented, and inefficient manual processes for assisting stray animals called SavePaws. SavePaws integrates Animal Report & Rescue Management, Adoption, Donation & Sponsorship, and Volunteer & Community into a single and efficient platform.
 
 ## Main Screen
