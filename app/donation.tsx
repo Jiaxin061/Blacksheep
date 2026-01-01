@@ -1,18 +1,20 @@
 import axios from "axios";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { API_BASE_URL } from "../config/api";
 import { colors } from "../theme/colors";
+import { getAuthHeaders } from "../utils/auth";  
+import { getUserProfile } from "../services/api"; 
 
 export default function DonationScreen() {
   const router = useRouter();
@@ -22,17 +24,34 @@ export default function DonationScreen() {
   }>();
 
   const [donationAmount, setDonationAmount] = useState("");
-  const [donorName, setDonorName] = useState("");
-  const [donorEmail, setDonorEmail] = useState("");
-  const [donationType, setDonationType] = useState<"One-time" | "Monthly">(
-    "One-time"
-  );
+  const [donorName, setDonorName] = useState("Loading..."); // Default state
+  const [donorEmail, setDonorEmail] = useState("Loading..."); // Default state
+  const [donationType, setDonationType] = useState<"One-time" | "Monthly">("One-time");
+  
   const [processing, setProcessing] = useState(false);
+  const [loadingUser, setLoadingUser] = useState(true); // New loading state for user data
+  
   const [errors, setErrors] = useState<{
     amount?: string;
-    name?: string;
-    email?: string;
   }>({});
+
+  // 1. Fetch User Data on Mount
+  useEffect(() => {
+    async function loadUserData() {
+      try {
+        const user = await getUserProfile();
+        setDonorName(user.name);
+        setDonorEmail(user.email);
+      } catch (error) {
+        console.error("Failed to load user profile", error);
+        Alert.alert("Error", "Could not verify your identity. Please login again.");
+        router.back();
+      } finally {
+        setLoadingUser(false);
+      }
+    }
+    loadUserData();
+  }, []);
 
   const validateForm = (): boolean => {
     const newErrors: typeof errors = {};
@@ -41,15 +60,7 @@ export default function DonationScreen() {
       newErrors.amount = "Please enter a valid donation amount";
     }
 
-    if (!donorName.trim()) {
-      newErrors.name = "Please enter your name";
-    }
-
-    if (!donorEmail.trim()) {
-      newErrors.email = "Please enter your email";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(donorEmail)) {
-      newErrors.email = "Please enter a valid email address";
-    }
+    // Name and Email validation removed because they are now pre-filled/read-only
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -67,19 +78,40 @@ export default function DonationScreen() {
         animalID: parseInt(animalID || "0"),
         donation_amount: parseFloat(donationAmount),
         type: donationType,
-        donor_name: donorName.trim(),
-        donor_email: donorEmail.trim(),
+        donor_name: donorName, // Uses the fetched state
+        donor_email: donorEmail, // Uses the fetched state
       };
 
+      // Get auth headers
+      const headers = await getAuthHeaders();
+      
       const response = await axios.post(
         `${API_BASE_URL}/api/donate`,
-        donationData
+        donationData,
+        { headers }
       );
 
       if (response.data.success) {
+        const acceptedAmount = response.data.donationAmount || parseFloat(donationAmount);
+        const amountAdjusted = response.data.amountAdjusted || false;
+        const fundingGoalReached = response.data.fundingGoalReached || false;
+        
+        let message = `Thank you for your donation of $${acceptedAmount.toFixed(2)}!`;
+        
+        if (amountAdjusted) {
+          const requestedAmount = response.data.requestedAmount || parseFloat(donationAmount);
+          message += `\n\nNote: Your requested amount of $${requestedAmount.toFixed(2)} was adjusted to $${acceptedAmount.toFixed(2)} to match the remaining funding needed.`;
+        }
+        
+        if (fundingGoalReached) {
+          message += `\n\n🎉 The funding goal has been reached!`;
+        }
+        
+        message += `\n\nTransaction ID: ${response.data.transactionID}`;
+        
         Alert.alert(
           "Donation Successful!",
-          `Thank you for your donation of $${donationAmount}!\n\nTransaction ID: ${response.data.transactionID}`,
+          message,
           [
             {
               text: "OK",
@@ -105,11 +137,20 @@ export default function DonationScreen() {
     }
   };
 
+  if (loadingUser) {
+    return (
+      <View style={[styles.container, styles.loadingContainer]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>Make a Donation</Text>
 
+        {/* Animal Name (Read-Only) */}
         <View style={styles.section}>
           <Text style={styles.label}>Animal</Text>
           <View style={styles.readOnlyField}>
@@ -117,6 +158,7 @@ export default function DonationScreen() {
           </View>
         </View>
 
+        {/* Donation Amount (Editable) */}
         <View style={styles.section}>
           <Text style={styles.label}>
             Donation Amount <Text style={styles.required}>*</Text>
@@ -142,46 +184,22 @@ export default function DonationScreen() {
           )}
         </View>
 
+        {/* Donor Name (Read-Only) */}
         <View style={styles.section}>
-          <Text style={styles.label}>
-            Donor Name <Text style={styles.required}>*</Text>
-          </Text>
-          <TextInput
-            style={[styles.input, errors.name && styles.inputError]}
-            value={donorName}
-            onChangeText={(text) => {
-              setDonorName(text);
-              if (errors.name) {
-                setErrors({ ...errors, name: undefined });
-              }
-            }}
-            placeholder="Enter your full name"
-            editable={!processing}
-          />
-          {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+          <Text style={styles.label}>Donor Name</Text>
+          {/* CHANGED: Using View/Text instead of TextInput */}
+          <View style={styles.readOnlyField}>
+            <Text style={styles.readOnlyText}>{donorName}</Text>
+          </View>
         </View>
 
+        {/* Donor Email (Read-Only) */}
         <View style={styles.section}>
-          <Text style={styles.label}>
-            Donor Email <Text style={styles.required}>*</Text>
-          </Text>
-          <TextInput
-            style={[styles.input, errors.email && styles.inputError]}
-            value={donorEmail}
-            onChangeText={(text) => {
-              setDonorEmail(text);
-              if (errors.email) {
-                setErrors({ ...errors, email: undefined });
-              }
-            }}
-            placeholder="your.email@example.com"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            editable={!processing}
-          />
-          {errors.email && (
-            <Text style={styles.errorText}>{errors.email}</Text>
-          )}
+          <Text style={styles.label}>Donor Email</Text>
+          {/* CHANGED: Using View/Text instead of TextInput */}
+          <View style={styles.readOnlyField}>
+            <Text style={styles.readOnlyText}>{donorEmail}</Text>
+          </View>
         </View>
 
         <View style={styles.section}>
@@ -230,7 +248,7 @@ export default function DonationScreen() {
           disabled={processing}
         >
           {processing ? (
-        <ActivityIndicator color={colors.surface} />
+            <ActivityIndicator color={colors.surface} />
           ) : (
             <Text style={styles.submitButtonText}>Process Payment</Text>
           )}
@@ -252,6 +270,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  loadingContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
   content: {
     padding: 20,
@@ -282,9 +304,6 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     color: colors.textPrimary,
-  },
-  inputError: {
-    borderColor: colors.danger,
   },
   amountContainer: {
     flexDirection: "row",
@@ -373,4 +392,3 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-

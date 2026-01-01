@@ -1,7 +1,12 @@
+// app/admin/add-animal.tsx
+
+import axios from "axios"; // ADD THIS LINE
+import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
+  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -11,11 +16,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { AnimalPayload, createAnimal } from "../../services/api";
+import { API_BASE_URL } from "../../config/api"; // ADD THIS LINE
+import { AnimalFormData, createAnimal } from "../../services/api";
 import { colors } from "../../theme/colors";
 
 const animalTypes = ["Dog", "Cat", "Rabbit", "Bird", "Other"];
-const statusOptions: AnimalPayload["status"][] = [
+const statusOptions: AnimalFormData["status"][] = [
   "Active",
   "Funded",
   "Adopted",
@@ -27,7 +33,7 @@ interface FormErrors {
   type?: string;
   story?: string;
   fundingGoal?: string;
-  photoURL?: string;
+  photo?: string;
   status?: string;
 }
 
@@ -38,15 +44,43 @@ export default function AddAnimalScreen() {
     type: animalTypes[0],
     story: "",
     fundingGoal: "",
-    photoURL: "",
-    status: "Active" as AnimalPayload["status"],
+    status: "Active" as AnimalFormData["status"],
   });
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
 
   const updateField = (key: keyof typeof form, value: string) => {
     setForm((prev) => ({ ...prev, [key]: value }));
     setErrors((prev) => ({ ...prev, [key]: undefined }));
+  };
+
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission Required",
+        "We need access to your photo library to upload images."
+      );
+      return;
+    }
+
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        setSelectedImage(result.assets[0].uri);
+        setErrors((prev) => ({ ...prev, photo: undefined }));
+      }
+    } catch (error) {
+      console.error("Image picker error:", error);
+      Alert.alert("Error", "Failed to pick image. Please try again.");
+    }
   };
 
   const validate = (): boolean => {
@@ -67,13 +101,8 @@ export default function AddAnimalScreen() {
       newErrors.fundingGoal = "Funding goal must be greater than 0";
     }
 
-    try {
-      const url = new URL(form.photoURL);
-      if (!["http:", "https:"].includes(url.protocol)) {
-        newErrors.photoURL = "Photo URL must start with http or https";
-      }
-    } catch {
-      newErrors.photoURL = "A valid photo URL is required";
+    if (!selectedImage) {
+      newErrors.photo = "Please select an image";
     }
 
     if (!form.type) {
@@ -88,21 +117,61 @@ export default function AddAnimalScreen() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const testConnection = async () => {
+    const url = `${API_BASE_URL}/health`; // Define URL here to be sure
+    try {
+      console.log('🔍 Testing connection to:', url); // Log the EXACT URL
+      const response = await axios.get(url);
+      console.log('✅ Connection test success:', response.data);
+      return true;
+    } catch (error: any) {
+      console.error('❌ Connection test failed for URL:', url); // Log URL again on error
+      console.error('❌ Status Code:', error.response?.status); // Log status code
+      
+      Alert.alert(
+        'Connection Error', 
+        `Failed to reach: ${url}\nStatus: ${error.response?.status}\n\nMake sure your server.js has the /health route!`
+      );
+      return false;
+    }
+  };
+
   const handleSubmit = async () => {
     if (!validate()) return;
 
+    // Test connection first
+    const connected = await testConnection();
+    if (!connected) return;
+
     setSubmitting(true);
     try {
-      const payload: AnimalPayload = {
+      console.log('📝 Form data:', {
+        name: form.name,
+        type: form.type,
+        fundingGoal: form.fundingGoal,
+        status: form.status,
+        hasImage: !!selectedImage,
+      });
+
+      const formData: AnimalFormData = {
         name: form.name.trim(),
-        type: form.type as AnimalPayload["type"],
+        type: form.type,
         story: form.story.trim(),
         fundingGoal: Number(form.fundingGoal),
-        photoURL: form.photoURL.trim(),
         status: form.status,
+        photo: selectedImage
+          ? {
+              uri: selectedImage,
+              type: "image/jpeg",
+              name: "photo.jpg",
+            }
+          : null,
       };
 
-      await createAnimal(payload);
+      console.log('🚀 Calling createAnimal API...');
+      await createAnimal(formData);
+      
+      console.log('✅ Animal created successfully');
       Alert.alert("Success", "Animal profile created successfully.", [
         {
           text: "OK",
@@ -110,9 +179,16 @@ export default function AddAnimalScreen() {
         },
       ]);
     } catch (error: any) {
-      console.error("Create animal error:", error?.response || error);
+      console.error("❌ Create animal error:", error);
+      console.error("❌ Error details:", {
+        message: error?.message,
+        response: error?.response?.data,
+        status: error?.response?.status,
+      });
+      
       const message =
         error?.response?.data?.message ||
+        error?.message ||
         "Failed to create animal profile. Please try again.";
       Alert.alert("Error", message);
     } finally {
@@ -198,16 +274,25 @@ export default function AddAnimalScreen() {
         </View>
 
         <View style={styles.field}>
-          <Text style={styles.label}>Photo URL *</Text>
-          <TextInput
-            style={[styles.input, errors.photoURL && styles.inputError]}
-            value={form.photoURL}
-            onChangeText={(text) => updateField("photoURL", text)}
-            placeholder="https://example.com/photo.jpg"
-            autoCapitalize="none"
-          />
-          {errors.photoURL && (
-            <Text style={styles.errorText}>{errors.photoURL}</Text>
+          <Text style={styles.label}>Photo *</Text>
+          <TouchableOpacity
+            style={[
+              styles.imagePickerButton,
+              errors.photo && styles.inputError,
+            ]}
+            onPress={pickImage}
+          >
+            <Text style={styles.imagePickerText}>
+              {selectedImage ? "Change Photo" : "Select Photo"}
+            </Text>
+          </TouchableOpacity>
+          {selectedImage && (
+            <View style={styles.imagePreview}>
+              <Image source={{ uri: selectedImage }} style={styles.previewImage} />
+            </View>
+          )}
+          {errors.photo && (
+            <Text style={styles.errorText}>{errors.photo}</Text>
           )}
         </View>
 
@@ -339,6 +424,33 @@ const styles = StyleSheet.create({
     color: colors.danger,
     marginTop: 6,
   },
+  imagePickerButton: {
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderStyle: "dashed",
+    alignItems: "center",
+  },
+  imagePickerText: {
+    color: colors.primary,
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  imagePreview: {
+    marginTop: 12,
+    borderRadius: 12,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  previewImage: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover",
+  },
   buttonRow: {
     flexDirection: "row",
     gap: 12,
@@ -366,5 +478,3 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 });
-
-

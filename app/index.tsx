@@ -1,125 +1,133 @@
-import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
 import { useRouter } from "expo-router";
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { API_BASE_URL } from "../config/api";
 import { colors } from "../theme/colors";
+import { setCurrentUserID } from "../utils/auth";
 
-export default function LandingScreen() {
+interface User {
+  userID: number;
+  name: string;
+  email: string;
+  role: "user" | "admin";
+}
+
+export default function LoginScreen() {
   const router = useRouter();
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selecting, setSelecting] = useState(false);
 
-  return (
-    <View style={styles.background}>
-      <SafeAreaView style={styles.container}>
-        <View style={styles.hero}>
-          <Text style={styles.title}>Animal Rescue Donation Portal</Text>
-          <Text style={styles.subtitle}>
-            Support rescues or manage campaigns from one place.
+  // 1. Fetch Users from Database on Load
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/users`);
+      if (response.data.success) {
+        setUsers(response.data.data);
+      }
+    } catch (error) {
+      console.error("Failed to load users:", error);
+      Alert.alert("Connection Error", "Could not load demo users from server.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSelectUser = async (user: User) => {
+    setSelecting(true);
+    try {
+      // 2. Save Session
+      await setCurrentUserID(user.userID);
+
+      // 3. Navigate based on Role
+      if (user.role === "admin") {
+        router.replace("/admin/dashboard");
+      } else {
+        // Navigate to the User Home (Main Page)
+        router.replace("/user-home");
+      }
+    } catch (error) {
+      console.error("Error selecting user:", error);
+    } finally {
+      setSelecting(false);
+    }
+  };
+
+  const renderUserCard = ({ item }: { item: User }) => (
+    <TouchableOpacity
+      style={styles.userCard}
+      onPress={() => handleSelectUser(item)}
+      disabled={selecting}
+    >
+      <View style={styles.userInfo}>
+        <Text style={styles.userName}>{item.name}</Text>
+        <Text style={styles.userEmail}>{item.email}</Text>
+        <View style={[styles.roleBadge, item.role === "admin" && styles.roleBadgeAdmin]}>
+          <Text style={[styles.roleText, item.role === "admin" && styles.roleTextAdmin]}>
+            {item.role.toUpperCase()}
           </Text>
         </View>
+      </View>
+    </TouchableOpacity>
+  );
 
-        <View style={styles.cardsContainer}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.card,
-              styles.userCard,
-              pressed && styles.cardPressed,
-            ]}
-            onPress={() => router.push("/animal-list")}
-          >
-            <Ionicons name="paw" size={42} color={colors.success} />
-            <Text style={styles.cardTitle}>Continue as User</Text>
-            <Text style={styles.cardDescription}>
-              Browse animals seeking support and make donations.
-            </Text>
-          </Pressable>
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={{ marginTop: 10, color: colors.textSecondary }}>Connecting to SavePaws...</Text>
+      </View>
+    );
+  }
 
-          <Pressable
-            style={({ pressed }) => [
-              styles.card,
-              styles.adminCard,
-              pressed && styles.cardPressed,
-            ]}
-            onPress={() => router.push("/admin/dashboard")}
-          >
-            <Ionicons name="settings" size={42} color={colors.primaryDark} />
-            <Text style={styles.cardTitle}>Admin Portal</Text>
-            <Text style={styles.cardDescription}>
-              Manage animal profiles, funding goals, and statuses.
-            </Text>
-          </Pressable>
-        </View>
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>SavePaws Login</Text>
+        <Text style={styles.subtitle}>Select a profile to continue:</Text>
+      </View>
 
-        <Text style={styles.footer}>Choose your role to get started</Text>
-      </SafeAreaView>
-    </View>
+      <FlatList
+        data={users}
+        renderItem={renderUserCard}
+        keyExtractor={(item) => item.userID.toString()}
+        contentContainerStyle={styles.listContent}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>No users found in database.</Text>
+        }
+      />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    backgroundColor: colors.primary,
-  },
-  container: {
-    flex: 1,
-    padding: 24,
-  },
-  hero: {
-    marginTop: 40,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "800",
-    color: colors.surface,
-    marginBottom: 12,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: "#DDF7F4",
-    lineHeight: 26,
-  },
-  cardsContainer: {
-    flex: 1,
-    justifyContent: "center",
-    gap: 20,
-  },
-  card: {
-    borderRadius: 20,
-    padding: 24,
-    backgroundColor: colors.surface,
-    elevation: 4,
-    shadowColor: "#000000",
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  userCard: {
-    borderLeftWidth: 6,
-    borderLeftColor: colors.primaryLight,
-  },
-  adminCard: {
-    borderLeftWidth: 6,
-    borderLeftColor: colors.primaryDark,
-  },
-  cardPressed: {
-    transform: [{ scale: 0.98 }],
-    opacity: 0.9,
-  },
-  cardTitle: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: colors.textPrimary,
-    marginTop: 12,
-    marginBottom: 8,
-  },
-  cardDescription: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    lineHeight: 22,
-  },
-  footer: {
-    textAlign: "center",
-    color: "#E9FFFC",
-    fontSize: 16,
-    marginBottom: 16,
-  },
+  container: { flex: 1, backgroundColor: colors.background },
+  loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
+  header: { padding: 24, backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.border },
+  title: { fontSize: 28, fontWeight: "bold", color: colors.textPrimary, marginBottom: 8 },
+  subtitle: { fontSize: 14, color: colors.textSecondary },
+  listContent: { padding: 16 },
+  userCard: { backgroundColor: colors.surface, borderRadius: 12, padding: 20, marginBottom: 16, elevation: 2 },
+  userInfo: { gap: 8 },
+  userName: { fontSize: 20, fontWeight: "600", color: colors.textPrimary },
+  userEmail: { fontSize: 14, color: colors.textSecondary },
+  roleBadge: { alignSelf: "flex-start", backgroundColor: colors.muted, paddingHorizontal: 12, paddingVertical: 4, borderRadius: 12 },
+  roleBadgeAdmin: { backgroundColor: colors.primary },
+  roleText: { fontSize: 12, fontWeight: "600", color: colors.textPrimary },
+  roleTextAdmin: { color: colors.surface },
+  emptyText: { textAlign: 'center', marginTop: 20, color: colors.textSecondary }
 });

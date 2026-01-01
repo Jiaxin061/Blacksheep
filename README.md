@@ -31,6 +31,8 @@ cp env.example .env
    ```bash
 mysql -u root -p < server/database/schema.sql
 mysql -u root -p < server/database/seed.sql
+mysql -u root -p < server/database/migration_legacy_donations.sql
+mysql -u root -p < server/database/schema_expansion.sql
 ```
 
 ### 4. Start Backend Server

@@ -4,19 +4,22 @@
   "description": "SavePaws Backend API Server",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "nodemon server.js",
+    "prod": "node server.js"
   },
   "dependencies": {
     "@paypal/checkout-server-sdk": "^1.0.3",
     "axios": "^1.7.9",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
-    "expo-linear-gradient": "~15.0.7",
+    "expo-image-picker": "~17.0.9",
     "express": "^4.21.2",
-    "mysql2": "^3.11.5"
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.11.5",
+    "pdfkit": "^0.15.2"
   },
   "devDependencies": {
+    "concurrently": "^9.0.0",
     "nodemon": "^3.1.9"
   }
 }

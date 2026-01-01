@@ -1,4 +1,15 @@
 const db = require("../config/database");
+const path = require("path");
+
+const formatPhotoUrl = (photoURL) => {
+  if (!photoURL) return null;
+  // If it's already a full URL, return as is
+  if (photoURL.startsWith("http://") || photoURL.startsWith("https://")) {
+    return photoURL;
+  }
+  // If it's a local path, return as is (frontend will construct full URL)
+  return photoURL;
+};
 
 exports.getAllAnimals = async (req, res, next) => {
   try {
@@ -18,7 +29,14 @@ exports.getAllAnimals = async (req, res, next) => {
       ORDER BY createdAt DESC`
     );
 
-    res.json(animals);
+    const formattedAnimals = animals.map((animal) => ({
+      ...animal,
+      fundingGoal: Number(animal.fundingGoal),
+      amountRaised: Number(animal.amountRaised),
+      photoURL: formatPhotoUrl(animal.photoURL),
+    }));
+
+    res.json(formattedAnimals);
   } catch (error) {
     console.error("Error fetching animals:", error);
     next({
@@ -55,7 +73,14 @@ exports.getAnimalById = async (req, res, next) => {
       });
     }
 
-    res.json(animals[0]);
+    const formattedAnimal = {
+      ...animals[0],
+      fundingGoal: Number(animals[0].fundingGoal),
+      amountRaised: Number(animals[0].amountRaised),
+      photoURL: formatPhotoUrl(animals[0].photoURL),
+    };
+
+    res.json(formattedAnimal);
   } catch (error) {
     console.error("Error fetching animal:", error);
     next({

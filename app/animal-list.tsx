@@ -2,18 +2,19 @@ import axios from "axios";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  FlatList,
-  Image,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    FlatList,
+    Image,
+    RefreshControl,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { API_BASE_URL } from "../config/api";
 import { colors } from "../theme/colors";
+import { getImageUrl } from "../utils/imageHelper";
 
 interface Animal {
   animalID: number;
@@ -75,7 +76,7 @@ export default function AnimalListScreen() {
         onPress={() => router.push(`/animal-details?id=${item.animalID}`)}
       >
         <Image
-          source={{ uri: item.photoURL || "https://via.placeholder.com/150" }}
+          source={{ uri: getImageUrl(item.photoURL) }}
           style={styles.cardImage}
         />
         <View style={styles.cardContent}>

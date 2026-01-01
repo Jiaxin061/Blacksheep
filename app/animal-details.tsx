@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { API_BASE_URL } from "../config/api";
 import { colors } from "../theme/colors";
+import { getImageUrl } from "../utils/imageHelper";
 
 interface Animal {
   animalID: number;
@@ -103,7 +104,7 @@ export default function AnimalDetailsScreen() {
   return (
     <ScrollView style={styles.container}>
       <Image
-        source={{ uri: animal.photoURL || "https://via.placeholder.com/400" }}
+        source={{ uri: getImageUrl(animal.photoURL) }}
         style={styles.image}
       />
       <View style={styles.content}>

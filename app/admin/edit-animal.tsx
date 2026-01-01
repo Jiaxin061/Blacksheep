@@ -1,8 +1,10 @@
+import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -13,14 +15,15 @@ import {
   View,
 } from "react-native";
 import {
-  AnimalPayload,
+  AnimalFormData,
   fetchAnimalDetails,
   updateAnimal,
 } from "../../services/api";
 import { colors } from "../../theme/colors";
+import { getImageUrl } from "../../utils/imageHelper";
 
 const animalTypes = ["Dog", "Cat", "Rabbit", "Bird", "Other"];
-const statusOptions: AnimalPayload["status"][] = [
+const statusOptions: AnimalFormData["status"][] = [
   "Active",
   "Funded",
   "Adopted",
@@ -33,8 +36,8 @@ interface FormState {
   story: string;
   fundingGoal: string;
   amountRaised: string;
-  photoURL: string;
-  status: AnimalPayload["status"];
+  status: AnimalFormData["status"];
+  existingPhotoUrl?: string;
 }
 
 interface FormErrors {
@@ -43,7 +46,6 @@ interface FormErrors {
   story?: string;
   fundingGoal?: string;
   amountRaised?: string;
-  photoURL?: string;
   status?: string;
 }
 
@@ -51,6 +53,7 @@ export default function EditAnimalScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
   const [form, setForm] = useState<FormState | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -66,8 +69,8 @@ export default function EditAnimalScreen() {
           story: data.story,
           fundingGoal: String(data.fundingGoal),
           amountRaised: String(data.amountRaised),
-          photoURL: data.photoURL,
           status: data.status,
+          existingPhotoUrl: data.photoURL,
         });
       } catch (error) {
         console.error("Fetch animal error:", error);
@@ -94,6 +97,33 @@ export default function EditAnimalScreen() {
     setErrors((prev) => ({ ...prev, [key]: undefined }));
   };
 
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission Required",
+        "We need access to your photo library to upload images."
+      );
+      return;
+    }
+
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        setSelectedImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error("Image picker error:", error);
+      Alert.alert("Error", "Failed to pick image. Please try again.");
+    }
+  };
+
   const validate = (): boolean => {
     if (!form) return false;
     const newErrors: FormErrors = {};
@@ -118,15 +148,6 @@ export default function EditAnimalScreen() {
       newErrors.amountRaised = "Amount raised must be 0 or greater";
     }
 
-    try {
-      const url = new URL(form.photoURL);
-      if (!["http:", "https:"].includes(url.protocol)) {
-        newErrors.photoURL = "Photo URL must start with http or https";
-      }
-    } catch {
-      newErrors.photoURL = "A valid photo URL is required";
-    }
-
     if (!form.type) {
       newErrors.type = "Type is required";
     }
@@ -145,15 +166,24 @@ export default function EditAnimalScreen() {
 
     setSubmitting(true);
     try {
-      await updateAnimal(Number(id), {
+      const formData: AnimalFormData = {
         name: form.name.trim(),
         type: form.type,
         story: form.story.trim(),
         fundingGoal: Number(form.fundingGoal),
         amountRaised: Number(form.amountRaised),
         status: form.status,
-        photoURL: form.photoURL.trim(),
-      });
+        // Only include photo if a new one was selected
+        photo: selectedImage
+          ? {
+              uri: selectedImage,
+              type: "image/jpeg",
+              name: "photo.jpg",
+            }
+          : undefined,
+      };
+
+      await updateAnimal(Number(id), formData);
 
       Alert.alert("Success", "Animal profile updated successfully.", [
         {
@@ -165,6 +195,7 @@ export default function EditAnimalScreen() {
       console.error("Update animal error:", error?.response || error);
       const message =
         error?.response?.data?.message ||
+        error?.message ||
         "Failed to update animal profile. Please try again.";
       Alert.alert("Error", message);
     } finally {
@@ -180,6 +211,8 @@ export default function EditAnimalScreen() {
       </View>
     );
   }
+
+  const displayImage = selectedImage || getImageUrl(form.existingPhotoUrl);
 
   return (
     <KeyboardAvoidingView
@@ -269,16 +302,18 @@ export default function EditAnimalScreen() {
         </View>
 
         <View style={styles.field}>
-          <Text style={styles.label}>Photo URL *</Text>
-          <TextInput
-            style={[styles.input, errors.photoURL && styles.inputError]}
-            value={form.photoURL}
-            onChangeText={(text) => updateField("photoURL", text)}
-            autoCapitalize="none"
-          />
-          {errors.photoURL && (
-            <Text style={styles.errorText}>{errors.photoURL}</Text>
-          )}
+          <Text style={styles.label}>Photo</Text>
+          <TouchableOpacity
+            style={styles.imagePickerButton}
+            onPress={pickImage}
+          >
+            <Text style={styles.imagePickerText}>
+              {selectedImage ? "Change Photo" : "Update Photo"}
+            </Text>
+          </TouchableOpacity>
+          <View style={styles.imagePreview}>
+            <Image source={{ uri: displayImage }} style={styles.previewImage} />
+          </View>
         </View>
 
         <View style={styles.field}>
@@ -415,6 +450,33 @@ const styles = StyleSheet.create({
     color: colors.danger,
     marginTop: 6,
   },
+  imagePickerButton: {
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderStyle: "dashed",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  imagePickerText: {
+    color: colors.primary,
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  imagePreview: {
+    borderRadius: 12,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  previewImage: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover",
+  },
   buttonRow: {
     flexDirection: "row",
     gap: 12,
@@ -442,5 +504,3 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 });
-
-

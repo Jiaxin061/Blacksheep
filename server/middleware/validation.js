@@ -58,10 +58,8 @@ exports.validateCreateAnimal = (req, res, next) => {
     payload.fundingGoal = fundingGoal;
   }
 
-  payload.photoURL = sanitizeString(payload.photoURL);
-  if (!payload.photoURL || !isValidUrl(payload.photoURL)) {
-    errors.photoURL = "A valid photo URL is required";
-  }
+  // Photo is now handled by multer file upload
+  // Validation is done in upload middleware
 
   payload.status = sanitizeString(payload.status) || "Active";
   if (!allowedStatuses.includes(payload.status)) {
@@ -113,10 +111,8 @@ exports.validateUpdateAnimal = (req, res, next) => {
     payload.amountRaised = amountRaised;
   }
 
-  payload.photoURL = sanitizeString(payload.photoURL);
-  if (!payload.photoURL || !isValidUrl(payload.photoURL)) {
-    errors.photoURL = "A valid photo URL is required";
-  }
+  // Photo is optional for updates - can keep existing or upload new
+  // Validation is done in upload middleware if file is provided
 
   payload.status = sanitizeString(payload.status) || "Active";
   if (!allowedStatuses.includes(payload.status)) {
