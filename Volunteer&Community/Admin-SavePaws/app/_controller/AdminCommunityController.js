@@ -2,7 +2,7 @@ import { CommunityPost } from '../_model/CommunityPost';
 import { CommunityService } from '../_services/CommunityService';
 
 export class AdminCommunityController {
-    // Re-use API_URL if needed, but not strictly necessary here as Helper manages it.
+    static API_URL = 'http://10.0.2.2:3000';
 
     // UC30: Load All Posts for Admin Review (Active or Deleted)
     static async getAllPosts(status = 'Active') {
@@ -24,6 +24,17 @@ export class AdminCommunityController {
         } catch (error) {
             console.error('Admin Controller Error (deletePost):', error);
             return { success: false, message: "Failed to delete post" };
+        }
+    }
+
+    // UC30: Restore Post
+    static async restorePost(postId) {
+        try {
+            await CommunityService.restorePost(postId);
+            return { success: true, message: "Post restored successfully" };
+        } catch (error) {
+            console.error('Admin Controller Error (restorePost):', error);
+            return { success: false, message: "Failed to restore post" };
         }
     }
 }

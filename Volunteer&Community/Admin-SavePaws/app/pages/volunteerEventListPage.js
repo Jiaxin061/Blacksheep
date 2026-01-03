@@ -40,7 +40,7 @@ const VolunteerEventListPage = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor={Colors.primaryDark} />
+            <StatusBar translucent backgroundColor="rgba(0, 0, 0, 0.2)" barStyle="light-content" />
 
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -55,13 +55,14 @@ const VolunteerEventListPage = () => {
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => <EventCard item={item} />}
                 contentContainerStyle={styles.list}
+                style={{ flex: 1, backgroundColor: Colors.background }}
             />
         </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: Colors.background },
+    container: { flex: 1, backgroundColor: Colors.primary, paddingTop: StatusBar.currentHeight || 0 },
     header: {
         backgroundColor: Colors.primary,
         flexDirection: 'row',

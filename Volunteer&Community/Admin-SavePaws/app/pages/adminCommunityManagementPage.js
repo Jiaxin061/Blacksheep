@@ -5,7 +5,6 @@ import { useCallback, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Image, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { AdminCommunityController } from '../_controller/AdminCommunityController';
-import { CommunityController } from '../_controller/CommunityController';
 
 const Colors = {
     primary: '#14b8a6', primaryDark: '#0f766e',
@@ -16,7 +15,7 @@ const Colors = {
 const Spacing = { s: 8, m: 16 };
 const BorderRadius = { l: 12 };
 
-const PostCard = ({ item, onDelete, showRestore }) => (
+const PostCard = ({ item, onDelete, onRestore }) => (
     <View style={styles.card}>
         <View style={styles.cardHeader}>
             <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
@@ -39,7 +38,7 @@ const PostCard = ({ item, onDelete, showRestore }) => (
         {item.contentImage && (
             <Image
                 source={{
-                    uri: item.contentImage.startsWith('http') ? item.contentImage : `${CommunityController.API_URL}/${item.contentImage}`
+                    uri: item.contentImage.startsWith('http') ? item.contentImage : `${AdminCommunityController.API_URL}/${item.contentImage}`
                 }}
                 style={styles.postImage}
                 resizeMode="cover"
@@ -53,10 +52,10 @@ const PostCard = ({ item, onDelete, showRestore }) => (
                     <Text style={styles.buttonText}>Delete</Text>
                 </TouchableOpacity>
             ) : (
-                <View style={styles.deletedInfo}>
-                    <Ionicons name="ban-outline" size={18} color={Colors.textSecondary} />
-                    <Text style={styles.deletedText}>Removed</Text>
-                </View>
+                <TouchableOpacity onPress={() => onRestore(item)} style={styles.restoreButton}>
+                    <Ionicons name="refresh-outline" size={18} color={Colors.white} />
+                    <Text style={styles.buttonText}>Restore</Text>
+                </TouchableOpacity>
             )}
         </View>
     </View>
@@ -102,6 +101,23 @@ const AdminCommunityManagementPage = () => {
         );
     };
 
+    const handleRestore = (post) => {
+        Alert.alert(
+            "Restore Post",
+            "Are you sure you want to restore this post?",
+            [
+                { text: "Cancel", style: "cancel" },
+                {
+                    text: "Confirm",
+                    onPress: async () => {
+                        await AdminCommunityController.restorePost(post.id);
+                        loadPosts();
+                    }
+                }
+            ]
+        );
+    };
+
     const filteredPosts = posts.filter(post =>
         post.contentText.toLowerCase().includes(searchQuery.toLowerCase()) ||
         post.userName.toLowerCase().includes(searchQuery.toLowerCase())
@@ -109,7 +125,7 @@ const AdminCommunityManagementPage = () => {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <StatusBar barStyle="light-content" backgroundColor={Colors.primaryDark} />
+            <StatusBar translucent backgroundColor="rgba(0, 0, 0, 0.2)" barStyle="light-content" />
 
             {/* Header */}
             <View style={styles.header}>
@@ -136,7 +152,7 @@ const AdminCommunityManagementPage = () => {
                 </TouchableOpacity>
             </View>
 
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: Colors.background }}>
                 {/* Search */}
                 <View style={styles.searchBarContainer}>
                     <View style={styles.searchBar}>
@@ -166,7 +182,7 @@ const AdminCommunityManagementPage = () => {
                         data={filteredPosts}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
-                            <PostCard item={item} onDelete={handleDelete} />
+                            <PostCard item={item} onDelete={handleDelete} onRestore={handleRestore} />
                         )}
                         contentContainerStyle={styles.listContent}
                         refreshControl={<RefreshControl refreshing={isLoading} onRefresh={loadPosts} colors={[Colors.primary]} />}
@@ -183,7 +199,7 @@ const AdminCommunityManagementPage = () => {
 };
 
 const styles = StyleSheet.create({
-    safeArea: { flex: 1, backgroundColor: Colors.background },
+    safeArea: { flex: 1, backgroundColor: Colors.primary, paddingTop: StatusBar.currentHeight || 0 },
     header: {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
         paddingHorizontal: Spacing.m, paddingVertical: 16, backgroundColor: Colors.primary,
@@ -237,6 +253,10 @@ const styles = StyleSheet.create({
     buttonText: { color: Colors.white, fontWeight: '600', marginLeft: 4, fontSize: 12 },
     deletedInfo: { flexDirection: 'row', alignItems: 'center' },
     deletedText: { marginLeft: 4, color: Colors.textSecondary, fontStyle: 'italic' },
+    restoreButton: {
+        backgroundColor: Colors.primary, flexDirection: 'row', alignItems: 'center',
+        paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8,
+    },
     centerContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50 },
     emptyText: { color: Colors.textSecondary, fontSize: 16 },
 });

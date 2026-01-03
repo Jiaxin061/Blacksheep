@@ -27,7 +27,7 @@ const VolunteerContributionPage = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor={Colors.primaryDark} />
+            <StatusBar translucent backgroundColor="rgba(0, 0, 0, 0.2)" barStyle="light-content" />
 
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -37,7 +37,7 @@ const VolunteerContributionPage = () => {
                 <View style={{ width: 24 }} />
             </View>
 
-            <ScrollView contentContainerStyle={styles.content}>
+            <ScrollView contentContainerStyle={styles.content} style={{ flex: 1, backgroundColor: Colors.background }}>
                 <View style={styles.card}>
                     <Text style={styles.cardTitle}>My Contribution</Text>
                     <View style={styles.statsRow}>
@@ -77,7 +77,7 @@ const VolunteerContributionPage = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: Colors.background },
+    container: { flex: 1, backgroundColor: Colors.primary, paddingTop: StatusBar.currentHeight || 0 },
     header: {
         backgroundColor: Colors.primary,
         flexDirection: 'row',

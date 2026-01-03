@@ -67,12 +67,12 @@ const HomePage = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#0f766e" />
+      <StatusBar translucent backgroundColor="rgba(0, 0, 0, 0.2)" barStyle="light-content" />
 
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>Hello, User! 👋</Text>
+          <Text style={styles.greeting}>Hello, Admin! 👋</Text>
           <Text style={styles.headerSubtitle}>How can we help today?</Text>
         </View>
         <TouchableOpacity
@@ -327,7 +327,8 @@ const HomePage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0fdfa',
+    backgroundColor: '#14b8a6',
+    paddingTop: StatusBar.currentHeight || 0,
   },
   header: {
     backgroundColor: '#14b8a6',
@@ -361,6 +362,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    backgroundColor: '#f0fdfa',
   },
   section: {
     paddingHorizontal: 24,

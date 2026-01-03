@@ -3,7 +3,7 @@
 // Android Emulator localhost: 10.0.2.2
 // iOS Simulator localhost: 127.0.0.1
 // Physical Device: Use computer's IP address (e.g., 192.168.1.5)
-const API_URL = 'http://192.168.1.75:3000'; // Defaulting to Emulator for stability
+const API_URL = 'http://10.0.2.2:3000'; // Defaulting to Emulator for stability
 
 // Helper for timeout
 const fetchWithTimeout = async (resource, options = {}) => {
@@ -140,6 +140,24 @@ export const CommunityService = {
             return await response.json();
         } catch (error) {
             console.error('Error deleting post:', error);
+            throw error;
+        }
+    },
+
+    // UC30: Restore a post (Admin)
+    restorePost: async (postId) => {
+        try {
+            console.log(`Service: Attempting to restore post ${postId} at ${API_URL}`);
+            const response = await fetchWithTimeout(`${API_URL}/posts/${postId}/restore`, {
+                method: 'POST',
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Failed to restore post: ${errorText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error restoring post:', error);
             throw error;
         }
     },

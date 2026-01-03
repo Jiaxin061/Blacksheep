@@ -294,6 +294,46 @@ app.delete('/comments/:id', (req, res) => {
     });
 });
 
+// UC30: Delete Post (Soft Delete - Change Status to 'Deleted')
+app.delete('/posts/:id', (req, res) => {
+    const postId = req.params.id;
+    console.log(`Server: Received request to delete post ${postId}`);
+    const sql = "UPDATE community_posts SET post_status = 'Deleted' WHERE postID = ?";
+
+    db.query(sql, [postId], (err, result) => {
+        if (err) {
+            console.error('Server: Error deleting post:', err);
+            return res.status(500).send('Error deleting post');
+        }
+        if (result.affectedRows === 0) {
+            console.warn(`Server: Post ${postId} not found for deletion`);
+            return res.status(404).send('Post not found');
+        }
+        console.log(`Server: Post ${postId} deleted successfully`);
+        res.json({ message: 'Post deleted successfully' });
+    });
+});
+
+// UC30: Restore Post (Change Status from 'Deleted' to 'Active')
+app.post('/posts/:id/restore', (req, res) => {
+    const postId = req.params.id;
+    console.log(`Server: Received request to restore post ${postId}`);
+    const sql = "UPDATE community_posts SET post_status = 'Active' WHERE postID = ?";
+
+    db.query(sql, [postId], (err, result) => {
+        if (err) {
+            console.error('Server: Error restoring post:', err);
+            return res.status(500).send('Error restoring post');
+        }
+        if (result.affectedRows === 0) {
+            console.warn(`Server: Post ${postId} not found for restoration`);
+            return res.status(404).send('Post not found');
+        }
+        console.log(`Server: Post ${postId} restored successfully`);
+        res.json({ message: 'Post restored successfully' });
+    });
+});
+
 // --- Volunteer Module Endpoints ---
 
 // VC01: Get Available Volunteer Events
@@ -386,11 +426,11 @@ app.get('/events/user/:userId', (req, res) => {
 
 // UC19: Create Event
 app.post('/admin/events', (req, res) => {
-    const { title, description, location, start_date, end_date, max_volunteers, hours } = req.body;
+    const { title, description, location, start_date, end_date, max_volunteers, hours, image_url } = req.body;
     const adminID = 1; // Default admin for now
-    const sql = 'INSERT INTO volunteer_events (title, description, eventLocation, start_date, end_date, max_volunteers, hours, adminID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+    const sql = 'INSERT INTO volunteer_events (title, description, eventLocation, start_date, end_date, max_volunteers, hours, image_url, adminID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
-    db.query(sql, [title, description, location, start_date, end_date, max_volunteers, hours, adminID], (err, result) => {
+    db.query(sql, [title, description, location, start_date, end_date, max_volunteers, hours, image_url, adminID], (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error creating event');
@@ -402,10 +442,10 @@ app.post('/admin/events', (req, res) => {
 // UC19: Update Event
 app.put('/admin/events/:id', (req, res) => {
     const eventId = req.params.id;
-    const { title, description, location, start_date, end_date, max_volunteers, hours } = req.body;
-    const sql = 'UPDATE volunteer_events SET title = ?, description = ?, eventLocation = ?, start_date = ?, end_date = ?, max_volunteers = ?, hours = ? WHERE eventID = ?';
+    const { title, description, location, start_date, end_date, max_volunteers, hours, image_url } = req.body;
+    const sql = 'UPDATE volunteer_events SET title = ?, description = ?, eventLocation = ?, start_date = ?, end_date = ?, max_volunteers = ?, hours = ?, image_url = ? WHERE eventID = ?';
 
-    db.query(sql, [title, description, location, start_date, end_date, max_volunteers, hours, eventId], (err, result) => {
+    db.query(sql, [title, description, location, start_date, end_date, max_volunteers, hours, image_url, eventId], (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error updating event');

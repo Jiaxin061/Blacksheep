@@ -97,7 +97,7 @@ export default function AdminRegistrationDetailsPage() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <StatusBar barStyle="light-content" backgroundColor={Colors.secondary} />
+            <StatusBar translucent backgroundColor="rgba(0, 0, 0, 0.2)" barStyle="light-content" />
 
             {/* Header */}
             <View style={styles.header}>
@@ -108,7 +108,7 @@ export default function AdminRegistrationDetailsPage() {
                 <View style={{ width: 44 }} />
             </View>
 
-            <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+            <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} style={{ flex: 1, backgroundColor: Colors.background }}>
                 {/* Status Card */}
                 <View style={[styles.statusCard, { backgroundColor: statusStyle.bg }]}>
                     <View style={[styles.statusDot, { backgroundColor: statusStyle.text }]} />
@@ -258,7 +258,7 @@ export default function AdminRegistrationDetailsPage() {
 }
 
 const styles = StyleSheet.create({
-    safeArea: { flex: 1, backgroundColor: Colors.background },
+    safeArea: { flex: 1, backgroundColor: Colors.primary, paddingTop: StatusBar.currentHeight || 0 },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',

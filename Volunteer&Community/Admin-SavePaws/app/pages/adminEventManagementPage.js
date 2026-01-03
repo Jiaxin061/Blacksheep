@@ -2,7 +2,8 @@ import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, Modal, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View, SafeAreaView, StatusBar } from 'react-native';
+import { Alert, FlatList, Modal, RefreshControl, StyleSheet, Text, TextInput, TouchableOpacity, View, SafeAreaView, StatusBar, Image } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { useAdminEventController } from '../_controller/AdminEventController';
 
 // Theme constants integrated for consistency
@@ -45,9 +46,14 @@ export default function AdminEventManagementPage() {
     const [description, setDescription] = useState('');
     const [location, setLocation] = useState('');
     const [date, setDate] = useState(new Date());
+    const [startTime, setStartTime] = useState(new Date());
+    const [endTime, setEndTime] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
+    const [showStartTimePicker, setShowStartTimePicker] = useState(false);
+    const [showEndTimePicker, setShowEndTimePicker] = useState(false);
     const [maxVolunteers, setMaxVolunteers] = useState('');
     const [hours, setHours] = useState('');
+    const [image, setImage] = useState(null);
 
     useEffect(() => {
         if (error) {
@@ -75,10 +81,84 @@ export default function AdminEventManagementPage() {
         setDescription('');
         setLocation('');
         setDate(new Date());
+        setStartTime(new Date());
+        setEndTime(new Date());
         setMaxVolunteers('');
-        setHours('');
+        setHours('0');
+        setImage(null);
         setIsEditing(false);
         setSelectedEventId(null);
+    };
+
+    // --- Time Sync Logic ---
+    const updateEndTime = (start, h) => {
+        if (!start || isNaN(parseFloat(h))) return;
+        const durationMinutes = parseFloat(h) * 60;
+        const newEnd = new Date(start.getTime() + durationMinutes * 60000);
+        setEndTime(newEnd);
+    };
+
+    const updateHours = (start, end) => {
+        if (!start || !end) return;
+        const diffMs = end.getTime() - start.getTime();
+        const h = diffMs / 3600000; // ms to hours
+        // Round to 1 decimal for cleanliness, but keep precision if needed
+        setHours(h > 0 ? h.toFixed(1) : '0');
+    };
+
+    const handleStartTimeChange = (event, selectedDate) => {
+        setShowStartTimePicker(false);
+        if (selectedDate) {
+            setStartTime(selectedDate);
+            // If hours exist, update End Time
+            if (hours && hours !== '0') {
+                updateEndTime(selectedDate, hours);
+            } else {
+                // Determine hours from existing End Time?
+                // Or just keep End Time and update hours?
+                // User requirement: "3h -> 3pm to 6pm".
+                // If I change start time, usually duration is preserved.
+                // So updating End Time is safer.
+                updateEndTime(selectedDate, hours || '0');
+            }
+        }
+    };
+
+    const handleEndTimeChange = (event, selectedDate) => {
+        setShowEndTimePicker(false);
+        if (selectedDate) {
+            setEndTime(selectedDate);
+            // Update Hours
+            updateHours(startTime, selectedDate);
+        }
+    };
+
+    const handleHoursChange = (text) => {
+        setHours(text);
+        // Update EndTime if valid
+        const h = parseFloat(text);
+        if (!isNaN(h)) {
+            updateEndTime(startTime, text);
+        }
+    };
+
+    const incrementHours = () => {
+        const current = parseFloat(hours) || 0;
+        const newH = (current + 0.5).toString();
+        setHours(newH);
+        updateEndTime(startTime, newH);
+    };
+
+    const decrementHours = () => {
+        const current = parseFloat(hours) || 0;
+        if (current >= 0.5) {
+            const newH = (current - 0.5).toString();
+            setHours(newH);
+            updateEndTime(startTime, newH);
+        } else {
+            setHours('0');
+            updateEndTime(startTime, '0');
+        }
     };
 
     const handleAddPress = () => {
@@ -91,9 +171,13 @@ export default function AdminEventManagementPage() {
         setDescription(event.description);
         setLocation(event.location);
         const dateObj = event.event_date ? new Date(event.event_date) : new Date();
+        const endObj = event.end_date ? new Date(event.end_date) : new Date();
         setDate(dateObj);
+        setStartTime(dateObj);
+        setEndTime(endObj);
         setMaxVolunteers(event.max_volunteers ? event.max_volunteers.toString() : '');
         setHours(event.hours ? event.hours.toString() : '');
+        setImage(event.image_url);
 
         setIsEditing(true);
         setSelectedEventId(event.eventID);
@@ -107,14 +191,23 @@ export default function AdminEventManagementPage() {
         }
 
         try {
+            // Combine Date with Start Time
+            const combinedStart = new Date(date);
+            combinedStart.setHours(startTime.getHours(), startTime.getMinutes(), 0, 0);
+
+            // Combine Date with End Time
+            const combinedEnd = new Date(date);
+            combinedEnd.setHours(endTime.getHours(), endTime.getMinutes(), 0, 0);
+
             const eventData = {
                 title,
                 description,
                 location,
-                start_date: date.toISOString().slice(0, 19).replace('T', ' '),
-                end_date: date.toISOString().slice(0, 19).replace('T', ' '),
+                start_date: combinedStart.toISOString().slice(0, 19).replace('T', ' '),
+                end_date: combinedEnd.toISOString().slice(0, 19).replace('T', ' '),
                 max_volunteers: parseInt(maxVolunteers, 10),
-                hours: parseFloat(hours)
+                hours: parseFloat(hours),
+                image_url: image
             };
 
             let success = false;
@@ -152,6 +245,45 @@ export default function AdminEventManagementPage() {
         ]);
     };
 
+    const pickImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
+            return;
+        }
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [16, 9],
+            quality: 0.5,
+            base64: true,
+        });
+
+        if (!result.canceled) {
+            setImage(`data:image/jpeg;base64,${result.assets[0].base64}`);
+        }
+    };
+
+    const takePhoto = async () => {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Permission Denied', 'Sorry, we need camera permissions to make this work!');
+            return;
+        }
+
+        let result = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [16, 9],
+            quality: 0.5,
+            base64: true,
+        });
+
+        if (!result.canceled) {
+            setImage(`data:image/jpeg;base64,${result.assets[0].base64}`);
+        }
+    };
+
     const renderItem = ({ item }) => (
         <View style={styles.card}>
             <View style={styles.cardContent}>
@@ -173,7 +305,7 @@ export default function AdminEventManagementPage() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <StatusBar barStyle="light-content" backgroundColor={Colors.secondary} />
+            <StatusBar translucent backgroundColor="rgba(0, 0, 0, 0.2)" barStyle="light-content" />
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => router.back()}>
                     <Ionicons name="arrow-back" size={24} color={Colors.white} />
@@ -191,12 +323,47 @@ export default function AdminEventManagementPage() {
                 contentContainerStyle={styles.listContent}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 ListEmptyComponent={<Text style={styles.emptyText}>No event records</Text>}
+                style={{ flex: 1, backgroundColor: Colors.background }}
             />
 
             <Modal visible={modalVisible} animationType="slide" transparent>
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
                         <Text style={styles.modalTitle}>{isEditing ? 'Edit Event' : 'New Event'}</Text>
+
+                        <View style={styles.imageSection}>
+                            <TouchableOpacity style={styles.imagePickerContainer} onPress={pickImage}>
+                                {image ? (
+                                    <Image source={{ uri: image }} style={styles.previewImage} />
+                                ) : (
+                                    <View style={styles.imagePlaceholder}>
+                                        <Ionicons name="image-outline" size={40} color={Colors.textSecondary} />
+                                        <Text style={styles.imagePlaceholderText}>Select Image</Text>
+                                    </View>
+                                )}
+                            </TouchableOpacity>
+
+                            <View style={styles.imageButtonsRow}>
+                                <TouchableOpacity style={styles.imageOptionButton} onPress={pickImage}>
+                                    <Ionicons name="images-outline" size={20} color={Colors.primary} />
+                                    <Text style={styles.imageOptionText}>Gallery</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.imageOptionButton} onPress={takePhoto}>
+                                    <Ionicons name="camera-outline" size={20} color={Colors.primary} />
+                                    <Text style={styles.imageOptionText}>Camera</Text>
+                                </TouchableOpacity>
+                                {image && (
+                                    <TouchableOpacity
+                                        style={[styles.imageOptionButton, { borderColor: Colors.error }]}
+                                        onPress={() => setImage(null)}
+                                    >
+                                        <Ionicons name="trash-outline" size={20} color={Colors.error} />
+                                        <Text style={[styles.imageOptionText, { color: Colors.error }]}>Remove</Text>
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                        </View>
+
                         <TextInput style={styles.input} placeholder="Title" value={title} onChangeText={setTitle} />
                         <TextInput style={styles.input} placeholder="Description" value={description} onChangeText={setDescription} />
                         <TextInput style={styles.input} placeholder="Location" value={location} onChangeText={setLocation} />
@@ -214,12 +381,65 @@ export default function AdminEventManagementPage() {
                             <DateTimePicker
                                 value={date}
                                 mode="date"
-                                display="default"
+                                display="spinner"
                                 accentColor={Colors.primary}
+                                textColor={Colors.primary}
+                                positiveButton={{ label: 'OK', textColor: Colors.primary }}
+                                negativeButton={{ label: 'Cancel' }}
                                 onChange={(event, selectedDate) => {
                                     setShowDatePicker(false);
                                     if (selectedDate) setDate(selectedDate);
                                 }}
+                            />
+                        )}
+
+                        <View style={{ flexDirection: 'row', gap: 10, marginBottom: Spacing.m }}>
+                            <TouchableOpacity
+                                style={[styles.dateInput, { flex: 1, marginBottom: 0 }]}
+                                onPress={() => setShowStartTimePicker(true)}
+                            >
+                                <Text style={styles.label}>Start Time</Text>
+                                <Text style={styles.dateText}>
+                                    {startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={[styles.dateInput, { flex: 1, marginBottom: 0 }]}
+                                onPress={() => setShowEndTimePicker(true)}
+                            >
+                                <Text style={styles.label}>End Time</Text>
+                                <Text style={styles.dateText}>
+                                    {endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        {showStartTimePicker && (
+                            <DateTimePicker
+                                value={startTime}
+                                mode="time"
+                                display="spinner"
+                                is24Hour={false}
+                                accentColor={Colors.primary}
+                                textColor={Colors.primary}
+                                positiveButton={{ label: 'OK', textColor: Colors.primary }}
+                                negativeButton={{ label: 'Cancel' }}
+                                onChange={handleStartTimeChange}
+                            />
+                        )}
+
+                        {showEndTimePicker && (
+                            <DateTimePicker
+                                value={endTime}
+                                mode="time"
+                                display="spinner"
+                                is24Hour={false}
+                                accentColor={Colors.primary}
+                                textColor={Colors.primary}
+                                positiveButton={{ label: 'OK', textColor: Colors.primary }}
+                                negativeButton={{ label: 'Cancel' }}
+                                onChange={handleEndTimeChange}
                             />
                         )}
 
@@ -230,26 +450,19 @@ export default function AdminEventManagementPage() {
                                 style={[styles.stepperInput]}
                                 placeholder="Hours"
                                 value={hours}
-                                onChangeText={setHours}
+                                onChangeText={handleHoursChange}
                                 keyboardType="numeric"
                             />
                             <View style={styles.stepperButtons}>
                                 <TouchableOpacity
                                     style={styles.stepperButton}
-                                    onPress={() => {
-                                        const current = parseFloat(hours) || 0;
-                                        setHours((current + 0.5).toString());
-                                    }}
+                                    onPress={incrementHours}
                                 >
                                     <Ionicons name="chevron-up" size={16} color={Colors.textSecondary} />
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.stepperButton}
-                                    onPress={() => {
-                                        const current = parseFloat(hours) || 0;
-                                        if (current >= 0.5) setHours((current - 0.5).toString());
-                                        else setHours("0");
-                                    }}
+                                    onPress={decrementHours}
                                 >
                                     <Ionicons name="chevron-down" size={16} color={Colors.textSecondary} />
                                 </TouchableOpacity>
@@ -272,7 +485,7 @@ export default function AdminEventManagementPage() {
 }
 
 const styles = StyleSheet.create({
-    safeArea: { flex: 1, backgroundColor: Colors.background },
+    safeArea: { flex: 1, backgroundColor: Colors.primary, paddingTop: StatusBar.currentHeight || 0 },
     container: { flex: 1, backgroundColor: Colors.background },
     header: {
         flexDirection: 'row',
@@ -319,14 +532,64 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: Colors.text
     },
-    stepperButtons: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        paddingLeft: 8
-    },
     stepperButton: {
         paddingVertical: 2,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    imageSection: {
+        marginBottom: Spacing.m,
+    },
+    imagePickerContainer: {
+        width: '100%',
+        height: 180,
+        backgroundColor: Colors.background,
+        borderRadius: BorderRadius.m,
+        marginBottom: Spacing.s,
+        borderWidth: 1,
+        borderColor: Colors.border,
+        borderStyle: 'dashed',
+        overflow: 'hidden',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    previewImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover'
+    },
+    imagePlaceholder: {
+        alignItems: 'center'
+    },
+    imagePlaceholderText: {
+        marginTop: 8,
+        color: Colors.textSecondary,
+        fontSize: 14
+    },
+    imageButtonsRow: {
+        flexDirection: 'row',
+        gap: 8,
+    },
+    imageOptionButton: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 8,
+        borderRadius: BorderRadius.s,
+        borderWidth: 1,
+        borderColor: Colors.border,
+        backgroundColor: Colors.white,
+    },
+    imageOptionText: {
+        marginLeft: 6,
+        fontSize: 12,
+        color: Colors.primary,
+        fontWeight: '600',
+    },
+    label: {
+        fontSize: 12,
+        color: Colors.textSecondary,
+        marginBottom: 4
     }
 });

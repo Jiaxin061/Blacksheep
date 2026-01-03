@@ -1,6 +1,6 @@
 // File: app/services/ApiService.js
 
-const API_URL = 'http://192.168.1.75:3000';
+const API_URL = 'http://10.0.2.2:3000';
 
 const fetchWithTimeout = async (resource, options = {}) => {
     const { timeout = 15000 } = options;

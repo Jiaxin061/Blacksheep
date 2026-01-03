@@ -204,7 +204,7 @@ export default function AdminRegistrationManagementPage() {
 
     return (
         <SafeAreaView style={styles.safeArea}>
-            <StatusBar barStyle="light-content" backgroundColor={Colors.secondary} />
+            <StatusBar translucent backgroundColor="rgba(0, 0, 0, 0.2)" barStyle="light-content" />
 
             {/* Header */}
             <View style={styles.header}>
@@ -215,76 +215,78 @@ export default function AdminRegistrationManagementPage() {
                 <View style={{ width: 44 }} />
             </View>
 
-            {/* Stats Cards */}
-            <View style={styles.statsContainer}>
-                <View style={styles.statCard}>
-                    <Text style={[styles.statNumber, { color: Colors.warning }]}>{stats.Pending}</Text>
-                    <Text style={styles.statLabel}>Pending</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={[styles.statNumber, { color: Colors.success }]}>{stats.Approved}</Text>
-                    <Text style={styles.statLabel}>Approved</Text>
-                </View>
-                <View style={styles.statCard}>
-                    <Text style={[styles.statNumber, { color: Colors.error }]}>{stats.Rejected}</Text>
-                    <Text style={styles.statLabel}>Rejected</Text>
-                </View>
-            </View>
-
-            {/* Search Bar */}
-            <View style={styles.searchContainer}>
-                <View style={styles.searchInputWrapper}>
-                    <Ionicons name="search-outline" size={20} color={Colors.textSecondary} />
-                    <TextInput
-                        style={styles.searchInput}
-                        placeholder="Search by name or location..."
-                        value={searchQuery}
-                        onChangeText={setSearchQuery}
-                    />
-                </View>
-            </View>
-
-            {/* Filter Chips */}
-            <View style={{ height: 50, marginBottom: 12 }}>
-                <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.filterContainer}
-                >
-                    {['All', 'Pending', 'Approved', 'Rejected'].map((status) => (
-                        <TouchableOpacity
-                            key={status}
-                            style={[
-                                styles.filterChip,
-                                filterStatus === status && styles.filterChipActive
-                            ]}
-                            onPress={() => setFilterStatus(status)}
-                        >
-                            <Text style={[
-                                styles.filterText,
-                                filterStatus === status && styles.filterTextActive
-                            ]}>
-                                {status} ({status === 'All' ? stats.Total : stats[status]})
-                            </Text>
-                        </TouchableOpacity>
-                    ))}
-                </ScrollView>
-            </View>
-
-            {/* List */}
-            <FlatList
-                data={filteredData}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.registrationID.toString()}
-                contentContainerStyle={styles.listContent}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                ListEmptyComponent={
-                    <View style={styles.emptyContainer}>
-                        <Ionicons name="document-text-outline" size={64} color={Colors.border} />
-                        <Text style={styles.emptyText}>No registration requests found</Text>
+            <View style={{ flex: 1, backgroundColor: Colors.background }}>
+                {/* Stats Cards */}
+                <View style={styles.statsContainer}>
+                    <View style={styles.statCard}>
+                        <Text style={[styles.statNumber, { color: Colors.warning }]}>{stats.Pending}</Text>
+                        <Text style={styles.statLabel}>Pending</Text>
                     </View>
-                }
-            />
+                    <View style={styles.statCard}>
+                        <Text style={[styles.statNumber, { color: Colors.success }]}>{stats.Approved}</Text>
+                        <Text style={styles.statLabel}>Approved</Text>
+                    </View>
+                    <View style={styles.statCard}>
+                        <Text style={[styles.statNumber, { color: Colors.error }]}>{stats.Rejected}</Text>
+                        <Text style={styles.statLabel}>Rejected</Text>
+                    </View>
+                </View>
+
+                {/* Search Bar */}
+                <View style={styles.searchContainer}>
+                    <View style={styles.searchInputWrapper}>
+                        <Ionicons name="search-outline" size={20} color={Colors.textSecondary} />
+                        <TextInput
+                            style={styles.searchInput}
+                            placeholder="Search by name or location..."
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                        />
+                    </View>
+                </View>
+
+                {/* Filter Chips */}
+                <View style={{ height: 50, marginBottom: 12 }}>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={styles.filterContainer}
+                    >
+                        {['All', 'Pending', 'Approved', 'Rejected'].map((status) => (
+                            <TouchableOpacity
+                                key={status}
+                                style={[
+                                    styles.filterChip,
+                                    filterStatus === status && styles.filterChipActive
+                                ]}
+                                onPress={() => setFilterStatus(status)}
+                            >
+                                <Text style={[
+                                    styles.filterText,
+                                    filterStatus === status && styles.filterTextActive
+                                ]}>
+                                    {status} ({status === 'All' ? stats.Total : stats[status]})
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                </View>
+
+                {/* List */}
+                <FlatList
+                    data={filteredData}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.registrationID.toString()}
+                    contentContainerStyle={styles.listContent}
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                    ListEmptyComponent={
+                        <View style={styles.emptyContainer}>
+                            <Ionicons name="document-text-outline" size={64} color={Colors.border} />
+                            <Text style={styles.emptyText}>No registration requests found</Text>
+                        </View>
+                    }
+                />
+            </View>
 
             {/* Reject Modal */}
             <Modal visible={rejectModalVisible} animationType="fade" transparent>
@@ -316,7 +318,7 @@ export default function AdminRegistrationManagementPage() {
 }
 
 const styles = StyleSheet.create({
-    safeArea: { flex: 1, backgroundColor: Colors.background },
+    safeArea: { flex: 1, backgroundColor: Colors.primary, paddingTop: StatusBar.currentHeight || 0 },
     container: { flex: 1, backgroundColor: Colors.background },
     header: {
         flexDirection: 'row',
