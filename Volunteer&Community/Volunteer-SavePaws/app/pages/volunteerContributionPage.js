@@ -5,7 +5,6 @@ import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
     Image,
-    SafeAreaView,
     ScrollView,
     StatusBar,
     StyleSheet,
@@ -13,6 +12,8 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import AIAssistantFAB from '../components/AIAssistantFAB';
 
 // --- Constants & Theme ---
 const Colors = {
@@ -114,7 +115,7 @@ const VolunteerContributionPage = () => {
     }, [navigation]);
 
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
             <StatusBar barStyle="light-content" backgroundColor={Colors.primaryDark} />
             {/* Header (Moved outside ScrollView for sticky behavior) */}
             <View style={styles.header}>
@@ -206,6 +207,7 @@ const VolunteerContributionPage = () => {
                 <View style={{ height: 80 }} />
 
             </ScrollView>
+            <AIAssistantFAB bottom={24} />
         </SafeAreaView>
     );
 };

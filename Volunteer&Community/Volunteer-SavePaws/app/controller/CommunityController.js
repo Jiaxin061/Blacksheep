@@ -43,24 +43,11 @@ export class CommunityController {
         }
     }
 
-    // UC28: Ask AI
-    static async askAI(userId, query) {
-        if (!query.trim()) return null;
-        try {
-            const result = await CommunityService.consultAI(userId, query);
-            console.log('Controller: AI result received:', result);
-            return result.response;
-        } catch (error) {
-            console.error('Controller Error (askAI):', error);
-            console.error('Error details:', error.message, error.stack);
-            return "Sorry, I'm having trouble connecting right now.";
-        }
-    }
 
     // UC29: Update a post
-    static async updatePost(postId, contentText, contentImage) {
+    static async updatePost(postId, userId, contentText, contentImage) {
         try {
-            const result = await CommunityService.updatePost(postId, contentText, contentImage);
+            const result = await CommunityService.updatePost(postId, userId, contentText, contentImage);
             return { success: true, message: result.message || 'Post updated successfully' };
         } catch (error) {
             console.error('Controller Error (updatePost):', error);
@@ -78,34 +65,15 @@ export class CommunityController {
         }
     }
 
-    // UC28: Get AI Chat History
-    static async getAIHistory(userId) {
-        try {
-            return await CommunityService.getAIHistory(userId);
-        } catch (error) {
-            console.error('Controller Error (getAIHistory):', error);
-            return [];
-        }
-    }
 
-    // UC28: Get Full AI Chat History
-    static async getFullAIHistory(userId) {
+    // UC29: Delete a post
+    static async deletePost(postId) {
         try {
-            console.log('Controller: Calling getFullAIHistory');
-            return await CommunityService.getFullAIHistory(userId);
+            await CommunityService.deletePost(postId);
+            return { success: true, message: "Post deleted successfully" };
         } catch (error) {
-            console.error('Controller Error (getFullAIHistory):', error);
-            return [];
-        }
-    }
-
-    // UC28: Clear AI Chat Session
-    static async clearAIHistory(userId) {
-        try {
-            return await CommunityService.clearAIHistory(userId);
-        } catch (error) {
-            console.error('Controller Error (clearAIHistory):', error);
-            return { success: false };
+            console.error('Controller Error (deletePost):', error);
+            return { success: false, message: error.message || "Failed to delete post" };
         }
     }
 }

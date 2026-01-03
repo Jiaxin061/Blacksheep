@@ -6,7 +6,6 @@ import React from 'react';
 import {
     Alert,
     Image,
-    SafeAreaView,
     ScrollView,
     StatusBar,
     StyleSheet,
@@ -14,6 +13,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // --- Constants & Theme (Matching project theme) ---
 const Colors = {
@@ -31,6 +31,7 @@ const Spacing = { s: 8, m: 16, l: 24, xl: 32 };
 const BorderRadius = { m: 12, l: 16, xl: 24 };
 
 import { VolunteerService } from '../services/VolunteerService';
+
 
 const VolunteerEventDetailsPage = () => {
     const params = useLocalSearchParams();
@@ -108,7 +109,7 @@ const VolunteerEventDetailsPage = () => {
 
     if (isLoading || !event) {
         return (
-            <SafeAreaView style={styles.safeArea}>
+            <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <Text>Loading event details...</Text>
                 </View>
@@ -117,7 +118,7 @@ const VolunteerEventDetailsPage = () => {
     }
 
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
             <StatusBar barStyle="light-content" backgroundColor={Colors.primaryDark} />
 
             <View style={styles.header}>
@@ -182,6 +183,7 @@ const VolunteerEventDetailsPage = () => {
                     </Text>
                 </TouchableOpacity>
             </View>
+            <AIAssistantFAB bottom={100} />
         </SafeAreaView>
     );
 };

@@ -17,6 +17,8 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import AIAssistantFAB from '../components/AIAssistantFAB';
 import { VolunteerController } from '../controller/VolunteerController';
 
 // Using the generated image path directly as a source requires it to be a remote URL or a local require.
@@ -104,7 +106,7 @@ const VolunteerRegistrationScreen = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
             <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
 
             {/* Header: Back Button */}
@@ -207,11 +209,9 @@ const VolunteerRegistrationScreen = () => {
                         <Text style={styles.submitButtonText}>Submit Registration</Text>
                     )}
                 </TouchableOpacity>
-
-                {/* Bottom Nav Simulation (Or simple spacer if real nav is present) */}
-                {/* <View style={styles.bottomNavSpacer} /> */}
             </KeyboardAvoidingView>
-        </View>
+            <AIAssistantFAB bottom={130} />
+        </SafeAreaView>
     );
 };
 

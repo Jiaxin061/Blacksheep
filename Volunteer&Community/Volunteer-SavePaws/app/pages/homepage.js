@@ -1,7 +1,6 @@
 // File: homepage.js
 import {
   Alert,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -9,10 +8,12 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 // 1. IMPORT THE HOOK
 import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router'; // ✨ FIX: Import 'router'
+import AIAssistantFAB from '../components/AIAssistantFAB';
 import { VolunteerController } from '../controller/VolunteerController';
 
 // -----------------------------------------------------------------------------------------
@@ -22,6 +23,7 @@ const MOCK_USER_ID = 2; // TODO: Real auth
 
 // 2. USE A CONSISTENT COMPONENT NAME (HomePage)
 const HomePage = () => {
+  console.log("HomePage Mounted");
   // 3. INITIALIZE NAVIGATION HERE
   const navigation = useNavigation();
 
@@ -93,7 +95,7 @@ const HomePage = () => {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <StatusBar barStyle="light-content" backgroundColor="#0f766e" />
 
       {/* Header */}
@@ -287,6 +289,9 @@ const HomePage = () => {
           <Text style={styles.navIcon}>👤</Text>
         </TouchableOpacity>
       </View>
+
+      {/* AI Assistant FAB */}
+      <AIAssistantFAB bottom={84} />
     </SafeAreaView>
   );
 };

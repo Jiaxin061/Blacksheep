@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
+const multer = require('multer');
+const fs = require('fs');
 const { GoogleGenAI } = require("@google/genai");
 
 // Import database config
@@ -12,13 +14,34 @@ const dbConfig = require('../src/resources/db_config');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Initialize Gemini AI (New SDK)
+// Initialize Gemini AI (Latest SDK)
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Ensure uploads directory exists
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+}
+
+// Serve static files from uploads folder
+app.use('/uploads', express.static(uploadDir));
+
+// Multer Configuration
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+const upload = multer({ storage: storage });
 
 // Request Logging Middleware
 app.use((req, res, next) => {
@@ -100,9 +123,15 @@ app.get('/posts/:id', (req, res) => {
     });
 });
 
-// UC29: Create Post
-app.post('/posts', (req, res) => {
-    const { userID, content_text, content_image } = req.body;
+// UC29: Create Post (Updated to handle upload)
+app.post('/posts', upload.single('content_image'), (req, res) => {
+    let { userID, content_text, content_image } = req.body;
+
+    // If a file was uploaded, use its path
+    if (req.file) {
+        content_image = `uploads/${req.file.filename}`;
+    }
+
     const sql = 'INSERT INTO community_posts (userID, content_text, content_image, post_status, post_created_at) VALUES (?, ?, ?, "Active", NOW())';
 
     db.query(sql, [userID, content_text, content_image], (err, result) => {
@@ -110,24 +139,63 @@ app.post('/posts', (req, res) => {
             console.error(err);
             return res.status(500).send('Error creating post');
         }
-        res.status(201).json({ message: 'Post created successfully', postID: result.insertId });
+        res.status(201).json({ message: 'Post created successfully', postID: result.insertId, imagePath: content_image });
     });
 });
 
-// UC29: Edit Post
-app.put('/posts/:id', (req, res) => {
+app.put('/posts/:id', upload.single('content_image'), (req, res) => {
     const postId = req.params.id;
-    const { content_text, content_image } = req.body;
-    console.log(`[DEBUG] PUT /posts/${postId} | body:`, req.body);
-    const sql = 'UPDATE community_posts SET content_text = ?, content_image = ? WHERE postID = ?';
+    let { userID, content_text, content_image } = req.body;
 
-    db.query(sql, [content_text, content_image, postId], (err, result) => {
+    console.log(`[DEBUG] PUT /posts/${postId} | body:`, req.body);
+    console.log(`[DEBUG] PUT /posts/${postId} | file:`, req.file);
+
+    // If a file was uploaded, use its path
+    if (req.file) {
+        content_image = `uploads/${req.file.filename}`;
+    }
+
+    const sql = 'UPDATE community_posts SET content_text = ?, content_image = ? WHERE postID = ? AND userID = ?';
+
+    db.query(sql, [content_text, content_image, postId, userID], (err, result) => {
         if (err) {
             console.error('[ERROR] SQL failure in PUT /posts:', err);
             return res.status(500).send(`Error updating post: ${err.message}`);
         }
-        console.log(`[DEBUG] Post ${postId} updated successfully`);
-        res.json({ message: 'Post updated successfully' });
+
+        if (result.affectedRows === 0) {
+            return res.status(403).send('Unauthorized or post not found');
+        }
+
+        res.json({ message: 'Post updated successfully', imagePath: content_image });
+    });
+});
+
+// UC29: Delete Post (Physical deletion for user)
+app.delete('/posts/:id', (req, res) => {
+    const postId = req.params.id;
+    console.log(`[DEBUG] Attempting to delete post ${postId}`);
+
+    // First delete comments for this post to avoid FK constraint error
+    const deleteCommentsSql = 'DELETE FROM post_comments WHERE postID = ?';
+    db.query(deleteCommentsSql, [postId], (err) => {
+        if (err) {
+            console.error('[ERROR] Failed to delete comments:', err);
+            return res.status(500).send('Error deleting post comments');
+        }
+
+        const deletePostSql = 'DELETE FROM community_posts WHERE postID = ?';
+        db.query(deletePostSql, [postId], (err, result) => {
+            if (err) {
+                console.error('[ERROR] Failed to delete post:', err);
+                return res.status(500).send(`Error deleting post: ${err.message}`);
+            }
+            if (result.affectedRows === 0) {
+                return res.status(404).send('Post not found');
+            }
+            console.log(`[DEBUG] Post ${postId} and its comments deleted successfully`);
+            res.json({ message: 'Post deleted successfully' });
+        });
     });
 });
 
@@ -157,20 +225,24 @@ app.post('/ai-chat', async (req, res) => {
 
         console.log('Using API Key starting with:', process.env.GEMINI_API_KEY.substring(0, 5));
 
-        // List of models to try (New SDK prefers gemini-2.5-flash)
+        // List of models to try (Using a wider range to avoid 404)
+        // List of models to try (Based on successful Model Discovery list)
         const modelsToTry = [
             "gemini-2.5-flash",
-            "gemini-1.5-flash",
-            "gemini-1.5-pro",
-            "gemini-pro"
+            "gemini-2.0-flash",
+            "gemini-3-flash-preview",
+            "gemini-1.5-flash"
         ];
+        const triedModels = [];
         let aiResponseText = "";
         let success = false;
         let lastError = null;
 
         for (const modelName of modelsToTry) {
             try {
-                console.log(`Attempting with model: ${modelName}...`);
+                triedModels.push(modelName);
+                console.log(`[DEBUG] AI Attempt ${triedModels.length}: Model=${modelName}...`);
+
                 const response = await ai.models.generateContent({
                     model: modelName,
                     contents: [
@@ -178,12 +250,12 @@ app.post('/ai-chat', async (req, res) => {
                             role: 'user',
                             parts: [
                                 {
-                                    text: `SYSTEM_INSTRUCTION: You are the dedicated AI assistant for "SavePaws", a mobile application for animal welfare. 
-                                LICENSE: You are ONLY allowed to discuss: Animal Rescue, Pet Adoption, Volunteering, Donations, Animal Care, and Pet First Aid.
+                                    text: `SYSTEM_INSTRUCTION: You are "Pawlo", the dedicated AI assistant for "SavePaws", a mobile application for animal welfare. 
+                                LICENSE: You are ONLY allowed to discuss: Animal Rescue, Pet Adoption, Volunteering, Donations, Animal Care, Pet First Aid, and GREETINGS.
                                 
                                 RULES:
-                                1. If the user asks about coffee, weather, math, coding, personal life, or ANY topic not listed above, you must REFUSE.
-                                2. DO NOT be chatty about off-topic things.
+                                1. You ARE allowed to respond to greetings (e.g., "Hi", "Hello", "How are you?") politely before guiding the user toward animal welfare topics.
+                                2. If the user asks about coffee, weather, math, coding, personal life, or ANY topic not related to animals or SavePaws, you must REFUSE.
                                 3. ALWAYS refer to SavePaws as an "app" or "application", NEVER a "website".
                                 4. REFUSAL MESSAGE: "I apologize, but I am designed solely to assist with animal welfare and SavePaws-related inquiries."
                                 
@@ -195,22 +267,30 @@ app.post('/ai-chat', async (req, res) => {
                     ]
                 });
 
+                // Extract text safely from the response
                 aiResponseText = response.text;
+                if (typeof aiResponseText === 'function') aiResponseText = await aiResponseText();
+                if (!aiResponseText && response.candidates && response.candidates[0].content) {
+                    aiResponseText = response.candidates[0].content.parts[0].text;
+                }
+
+                if (!aiResponseText) {
+                    throw new Error("Empty response from AI");
+                }
+
                 success = true;
-                console.log(`Success with model: ${modelName}`);
+                console.log(`[DEBUG] AI Success: Model=${modelName}`);
                 break;
             } catch (err) {
-                console.warn(`Model ${modelName} failed:`, err.message);
+                console.warn(`[DEBUG] AI Failure: Model=${modelName} | Error=${err.message}`);
                 lastError = err;
-                // If it's a 404 or model not found, try next
-                if (!err.message.includes("not found") && err.status !== 404) {
-                    break;
-                }
+                continue;
             }
         }
 
         if (!success) {
-            throw lastError || new Error("All models failed to respond.");
+            console.error('[ERROR] All AI models failed. Models tried:', triedModels.join(', '));
+            throw lastError || new Error(`All models failed: ${triedModels.join(', ')}`);
         }
 
         const sql = 'INSERT INTO ai_chats (userID, user_query, ai_response, chat_timestamp) VALUES (?, ?, ?, NOW())';

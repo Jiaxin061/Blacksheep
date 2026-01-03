@@ -4,8 +4,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, FlatList, Image, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import AIAssistantFAB from '../components/AIAssistantFAB';
 import { CommunityController } from '../controller/CommunityController';
 
 // --- Theme Constants (Matching Project Theme) ---
@@ -22,7 +24,8 @@ const BorderRadius = { s: 4, m: 8, l: 12, xl: 16 };
 const MOCK_USER_ID = 2;
 
 // Post Card Component
-const PostCard = ({ item, onPress, onEdit, showEdit }) => {
+// Post Card Component
+const PostCard = ({ item, onPress, onEdit, onDelete, showEdit }) => {
     const isOwnPost = item.userId === MOCK_USER_ID;
 
     return (
@@ -39,10 +42,14 @@ const PostCard = ({ item, onPress, onEdit, showEdit }) => {
                 </View>
 
                 {showEdit && (
-                    <TouchableOpacity onPress={() => onEdit(item)} style={styles.editButton}>
-                        <Ionicons name="pencil" size={18} color={Colors.white} />
-                        <Text style={styles.editButtonText}>Edit</Text>
-                    </TouchableOpacity>
+                    <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity onPress={() => onEdit(item)} style={styles.editButton}>
+                            <Ionicons name="pencil" size={16} color={Colors.white} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => onDelete(item)} style={[styles.editButton, { backgroundColor: Colors.error, marginLeft: 8 }]}>
+                            <Ionicons name="trash" size={16} color={Colors.white} />
+                        </TouchableOpacity>
+                    </View>
                 )}
             </View>
 
@@ -52,7 +59,7 @@ const PostCard = ({ item, onPress, onEdit, showEdit }) => {
             <Image
                 source={{
                     uri: item.contentImage
-                        ? (item.contentImage.startsWith('http') ? item.contentImage : `${CommunityController.API_URL}/${item.contentImage}`)
+                        ? (item.contentImage.startsWith('http') || item.contentImage.startsWith('file://') ? item.contentImage : `${CommunityController.API_URL}/${item.contentImage}`)
                         : `https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=800&auto=format&fit=crop&sig=${item.id % 10}`
                 }}
                 style={styles.postImage}
@@ -132,8 +139,30 @@ const CommunityPage = () => {
         });
     };
 
+    const handleDeletePost = (post) => {
+        Alert.alert(
+            "Delete Post",
+            "Are you sure you want to delete this post? This action cannot be undone.",
+            [
+                { text: "Cancel", style: "cancel" },
+                {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: async () => {
+                        const result = await CommunityController.deletePost(post.id);
+                        if (result.success) {
+                            loadPosts(); // Refresh list
+                        } else {
+                            Alert.alert("Error", result.message);
+                        }
+                    }
+                }
+            ]
+        );
+    };
+
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
             <StatusBar barStyle="light-content" backgroundColor={Colors.primaryDark} />
 
             {/* Header */}
@@ -198,6 +227,7 @@ const CommunityPage = () => {
                                     item={item}
                                     onPress={handlePostClick}
                                     onEdit={handleEditPost}
+                                    onDelete={handleDeletePost}
                                     showEdit={activeTab === 'Mine' && item.userId === MOCK_USER_ID}
                                 />
                             )}
@@ -211,10 +241,8 @@ const CommunityPage = () => {
                         />
                     )}
 
-                    {/* AI Assistant Floating Button (UC28) */}
-                    <TouchableOpacity style={styles.fab} onPress={handleAIAssistant}>
-                        <Ionicons name="chatbubbles" size={28} color={Colors.white} />
-                    </TouchableOpacity>
+                    {/* AI Assistant Floating Button (Standardized) */}
+                    <AIAssistantFAB bottom={80} />
                 </View>
             </View>
         </SafeAreaView>
@@ -262,10 +290,11 @@ const styles = StyleSheet.create({
     editButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 10,
-        paddingVertical: 5,
+        justifyContent: 'center',
+        width: 32,
+        height: 32,
         backgroundColor: Colors.primary,
-        borderRadius: 12,
+        borderRadius: 16,
     },
     editButtonText: {
         color: Colors.white,
@@ -336,21 +365,6 @@ const styles = StyleSheet.create({
     readMore: { color: Colors.primary, fontWeight: '600' },
     centerContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 50 },
     emptyText: { color: Colors.textSecondary, fontSize: 16 },
-    fab: {
-        position: 'absolute',
-        bottom: 80,
-        right: 24,
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: Colors.primaryDark,
-        justifyContent: 'center',
-        alignItems: 'center',
-        elevation: 5,
-        shadowColor: Colors.primary,
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
-    }
 });
 
 export default CommunityPage;

@@ -3,9 +3,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, FlatList, KeyboardAvoidingView, Modal, Platform, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, KeyboardAvoidingView, Modal, Platform, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { CommunityController } from '../controller/CommunityController';
+import { AIController } from '../controller/AIController';
 
 // --- Theme ---
 const Colors = {
@@ -15,7 +16,7 @@ const Colors = {
 };
 // -------------
 
-const INITIAL_GREETING = { id: '0', text: "Woof! I'm Pawlo 🐶\n\nI'm here to help you with animal first aid, rescue tips, or just to chat! How can I help today?", sender: 'ai' };
+const INITIAL_GREETING = { id: '0', text: "Woof! I'm Pawlo 🐶\n\nI'm here to help you with animal first aid, rescue tips, or others about animals! How can I help today?", sender: 'ai' };
 
 const AIAssistantPage = () => {
     const [messages, setMessages] = useState([INITIAL_GREETING]);
@@ -36,7 +37,7 @@ const AIAssistantPage = () => {
     const loadHistory = async () => {
         setIsTyping(true);
         // Load only ACTIVE history for the main feed
-        const history = await CommunityController.getAIHistory(CURRENT_USER_ID);
+        const history = await AIController.getAIHistory(CURRENT_USER_ID);
         if (history && history.length > 0) {
             const historyMessages = [];
             history.forEach((chat, index) => {
@@ -58,7 +59,7 @@ const AIAssistantPage = () => {
         }
 
         // Pre-load full history for the modal
-        const fullHistory = await CommunityController.getFullAIHistory(CURRENT_USER_ID);
+        const fullHistory = await AIController.getFullAIHistory(CURRENT_USER_ID);
         setHistoryList(fullHistory || []);
 
         setIsTyping(false);
@@ -76,7 +77,7 @@ const AIAssistantPage = () => {
         setTimeout(() => flatListRef.current?.scrollToEnd(), 100);
 
         // Call Controller
-        const responseText = await CommunityController.askAI(CURRENT_USER_ID, userMsg.text);
+        const responseText = await AIController.askAI(CURRENT_USER_ID, userMsg.text);
 
         setIsTyping(false);
         const aiMsg = { id: (Date.now() + 1).toString(), text: responseText, sender: 'ai' };
@@ -86,11 +87,11 @@ const AIAssistantPage = () => {
 
     const handleNewChat = async () => {
         // Clear current session on server
-        await CommunityController.clearAIHistory(CURRENT_USER_ID);
+        await AIController.clearAIHistory(CURRENT_USER_ID);
         // Reset local UI state
         setMessages([INITIAL_GREETING]);
         // Update history modal data
-        const fullHistory = await CommunityController.getFullAIHistory(CURRENT_USER_ID);
+        const fullHistory = await AIController.getFullAIHistory(CURRENT_USER_ID);
         setHistoryList(fullHistory || []);
     };
 
@@ -140,7 +141,7 @@ const AIAssistantPage = () => {
     };
 
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
             <StatusBar barStyle="light-content" backgroundColor={Colors.primaryDark} />
 
             {/* Header */}

@@ -3,7 +3,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router'; // NEW: Import router
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, FlatList, Image, RefreshControl, SafeAreaView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import AIAssistantFAB from '../components/AIAssistantFAB';
 
 // --- Embedded Constants (Teal Theme) ---
 const Colors = {
@@ -115,7 +117,7 @@ const VolunteerEventListPage = () => {
     }
 
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
             <StatusBar barStyle="light-content" backgroundColor={Colors.primaryDark} />
 
             {/* Header */}
@@ -150,6 +152,7 @@ const VolunteerEventListPage = () => {
                     }
                 />
             </View>
+            <AIAssistantFAB bottom={24} />
         </SafeAreaView>
     );
 }

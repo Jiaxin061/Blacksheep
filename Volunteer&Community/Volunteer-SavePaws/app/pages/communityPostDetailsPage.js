@@ -3,8 +3,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import AIAssistantFAB from '../components/AIAssistantFAB';
 import { CommunityController } from '../controller/CommunityController';
 import { CommunityService } from '../services/CommunityService'; // Direct service access for simple comments
 
@@ -90,7 +92,7 @@ const CommunityPostDetailsPage = () => {
     const { post, comments } = postData;
 
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
             <StatusBar barStyle="light-content" backgroundColor={Colors.primaryDark} />
 
             {/* Header */}
@@ -99,7 +101,7 @@ const CommunityPostDetailsPage = () => {
                     <Ionicons name="arrow-back" size={24} color={Colors.white} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Post Details</Text>
-                {post.userId === 1 ? (
+                {post.id && post.userId === CURRENT_USER_ID ? (
                     <TouchableOpacity onPress={() => router.push({
                         pathname: '/pages/communityCreatePostPage',
                         params: {
@@ -120,26 +122,28 @@ const CommunityPostDetailsPage = () => {
                 <View style={styles.postContainer}>
                     <View style={styles.userInfo}>
                         <View style={styles.avatarPlaceholder}>
-                            <Text style={styles.avatarText}>{post.userName.charAt(0)}</Text>
+                            <Text style={styles.avatarText}>{post.userName?.charAt(0) || 'U'}</Text>
                         </View>
                         <View>
-                            <Text style={styles.userName}>{post.userName}</Text>
-                            <Text style={styles.timestamp}>{post.createdAt.toLocaleString()}</Text>
+                            <Text style={styles.userName}>{post.userName || 'Anonymous User'}</Text>
+                            <Text style={styles.timestamp}>{new Date(post.createdAt).toLocaleString()}</Text>
                         </View>
                     </View>
 
                     <Text style={styles.postText}>{post.contentText}</Text>
 
                     {/* Post Image with Fallback */}
-                    <Image
-                        source={{
-                            uri: post.contentImage
-                                ? (post.contentImage.startsWith('http') ? post.contentImage : `${CommunityController.API_URL}/${post.contentImage}`)
-                                : `https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=800&auto=format&fit=crop&sig=${post.id % 10}`
-                        }}
-                        style={styles.postImage}
-                        resizeMode="cover"
-                    />
+                    {(post.contentImage || true) && (
+                        <Image
+                            source={{
+                                uri: post.contentImage
+                                    ? (post.contentImage.startsWith('http') || post.contentImage.startsWith('file://') ? post.contentImage : `${CommunityController.API_URL}/${post.contentImage}`)
+                                    : `https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=800&auto=format&fit=crop&sig=${post.id % 10}`
+                            }}
+                            style={styles.postImage}
+                            resizeMode="cover"
+                        />
+                    )}
                 </View>
 
                 {/* Comments Section */}
@@ -184,6 +188,7 @@ const CommunityPostDetailsPage = () => {
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
+            <AIAssistantFAB bottom={100} />
         </SafeAreaView>
     );
 };

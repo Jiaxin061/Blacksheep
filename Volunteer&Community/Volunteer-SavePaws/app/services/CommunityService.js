@@ -44,10 +44,34 @@ export const CommunityService = {
     // UC29: Create a new post
     createPost: async (userId, contentText, contentImage) => {
         try {
+            let body;
+            let headers = {};
+
+            if (contentImage && contentImage.startsWith('file://')) {
+                // Use FormData for file upload
+                body = new FormData();
+                body.append('userID', userId);
+                body.append('content_text', contentText);
+
+                const fileName = contentImage.split('/').pop();
+                const match = /\.(\w+)$/.exec(fileName);
+                const type = match ? `image/${match[1]}` : `image`;
+
+                body.append('content_image', {
+                    uri: contentImage,
+                    name: fileName,
+                    type: type,
+                });
+            } else {
+                // Use JSON
+                headers['Content-Type'] = 'application/json';
+                body = JSON.stringify({ userID: userId, content_text: contentText, content_image: contentImage });
+            }
+
             const response = await fetchWithTimeout(`${API_URL}/posts`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userID: userId, content_text: contentText, content_image: contentImage })
+                headers: headers,
+                body: body
             });
             if (!response.ok) throw new Error('Failed to create post');
             return await response.json();
@@ -58,12 +82,36 @@ export const CommunityService = {
     },
 
     // UC29: Update an existing post
-    updatePost: async (postId, contentText, contentImage) => {
+    updatePost: async (postId, userId, contentText, contentImage) => {
         try {
+            let body;
+            let headers = {};
+
+            if (contentImage && contentImage.startsWith('file://')) {
+                // Use FormData for file upload
+                body = new FormData();
+                body.append('userID', userId);
+                body.append('content_text', contentText);
+
+                const fileName = contentImage.split('/').pop();
+                const match = /\.(\w+)$/.exec(fileName);
+                const type = match ? `image/${match[1]}` : `image`;
+
+                body.append('content_image', {
+                    uri: contentImage,
+                    name: fileName,
+                    type: type,
+                });
+            } else {
+                // Use JSON
+                headers['Content-Type'] = 'application/json';
+                body = JSON.stringify({ userID: userId, content_text: contentText, content_image: contentImage });
+            }
+
             const response = await fetchWithTimeout(`${API_URL}/posts/${postId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content_text: contentText, content_image: contentImage })
+                headers: headers,
+                body: body
             });
             if (!response.ok) {
                 const errorBody = await response.text();
@@ -92,21 +140,6 @@ export const CommunityService = {
         }
     },
 
-    // UC28: Consult AI
-    consultAI: async (userId, query) => {
-        try {
-            const response = await fetchWithTimeout(`${API_URL}/ai-chat`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userID: userId, user_query: query }),
-                timeout: 30000 // 30 seconds for AI responses (they can take longer)
-            });
-            if (!response.ok) throw new Error('Failed to consult AI');
-            return await response.json();
-        } catch (error) {
-            throw error;
-        }
-    },
 
     // UC27: Delete a comment
     deleteComment: async (commentId) => {
@@ -127,48 +160,20 @@ export const CommunityService = {
         }
     },
 
-    // UC28: Fetch AI Chat History
-    getAIHistory: async (userId) => {
+
+    // UC29: Delete a post
+    deletePost: async (postId) => {
         try {
-            console.log(`Service: Fetching AI history for user ${userId} at ${API_URL}`);
-            const response = await fetchWithTimeout(`${API_URL}/ai-history/${userId}`);
-            console.log(`Service: AI history response status: ${response.status}`);
+            const response = await fetchWithTimeout(`${API_URL}/posts/${postId}`, {
+                method: 'DELETE',
+            });
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error(`Service: AI history fetch failed: ${errorText}`);
-                throw new Error(`Failed to fetch AI history: ${errorText}`);
+                throw new Error(`Server Error (${response.status}): ${errorText}`);
             }
             return await response.json();
         } catch (error) {
-            console.error('Error fetching AI history:', error);
-            throw error;
-        }
-    },
-
-    // UC28: Fetch ALL AI Chat History (Modal)
-    getFullAIHistory: async (userId) => {
-        try {
-            console.log(`Service: Fetching FULL AI history for user ${userId}`);
-            const response = await fetchWithTimeout(`${API_URL}/ai-history/all/${userId}`);
-            if (!response.ok) throw new Error('Failed to fetch full history');
-            return await response.json();
-        } catch (error) {
-            console.error('Error fetching full AI history:', error);
-            throw error;
-        }
-    },
-
-    // UC28: Clear Active AI Session
-    clearAIHistory: async (userId) => {
-        try {
-            console.log(`Service: Clearing AI session for user ${userId}`);
-            const response = await fetchWithTimeout(`${API_URL}/ai-history/clear/${userId}`, {
-                method: 'POST'
-            });
-            if (!response.ok) throw new Error('Failed to clear session');
-            return await response.json();
-        } catch (error) {
-            console.error('Error clearing AI session:', error);
+            console.error('Error deleting post:', error);
             throw error;
         }
     }
