@@ -17,7 +17,7 @@ const Spacing = { xs: 4, s: 8, m: 16, l: 24, xl: 32 };
 const BorderRadius = { s: 4, m: 8, l: 12, xl: 16 };
 // ---------------------------------------
 
-import { VolunteerService } from '../services/VolunteerService';
+import { VolunteerService } from '../_services/VolunteerService';
 
 // Helper function for date formatting
 const formatDateTime = (dateString) => {

@@ -1,8 +1,9 @@
 // File: volunteerRegistrationPage.js (Route: /volunteer/registration)
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import * as Location from 'expo-location';
 import { router } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
     ActivityIndicator,
     Alert,
@@ -17,9 +18,13 @@ import {
     TouchableOpacity,
     View,
 } from 'react-native';
+import * as Maps from 'react-native-maps';
+const MapView = Maps.MapView || Maps.default;
+const Marker = Maps.Marker;
+
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { VolunteerController } from '../_controller/VolunteerController';
 import AIAssistantFAB from '../components/AIAssistantFAB';
-import { VolunteerController } from '../controller/VolunteerController';
 
 // Using the generated image path directly as a source requires it to be a remote URL or a local require.
 // Since the environment treats the artifact path as local file system, we assume we can require it
@@ -55,6 +60,84 @@ const VolunteerRegistrationScreen = () => {
     });
     const [touched, setTouched] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const [locationPermission, setLocationPermission] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+            const { status } = await Location.requestForegroundPermissionsAsync();
+            setLocationPermission(status === 'granted');
+        })();
+    }, []);
+
+    // Map State (KL Sentral as default)
+    const [mapRegion, setMapRegion] = useState({
+        latitude: 3.1344,
+        longitude: 101.6865,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+    });
+
+    const handleAddressGeocode = async (address) => {
+        if (!address || address.trim().length < 5) return;
+        try {
+            const geocodedLocation = await Location.geocodeAsync(address);
+            if (geocodedLocation && geocodedLocation.length > 0) {
+                const { latitude, longitude } = geocodedLocation[0];
+                setMapRegion({
+                    ...mapRegion,
+                    latitude,
+                    longitude,
+                });
+            }
+        } catch (error) {
+            console.log('Geocoding error:', error);
+        }
+    };
+
+    const handleMapPress = async (event) => {
+        if (locationPermission === false) {
+            Alert.alert("Permission Denied", "Please enable location permissions to use map pinning.");
+            return;
+        }
+
+        const { latitude, longitude } = event.nativeEvent.coordinate;
+        if (!latitude || !longitude) return;
+
+        setMapRegion({
+            ...mapRegion,
+            latitude,
+            longitude,
+        });
+
+        try {
+            const reverseGeocode = await Location.reverseGeocodeAsync({ latitude, longitude });
+            if (reverseGeocode && reverseGeocode.length > 0) {
+                const loc = reverseGeocode[0];
+                // Construct address string: "Name/Street, City, Postcode, Region, Country"
+                const parts = [
+                    loc.name || loc.street,
+                    loc.district,
+                    loc.city,
+                    loc.postalCode,
+                    loc.region,
+                ].filter(Boolean);
+                const addressStr = parts.join(', ');
+                setFormData(prev => ({ ...prev, address: addressStr }));
+            }
+        } catch (error) {
+            console.log('Reverse geocoding error:', error);
+            Alert.alert("Error", "Could not fetch address for this location.");
+        }
+    };
+
+    const handleZoom = (type) => {
+        setMapRegion(prev => ({
+            ...prev,
+            latitudeDelta: type === 'in' ? prev.latitudeDelta / 2 : prev.latitudeDelta * 2,
+            longitudeDelta: type === 'in' ? prev.longitudeDelta / 2 : prev.longitudeDelta * 2,
+        }));
+    };
 
     // Fields definition for cleaner rendering loop
     const fields = [
@@ -155,11 +238,64 @@ const VolunteerRegistrationScreen = () => {
                                     placeholder={field.placeholder}
                                     value={formData[field.id]}
                                     onChangeText={(text) => handleChange(field.id, text)}
-                                    onBlur={() => handleBlur(field.id)}
+                                    onBlur={() => {
+                                        handleBlur(field.id);
+                                        if (field.id === 'address') {
+                                            handleAddressGeocode(formData.address);
+                                        }
+                                    }}
                                     multiline={isMultiline}
                                     numberOfLines={isMultiline ? 3 : 1}
                                     editable={!isSubmitting}
                                 />
+
+                                {/* Map visualization for address field */}
+                                {field.id === 'address' && (
+                                    <View style={styles.mapWrapper}>
+                                        {MapView ? (
+                                            <MapView
+                                                style={styles.map}
+                                                region={mapRegion}
+                                                onPress={handleMapPress}
+                                                onLongPress={handleMapPress}
+                                                provider={Maps.PROVIDER_GOOGLE || Maps.PROVIDER_DEFAULT}
+                                            >
+                                                <Marker
+                                                    coordinate={{
+                                                        latitude: mapRegion.latitude,
+                                                        longitude: mapRegion.longitude,
+                                                    }}
+                                                    draggable
+                                                    onDragEnd={(e) => handleMapPress(e)}
+                                                    title="Location"
+                                                    description={formData.address}
+                                                />
+                                            </MapView>
+                                        ) : (
+                                            <View style={styles.mapError}>
+                                                <Text>Map module not found</Text>
+                                            </View>
+                                        )}
+
+                                        {/* Zoom Controls Overlay */}
+                                        <View style={styles.zoomControls}>
+                                            <TouchableOpacity
+                                                style={styles.zoomButton}
+                                                onPress={() => handleZoom('in')}
+                                            >
+                                                <Ionicons name="add" size={24} color={Colors.text} />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                style={styles.zoomButton}
+                                                onPress={() => handleZoom('out')}
+                                            >
+                                                <Ionicons name="remove" size={24} color={Colors.text} />
+                                            </TouchableOpacity>
+                                        </View>
+
+                                        <Text style={styles.mapHint}>Tap map, long press, or drag pin to adjust location</Text>
+                                    </View>
+                                )}
 
                                 {/* Validation Message */}
                                 {isFilled ? (
@@ -313,6 +449,50 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: -4 },
         shadowOpacity: 0.05,
         shadowRadius: 10,
+    },
+    mapWrapper: {
+        height: 250,
+        width: '100%',
+        borderRadius: 12,
+        overflow: 'hidden',
+        marginTop: 12,
+        marginBottom: 8,
+        borderWidth: 1,
+        borderColor: Colors.inputBorder,
+    },
+    map: {
+        width: '100%',
+        height: '100%',
+    },
+    mapHint: {
+        fontSize: 10,
+        color: Colors.textSecondary,
+        textAlign: 'center',
+        marginTop: 2,
+    },
+    mapError: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f3f4f6',
+    },
+    zoomControls: {
+        position: 'absolute',
+        right: 12,
+        bottom: 80,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderRadius: 8,
+        padding: 4,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    },
+    zoomButton: {
+        padding: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f3f4f6',
     },
     progressContainer: {
         marginBottom: 16,

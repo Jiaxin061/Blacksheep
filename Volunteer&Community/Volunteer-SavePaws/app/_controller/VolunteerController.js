@@ -1,5 +1,5 @@
 // File: app/controller/VolunteerController.js
-import { VolunteerService } from '../services/VolunteerService';
+import { VolunteerService } from '../_services/VolunteerService';
 
 // This controller handles business logic for Volunteer Registration (UC07)
 export const VolunteerController = {

@@ -35,7 +35,7 @@ const Spacing = { s: 8, m: 16, l: 24, xl: 32 };
 const BorderRadius = { s: 8, m: 12, l: 16, xl: 20 };
 
 // --- Mock Data ---
-import { VolunteerService } from '../services/VolunteerService';
+import { VolunteerService } from '../_services/VolunteerService';
 
 const MOCK_CURRENT_USER_ID = 2; // User 2 (John Smith)
 

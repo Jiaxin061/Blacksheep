@@ -1,6 +1,6 @@
 // File: app/controller/AIController.js
 
-import { AIService } from '../services/AIService';
+import { AIService } from '../_services/AIService';
 
 export class AIController {
     // UC28: Ask AI

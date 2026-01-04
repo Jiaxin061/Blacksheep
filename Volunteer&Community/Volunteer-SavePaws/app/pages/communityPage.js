@@ -7,8 +7,8 @@ import { useCallback, useState } from 'react';
 import { ActivityIndicator, Alert, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { CommunityController } from '../_controller/CommunityController';
 import AIAssistantFAB from '../components/AIAssistantFAB';
-import { CommunityController } from '../controller/CommunityController';
 
 // --- Theme Constants (Matching Project Theme) ---
 const Colors = {

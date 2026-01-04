@@ -228,10 +228,8 @@ app.post('/ai-chat', async (req, res) => {
         // List of models to try (Using a wider range to avoid 404)
         // List of models to try (Based on successful Model Discovery list)
         const modelsToTry = [
-            "gemini-2.5-flash",
-            "gemini-2.0-flash",
-            "gemini-3-flash-preview",
-            "gemini-1.5-flash"
+            "gemini-1.5-flash",
+            "gemini-1.5-pro",
         ];
         const triedModels = [];
         let aiResponseText = "";

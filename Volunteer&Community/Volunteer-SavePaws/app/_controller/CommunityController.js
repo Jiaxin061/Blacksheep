@@ -1,7 +1,7 @@
 // File: app/controller/CommunityController.js
 
-import { CommunityPost } from '../model/CommunityPost';
-import { CommunityService } from '../services/CommunityService';
+import { CommunityPost } from '../_model/CommunityPost';
+import { CommunityService } from '../_services/CommunityService';
 
 export class CommunityController {
     static API_URL = 'http://10.0.2.2:3000'; // Match CommunityService API_URL

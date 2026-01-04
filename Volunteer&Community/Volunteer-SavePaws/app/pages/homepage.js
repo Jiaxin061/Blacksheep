@@ -13,8 +13,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 // 1. IMPORT THE HOOK
 import { useNavigation } from '@react-navigation/native';
 import { router } from 'expo-router'; // ✨ FIX: Import 'router'
+import { VolunteerController } from '../_controller/VolunteerController';
 import AIAssistantFAB from '../components/AIAssistantFAB';
-import { VolunteerController } from '../controller/VolunteerController';
 
 // -----------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------

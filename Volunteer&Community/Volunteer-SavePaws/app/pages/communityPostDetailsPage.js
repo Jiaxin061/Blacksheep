@@ -6,9 +6,9 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { CommunityController } from '../_controller/CommunityController';
+import { CommunityService } from '../_services/CommunityService'; // Direct service access for simple comments
 import AIAssistantFAB from '../components/AIAssistantFAB';
-import { CommunityController } from '../controller/CommunityController';
-import { CommunityService } from '../services/CommunityService'; // Direct service access for simple comments
 
 // --- Theme ---
 const Colors = {

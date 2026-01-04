@@ -14,6 +14,7 @@ import {
     View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AIAssistantFAB from '../components/AIAssistantFAB';
 
 // --- Constants & Theme (Matching project theme) ---
 const Colors = {
@@ -30,7 +31,7 @@ const Colors = {
 const Spacing = { s: 8, m: 16, l: 24, xl: 32 };
 const BorderRadius = { m: 12, l: 16, xl: 24 };
 
-import { VolunteerService } from '../services/VolunteerService';
+import { VolunteerService } from '../_services/VolunteerService';
 
 
 const VolunteerEventDetailsPage = () => {
