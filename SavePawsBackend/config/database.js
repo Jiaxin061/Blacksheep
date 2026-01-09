@@ -5,7 +5,7 @@ require('dotenv').config();
 const dbConfigWithoutDB = {
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
+  password: process.env.DB_PASSWORD || 'karen',
   port: process.env.DB_PORT || 3306,
 };
 
@@ -51,7 +51,7 @@ const testConnection = async () => {
 };
 
 // Execute query helper function
-const query = async (sql, params) => {
+const query = async (sql, params = []) => {
   try {
     if (!pool) {
       throw new Error('Database pool not initialized. Call testConnection() first.');

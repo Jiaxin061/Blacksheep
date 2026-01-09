@@ -88,14 +88,23 @@ router.get('/', async (req, res) => {
     }
 });
 
-// ==================== GET CURRENT USER REPORTS ====================
+// ==================== GET CURRENT USER REPORTS (token optional) ====================
 /**
  * GET /api/reports/my-reports
- * Returns reports belonging to the authenticated user
+ * Returns reports belonging to a user. Accepts either:
+ *  - Bearer token (preferred), or
+ *  - query param ?user_id=#
  */
-router.get('/my-reports', authenticateUser, async (req, res) => {
+router.get('/my-reports', async (req, res) => {
     try {
-        const userId = req.userId;
+        const userId = req.userId || req.query.user_id;
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: 'user_id is required when no token is provided'
+            });
+        }
 
         console.log('👤 GET /api/reports/my-reports - User:', userId);
 
@@ -340,11 +349,11 @@ router.patch('/:id/status', authenticateAdmin, async (req, res) => {
       });
     }
 
-    const validStatuses = ['pending', 'assigned', 'in_progress', 'rescued', 'closed'];
+    const validStatuses = ['pending', 'active', 'approved', 'closed'];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid status'
+        message: 'Invalid status. Must be: pending, active, approved, or closed'
       });
     }
 
@@ -428,9 +437,8 @@ router.get('/stats/summary', authenticateAdmin, async (req, res) => {
       SELECT 
         COUNT(*) as total,
         SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
-        SUM(CASE WHEN status = 'assigned' THEN 1 ELSE 0 END) as assigned,
-        SUM(CASE WHEN status = 'in_progress' THEN 1 ELSE 0 END) as in_progress,
-        SUM(CASE WHEN status = 'rescued' THEN 1 ELSE 0 END) as rescued,
+        SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active,
+        SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved,
         SUM(CASE WHEN status = 'closed' THEN 1 ELSE 0 END) as closed,
         SUM(CASE WHEN urgency_level = 'critical' THEN 1 ELSE 0 END) as critical,
         SUM(CASE WHEN urgency_level = 'high' THEN 1 ELSE 0 END) as high,

@@ -1,0 +1,54 @@
+-- SavePaws Seed Data
+-- Run this AFTER schema_core.sql
+
+USE savepaws;
+
+-- 1. Users
+INSERT INTO user (name, email, role) VALUES
+('Demo User 1', 'demo.user1@savepaws.com', 'user'),
+('Demo User 2', 'demo.user2@savepaws.com', 'user'),
+('Admin User', 'admin@savepaws.com', 'admin')
+ON DUPLICATE KEY UPDATE name=name;
+
+-- 2. Rewards (Vet Domain)
+INSERT INTO reward_item (rewardID, title, partnerName, category, description, imageURL, pointsRequired, validityMonths, terms, quantity) VALUES
+('rew_001', 'Free Vaccination', 'City Vet Clinic', 'Medical', 'One free core vaccination (Distemper/Parvo or Rabies) for your pet. Valid at City Vet Clinic main branch.', 'https://images.unsplash.com/photo-1553688738-a278b9f72e62?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3', 150, 6, 'Valid for one pet only. Appointment required. Subject to availability.', NULL),
+('rew_002', 'Vet Consultation Voucher', 'Paws & Claws Hospital', 'Medical', 'Free general consultation for one pet. Includes basic health check-up and weight assessment.', 'https://images.unsplash.com/photo-1576201836106-db1758fd1c97?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3', 100, 3, 'Does not include medications or surgeries. Valid Mon-Fri only.', NULL),
+('rew_003', 'Pet Grooming Discount', 'Happy Tails Grooming', 'Grooming', 'RM50 off on any full grooming session. Treat your pet to a spa day!', 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3', 80, 3, 'Valid for full grooming packages only. One voucher per visit.', NULL),
+('rew_004', 'Premium Pet Food Pack', 'SavePaws Shelter Store', 'Food', 'A bundle of premium wet and dry food (Dog or Cat options available).', 'https://images.unsplash.com/photo-1585849834654-e919e8ade217?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3', 250, 12, 'Pickup at SavePaws HQ only. While stocks last.', 50),
+('rew_005', 'Tick & Flea Prevention', 'City Vet Clinic', 'Medical', 'One month supply of tick and flea prevention spot-on.', 'https://images.unsplash.com/photo-1615266895738-11f1371cd7e5?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3', 120, 6, 'Must provide pet weight for correct dosage.', NULL)
+ON DUPLICATE KEY UPDATE title=title;
+
+-- 3. Animals
+INSERT INTO animal_profile (name, type, story, fundingGoal, amountRaised, status, photoURL, adminID) VALUES
+('Luna', 'Cat', 'Luna was found abandoned in a parking lot. She is a friendly 2-year-old tabby cat who loves cuddles and playtime. She needs medical treatment for a minor skin condition and vaccinations.', 500.00, 150.00, 'Active', 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400', 3),
+('Max', 'Dog', 'Max is a 3-year-old Golden Retriever who was surrendered by his previous owner. He is well-trained, friendly, and great with children. He needs neutering and routine vaccinations.', 800.00, 320.00, 'Active', 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400', 3),
+('Bella', 'Rabbit', 'Bella is a sweet 1-year-old rabbit who was found in a park. She is gentle and loves fresh vegetables. She needs spaying and a proper habitat setup.', 300.00, 75.00, 'Active', 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=400', 3),
+('Charlie', 'Dog', 'Charlie is a 4-year-old mixed breed who was rescued from a hoarding situation. Despite his past, he is very friendly and eager to please. He needs dental work and vaccinations.', 600.00, 450.00, 'Active', 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400', 3),
+('Mittens', 'Cat', 'Mittens is a 5-year-old Persian cat who was found as a stray. She is calm and affectionate, perfect for a quiet home. She needs grooming and medical checkup.', 400.00, 400.00, 'Funded', 'https://images.unsplash.com/photo-1513245543132-31f507417b26?w=400', 3);
+
+-- 4. Donation Transactions
+-- Note: UserID 1 = Demo User 1, UserID 2 = Demo User 2
+INSERT INTO donation_transaction (userID, animalID, donation_amount, type, payment_processor_id, payment_status, donor_name, donor_email, transaction_date) VALUES
+(1, 1, 50.00, 'One-time', 'PAYPAL_TEST_001', 'Success', 'Demo User 1', 'demo.user1@savepaws.com', DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(1, 1, 100.00, 'One-time', 'PAYPAL_TEST_002', 'Success', 'Demo User 1', 'demo.user1@savepaws.com', DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(1, 2, 200.00, 'One-time', 'PAYPAL_TEST_003', 'Success', 'Demo User 1', 'demo.user1@savepaws.com', DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(2, 2, 120.00, 'One-time', 'PAYPAL_TEST_004', 'Success', 'Demo User 2', 'demo.user2@savepaws.com', DATE_SUB(NOW(), INTERVAL 10 DAY)),
+(2, 3, 50.00, 'One-time', 'PAYPAL_TEST_005', 'Success', 'Demo User 2', 'demo.user2@savepaws.com', DATE_SUB(NOW(), INTERVAL 15 DAY));
+
+-- 5. Seed Reward Points (Backfill)
+-- For each donation above, insert an EARN record in ledger
+-- Logic: 1 Point per RM1, expiry 12 months from transaction date
+
+INSERT IGNORE INTO reward_point_ledger (userID, points, type, source, referenceID, expiryDate, createdAt)
+SELECT 
+  userID,
+  FLOOR(donation_amount * 1), -- 1x Multiplier
+  'EARN',
+  'DONATION',
+  transactionID,
+  DATE_ADD(transaction_date, INTERVAL 12 MONTH),
+  transaction_date
+FROM donation_transaction
+WHERE userID IS NOT NULL AND payment_status = 'Success';
+
