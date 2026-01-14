@@ -21,9 +21,8 @@
 -- - redemption_record (reward redemption records)
 -- =====================================================
 
-DROP DATABASE IF EXISTS savepaws_db;
-CREATE DATABASE savepaws_db;
-USE savepaws_db;
+-- Database setup is handled by config/database.js and initDatabase.js
+-- USE savepaws_db;
 
 -- =====================================================
 -- PART 1: USERS TABLE
@@ -507,3 +506,106 @@ END;
 -- =====================================================
 
 
+-- =====================================================
+-- PART 16: INTEGRATED LEGACY SCHEMA
+-- =====================================================
+
+-- 16.1 Missing User Columns
+ALTER TABLE users 
+ADD COLUMN IF NOT EXISTS is_volunteer BOOLEAN DEFAULT 0,
+ADD COLUMN IF NOT EXISTS volunteer_badge VARCHAR(50) DEFAULT NULL,
+ADD COLUMN IF NOT EXISTS volunteer_approval_date TIMESTAMP NULL DEFAULT NULL;
+
+-- 16.2 Missing Admin Columns
+ALTER TABLE admins
+ADD COLUMN IF NOT EXISTS first_name VARCHAR(100) DEFAULT NULL,
+ADD COLUMN IF NOT EXISTS last_name VARCHAR(100) DEFAULT NULL,
+ADD COLUMN IF NOT EXISTS phone_number VARCHAR(20) DEFAULT NULL,
+ADD COLUMN IF NOT EXISTS account_status ENUM('Active','Inactive') DEFAULT 'Active';
+
+-- 16.3 AI Chats Table
+CREATE TABLE IF NOT EXISTS ai_chats (
+  chatID INT AUTO_INCREMENT PRIMARY KEY,
+  userID INT NOT NULL,
+  user_query TEXT NOT NULL,
+  ai_response TEXT NOT NULL,
+  chat_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  is_active BOOLEAN DEFAULT TRUE,
+  FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 16.4 Community Posts Table
+CREATE TABLE IF NOT EXISTS community_posts (
+  postID INT AUTO_INCREMENT PRIMARY KEY,
+  userID INT NOT NULL,
+  content_text TEXT DEFAULT NULL,
+  content_image VARCHAR(255) DEFAULT NULL,
+  post_status ENUM('Active','Deleted') DEFAULT 'Active',
+  post_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 16.5 Volunteer Events Table
+CREATE TABLE IF NOT EXISTS volunteer_events (
+  eventID INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT DEFAULT NULL,
+  eventLocation VARCHAR(255) DEFAULT NULL,
+  start_date DATETIME DEFAULT NULL,
+  end_date DATETIME DEFAULT NULL,
+  max_volunteers INT DEFAULT NULL,
+  adminID INT NOT NULL,
+  image_url TEXT DEFAULT NULL,
+  hours DECIMAL(5,2) DEFAULT 0.00,
+  FOREIGN KEY (adminID) REFERENCES admins(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 16.6 Event Records Table
+CREATE TABLE IF NOT EXISTS event_records (
+  recordID INT AUTO_INCREMENT PRIMARY KEY,
+  userID INT NOT NULL,
+  eventID INT NOT NULL,
+  register_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  status ENUM('Registered','No-show') DEFAULT 'Registered',
+  FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (eventID) REFERENCES volunteer_events(eventID) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 16.7 Post Comments Table
+CREATE TABLE IF NOT EXISTS post_comments (
+  commentID INT AUTO_INCREMENT PRIMARY KEY,
+  postID INT NOT NULL,
+  userID INT NOT NULL,
+  comment_text TEXT NOT NULL,
+  comment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (postID) REFERENCES community_posts(postID) ON DELETE CASCADE,
+  FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 16.8 Volunteer Contribution Table
+CREATE TABLE IF NOT EXISTS volunteer_contribution (
+  contributionID INT AUTO_INCREMENT PRIMARY KEY,
+  userID INT NOT NULL,
+  eventID INT NOT NULL,
+  hours_contributed DECIMAL(5,2) DEFAULT NULL,
+  participation_status ENUM('Registered','Attended','No-show') DEFAULT 'Registered',
+  FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (eventID) REFERENCES volunteer_events(eventID) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 16.9 Volunteer Registration Table
+CREATE TABLE IF NOT EXISTS volunteer_registration (
+  registrationID INT AUTO_INCREMENT PRIMARY KEY,
+  userID INT NOT NULL,
+  userName VARCHAR(255) DEFAULT NULL,
+  location VARCHAR(255) DEFAULT NULL,
+  experience TEXT DEFAULT NULL,
+  capability TEXT DEFAULT NULL,
+  registration_status ENUM('Pending','Approved','Rejected') DEFAULT 'Pending',
+  submition_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  adminID INT DEFAULT NULL,
+  reviewed_date TIMESTAMP NULL DEFAULT NULL,
+  rejection_reason TEXT DEFAULT NULL,
+  FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (adminID) REFERENCES admins(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

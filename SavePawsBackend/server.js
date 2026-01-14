@@ -13,6 +13,8 @@ const authRoutes = require('./routes/auth');
 const reportRoutes = require('./routes/reports');
 const rescueTaskRoutes = require('./routes/rescueTasks');
 const userManagementRoutes = require('./routes/userManagement');
+const communityRoutes = require('./routes/community');
+const aiRoutes = require('./routes/ai'); // Import AI routes
 
 // Donation Portal routes
 const animalsRoutes = require('./routes/animals');
@@ -148,6 +150,12 @@ app.use('/api/rescue-tasks', rescueTaskRoutes);
 
 // User management routes (Module 3)
 app.use('/api/users', userManagementRoutes);
+
+// Community routes
+app.use('/api/community', communityRoutes);
+
+// AI routes
+app.use('/api/ai', aiRoutes);
 
 // Donation Portal routes
 app.use('/api/animals', animalsRoutes);

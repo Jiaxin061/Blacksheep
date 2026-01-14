@@ -84,7 +84,7 @@ const AdminLoginScreen = ({ navigation }) => {
             <View style={styles.noticeContent}>
               <Text style={styles.noticeTitle}>Secure Access Required</Text>
               <Text style={styles.noticeText}>
-                This area is restricted to authorized administrators only. 
+                This area is restricted to authorized administrators only.
                 All access attempts are logged.
               </Text>
             </View>
@@ -130,8 +130,8 @@ const AdminLoginScreen = ({ navigation }) => {
             </View>
 
             {/* Login Button */}
-            <TouchableOpacity 
-              style={[styles.loginButton, loading && styles.buttonDisabled]} 
+            <TouchableOpacity
+              style={[styles.loginButton, loading && styles.buttonDisabled]}
               onPress={handleAdminLogin}
               disabled={loading}
             >
@@ -145,7 +145,7 @@ const AdminLoginScreen = ({ navigation }) => {
           {/* Back to User Login */}
           <TouchableOpacity
             style={styles.backLink}
-            onPress={() => navigation.navigate('UserLogin')}
+            onPress={() => navigation.navigate('Login')}
           >
             <Text style={styles.backArrow}>←</Text>
             <Text style={styles.backText}>Back to User Login</Text>

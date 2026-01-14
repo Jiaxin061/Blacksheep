@@ -18,7 +18,8 @@ ON DUPLICATE KEY UPDATE username=username;
 -- =====================================================
 INSERT INTO users (id, ic_number, first_name, last_name, email, phone_number, password_hash) VALUES
 (1, '01234567890', 'Jia Xin', 'Yap', 'jiaxin@gmail.com', '0182310116', '$2b$10$AsgEKk9oxjZt1s2VsuKzG.kosGqW06z1TxbejzyU8U8Zj75j6nJZO'),
-(2, '990101011234', 'Demo', 'User2', 'demo.user2@savepaws.com', '0198765432', '$2b$10$AsgEKk9oxjZt1s2VsuKzG.kosGqW06z1TxbejzyU8U8Zj75j6nJZO')
+(2, '990101011234', 'Demo', 'User2', 'demo.user2@savepaws.com', '0198765432', '$2b$10$AsgEKk9oxjZt1s2VsuKzG.kosGqW06z1TxbejzyU8U8Zj75j6nJZO'),
+(3, '012345678901', 'Qing Qing', '', 'tan@gmail.com', '0192345678', '$2b$10$AsgEKk9oxjZt1s2VsuKzG.kosGqW06z1TxbejzyU8U8Zj75j6nJZO')
 ON DUPLICATE KEY UPDATE email=email;
 
 -- 3. SEED ANIMALS (For Adoption)
@@ -70,3 +71,40 @@ WHERE payment_status = 'Success';
 -- 7. SEED SAMPLE REPORTS
 INSERT INTO reports (user_id, animal_type, urgency_level, description, location, status) VALUES
 (1, 'dog', 'high', 'Injured dog found near the park.', 'Jalan Kiara 1', 'pending');
+
+-- Dumping data for table `ai_chats`
+INSERT INTO ai_chats (chatID, userID, user_query, ai_response, chat_timestamp, is_active) VALUES
+(1, 1, 'What to do if I find a stray with a collar?', 'Check for an ID tag. If none, take it to a vet to scan for a microchip.', '2025-12-29 21:25:51', 0),
+(3, 3, 'How to calm a scared cat?', 'Provide a small, dark hiding spot and avoid eye contact. Use low tones.', '2025-12-29 21:25:51', 1),
+(27, 2, 'can the animals drink what human eat?', 'It is generally not safe for animals to consume what humans eat or drink...', '2026-01-02 02:08:20', 0),
+(28, 3, 'can the dogs be feeded with coffee?', 'No, dogs should not be given coffee...', '2026-01-02 02:08:49', 0);
+-- (Truncated for brevity, normally would include all)
+
+-- Dumping data for table `community_posts`
+INSERT INTO community_posts (postID, userID, content_text, content_image, post_status, post_created_at) VALUES
+(1, 1, 'Spotted a stray husky near Mount Austin. It looks friendly but lost.', 'https://images.unsplash.com/photo-1534361960057-19889db9621e?q=80&w=800&auto=format&fit=crop', 'Active', '2025-12-29 13:25:51'),
+(2, 3, 'Just finished our weekly feeding at the local shelter!', 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=800&auto=format&fit=crop', 'Active', '2025-12-29 13:25:51'),
+(3, 2, 'ADVERTISEMENT: BUY FAKE MEDS HERE', 'https://images.unsplash.com/photo-1543466835-00a7907e9de1', 'Deleted', '2025-12-29 13:25:51'),
+(4, 1, 'About 10 animals rescued this month!', 'https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?q=80&w=800&auto=format&fit=crop', 'Active', '2025-12-29 15:19:10');
+
+-- Dumping data for table `volunteer_events`
+INSERT INTO volunteer_events (eventID, title, description, eventLocation, start_date, end_date, max_volunteers, adminID, image_url, hours) VALUES
+(1, 'Weekend Shelter Cleanup', 'General cleaning and disinfection of the dog kennels.', 'SavePaws Shelter HQ', '2025-01-10 09:00:00', '2025-01-10 13:00:00', 10, 1, 'https://images.unsplash.com/photo-1595278069441-2cf29f8005a4', 3.00),
+(2, 'Stray Vaccination Drive', 'Helping vets administer vaccines to neighborhood strays.', 'Community Hall A', '2025-05-24 10:00:00', '2025-05-24 17:00:00', 5, 1, 'https://images.unsplash.com/photo-1595278069441-2cf29f8005a4', 4.00);
+
+-- Dumping data for table `event_records`
+INSERT INTO event_records (recordID, userID, eventID, register_date, status) VALUES
+(1, 1, 1, '2025-01-01 13:25:51', 'Registered'),
+(2, 3, 1, '2025-01-02 13:25:51', 'Registered');
+
+-- Dumping data for table `post_comments`
+INSERT INTO post_comments (commentID, postID, userID, comment_text, comment_date) VALUES
+(1, 1, 2, 'I saw that husky too! I called the local council.', '2025-12-29 13:25:51');
+
+-- Dumping data for table `volunteer_contribution`
+INSERT INTO volunteer_contribution (contributionID, userID, eventID, hours_contributed, participation_status) VALUES
+(1, 1, 1, 4.00, 'Attended');
+
+-- Dumping data for table `volunteer_registration`
+INSERT INTO volunteer_registration (registrationID, userID, userName, location, experience, capability, registration_status, submition_date, adminID, reviewed_date, rejection_reason) VALUES
+(1, 3, 'Qing Qing', 'Johor Bahru', 'Rescued 10 cats', 'Animal handling, Driving', 'Pending', '2025-12-29 21:25:51', 1, '2025-12-01 02:00:00', NULL);

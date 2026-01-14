@@ -71,7 +71,7 @@ const UserHomeScreen = ({ navigation }) => {
       title: 'My Reports',
       subtitle: 'View your submitted reports',
       icon: '📋',
-      screen: 'ViewReport',
+      screen: 'ViewReports',
       color: '#0f766e',
     },
     {
@@ -117,6 +117,14 @@ const UserHomeScreen = ({ navigation }) => {
       screen: 'Volunteer',
       color: '#10b981',
     },
+    {
+      id: 7,
+      title: 'Community',
+      subtitle: 'Share & Connect',
+      icon: '💬',
+      screen: 'CommunityPage',
+      color: '#14b8a6',
+    },
   ];
 
   return (
@@ -131,7 +139,7 @@ const UserHomeScreen = ({ navigation }) => {
         </View>
         <TouchableOpacity
           style={styles.profileButton}
-          onPress={() => navigation.navigate('Profile')}
+          onPress={() => navigation.navigate('UserHome')}
         >
           <Text style={styles.profileIcon}>👤</Text>
         </TouchableOpacity>
@@ -315,7 +323,7 @@ const UserHomeScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => navigation.navigate('ViewReport')}
+          onPress={() => navigation.navigate('ViewReports')}
         >
           <Text style={styles.navIcon}>📋</Text>
         </TouchableOpacity>
@@ -335,7 +343,7 @@ const UserHomeScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => navigation.navigate('Profile')}
+          onPress={() => navigation.navigate('UserHome')}
         >
           <Text style={styles.navIcon}>👤</Text>
         </TouchableOpacity>
@@ -489,7 +497,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   serviceCard: {
-    width: '31%',
+    width: '48%',
     backgroundColor: '#ffffff',
     borderRadius: 16,
     padding: 16,

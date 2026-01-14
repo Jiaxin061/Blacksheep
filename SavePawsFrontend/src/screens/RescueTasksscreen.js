@@ -30,7 +30,7 @@ const RescueTasksScreen = ({ navigation }) => {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      
+
       if (activeTab === 'available') {
         const response = await ApiService.getAvailableRescueTasks();
         if (response.success) {
@@ -70,10 +70,12 @@ const RescueTasksScreen = ({ navigation }) => {
                 Alert.alert(
                   '✅ Task Accepted!',
                   'You can now view full details including exact location and reporter contact.',
-                  [{ text: 'OK', onPress: () => {
-                    setActiveTab('my-tasks');
-                    fetchTasks();
-                  }}]
+                  [{
+                    text: 'OK', onPress: () => {
+                      setActiveTab('my-tasks');
+                      fetchTasks();
+                    }
+                  }]
                 );
               } else {
                 Alert.alert('Error', response.message || 'Failed to accept task');
@@ -391,10 +393,10 @@ const RescueTasksScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('ReportAnimal')}>
           <Text style={styles.navIconLarge}>+</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('ViewReport')}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('ViewReports')}>
           <Text style={styles.navIcon}>✉</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('UserHome')}>
           <Text style={styles.navIcon}>👤</Text>
         </TouchableOpacity>
       </View>

@@ -25,7 +25,7 @@ export const animalService = {
   // UC05: Get single animal by ID
   getAnimalById: async (id) => {
     try {
-      const response = await api.get(`/api/animals/${id}`);
+      const response = await api.get(`/api/animals/adoption/${id}`);
       return response.data;
     } catch (error) {
       if (error.response?.data) {

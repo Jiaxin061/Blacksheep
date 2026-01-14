@@ -53,7 +53,7 @@ const UserRescueHistoryScreen = ({ navigation }) => {
                   // Navigate to login screen
                   navigation.reset({
                     index: 0,
-                    routes: [{ name: 'UserLogin' }],
+                    routes: [{ name: 'Login' }],
                   });
                 },
               },
@@ -116,8 +116,8 @@ const UserRescueHistoryScreen = ({ navigation }) => {
             {item.completed_at
               ? `Completed: ${new Date(item.completed_at).toLocaleDateString()}`
               : item.assigned_at
-              ? `Started: ${new Date(item.assigned_at).toLocaleDateString()}`
-              : 'In Progress'}
+                ? `Started: ${new Date(item.assigned_at).toLocaleDateString()}`
+                : 'In Progress'}
           </Text>
         </View>
         {item.verification_status && item.verification_status !== 'Pending' && (
@@ -148,10 +148,10 @@ const UserRescueHistoryScreen = ({ navigation }) => {
               {item.task_status === 'completed'
                 ? 'Completed'
                 : item.task_status === 'in_progress'
-                ? 'In Progress'
-                : item.task_status === 'assigned'
-                ? 'Assigned'
-                : item.task_status}
+                  ? 'In Progress'
+                  : item.task_status === 'assigned'
+                    ? 'Assigned'
+                    : item.task_status}
             </Text>
           </View>
         </View>
@@ -270,7 +270,7 @@ const UserRescueHistoryScreen = ({ navigation }) => {
             All ({inProgressTasks.length + completedTasks.length})
           </Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={[
             styles.filterButton,
@@ -285,7 +285,7 @@ const UserRescueHistoryScreen = ({ navigation }) => {
             In Progress ({inProgressTasks.length})
           </Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={[
             styles.filterButton,
@@ -313,18 +313,18 @@ const UserRescueHistoryScreen = ({ navigation }) => {
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyIcon}>📋</Text>
             <Text style={styles.emptyText}>
-              {activeFilter === 'all' 
+              {activeFilter === 'all'
                 ? 'No rescue tasks yet'
                 : activeFilter === 'in_progress'
-                ? 'No in-progress tasks'
-                : 'No completed tasks'}
+                  ? 'No in-progress tasks'
+                  : 'No completed tasks'}
             </Text>
             <Text style={styles.emptySubtext}>
               {activeFilter === 'all'
                 ? 'Accept and complete rescue tasks to see admin feedback here'
                 : activeFilter === 'in_progress'
-                ? 'Tasks you are currently working on will appear here'
-                : 'Completed tasks with admin feedback will appear here'}
+                  ? 'Tasks you are currently working on will appear here'
+                  : 'Completed tasks with admin feedback will appear here'}
             </Text>
           </View>
         }

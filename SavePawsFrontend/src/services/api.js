@@ -301,8 +301,9 @@ class ApiService {
         try {
             console.log('🔍 Fetching report by ID:', id);
 
-            // _protectedFetch already returns parsed JSON
-            const data = await ApiService._protectedFetch(`/reports/${id}`);
+            // _protectedFetch returns the raw Response object
+            const response = await ApiService._protectedFetch(`/reports/${id}`);
+            const data = await response.json();
 
             console.log('🔍 Report details:', data);
 
@@ -663,6 +664,166 @@ class ApiService {
             return { success: false, message: error.message || 'Network error' };
         }
     }
+    // ==================== COMMUNITY ====================
+
+    static async getCommunityFeed() {
+        try {
+            console.log('👥 Fetching community feed');
+            const response = await ApiService._protectedFetch('/community/feed', 'GET');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ getCommunityFeed error:', error);
+            return [];
+        }
+    }
+
+    static async getCommunityPostDetails(postId) {
+        try {
+            console.log('🔍 Fetching post details:', postId);
+            const response = await ApiService._protectedFetch(`/community/posts/${postId}`, 'GET');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ getCommunityPostDetails error:', error);
+            return null;
+        }
+    }
+
+    static async createCommunityPost(userId, text, imageUri, isEdit = false, postId = null) {
+        try {
+            console.log(isEdit ? '📝 Updating post:' : '📝 Creating post:', text);
+            const formData = new FormData();
+            formData.append('userId', userId);
+            formData.append('text', text);
+
+            if (imageUri) {
+                // Check if it's a new image (file URI) or existing (http/filename)
+                if (imageUri.startsWith('file://')) {
+                    const filename = imageUri.split('/').pop();
+                    const match = /\.(\w+)$/.exec(filename);
+                    const type = match ? `image/${match[1]}` : 'image/jpeg';
+                    formData.append('image', {
+                        uri: imageUri,
+                        name: filename,
+                        type,
+                    });
+                } else {
+                    // Existing image
+                    formData.append('existingImage', imageUri);
+                }
+            }
+
+            const url = isEdit ? `/community/update/${postId}` : '/community/create';
+            let token = await AsyncStorage.getItem('authToken');
+
+            const response = await fetch(`${API_BASE_URL}${url}`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Authorization': token ? `Bearer ${token}` : undefined,
+                },
+            });
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ createCommunityPost error:', error);
+            return { success: false, message: error.message };
+        }
+    }
+
+    static async deleteCommunityPost(postId) {
+        try {
+            console.log('🗑️ Deleting post:', postId);
+            const response = await ApiService._protectedFetch(`/community/delete/${postId}`, 'DELETE');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ deleteCommunityPost error:', error);
+            return { success: false, message: error.message };
+        }
+    }
+
+    static async deleteCommunityComment(commentId) {
+        try {
+            console.log('🗑️ Deleting comment:', commentId);
+            const response = await ApiService._protectedFetch(`/community/comments/${commentId}`, 'DELETE');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ deleteCommunityComment error:', error);
+            return { success: false, message: error.message };
+        }
+    }
+
+    static async addCommunityComment(postId, userId, text) {
+        try {
+            console.log('💬 Adding comment:', text);
+            const response = await ApiService._protectedFetch('/community/comments', 'POST', {
+                postId,
+                userId,
+                text
+            });
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ addCommunityComment error:', error);
+            return { success: false, message: error.message };
+        }
+    }
+
+    // ==================== AI ASSISTANT API ====================
+
+    static async askAI(userId, userQuery) {
+        try {
+            console.log('🤖 Asking AI:', userQuery);
+            const response = await ApiService._protectedFetch('/ai/chat', 'POST', {
+                userID: userId,
+                user_query: userQuery
+            }); // Default content type is application/json
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(text || 'AI Request Failed');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('❌ askAI error:', error);
+            return { error: error.message };
+        }
+    }
+
+    static async getAIHistory(userId) {
+        try {
+            const response = await ApiService._protectedFetch(`/ai/history/${userId}`);
+            return await response.json();
+        } catch (error) {
+            console.error('❌ getAIHistory error:', error);
+            return [];
+        }
+    }
+
+    static async getFullAIHistory(userId) {
+        try {
+            const response = await ApiService._protectedFetch(`/ai/history/all/${userId}`);
+            return await response.json();
+        } catch (error) {
+            console.error('❌ getFullAIHistory error:', error);
+            return [];
+        }
+    }
+
+    static async clearAIHistory(userId) {
+        try {
+            const response = await ApiService._protectedFetch(`/ai/history/${userId}`, 'DELETE');
+            return await response.json();
+        } catch (error) {
+            console.error('❌ clearAIHistory error:', error);
+            return { success: false };
+        }
+    }
+
 }
 
 // ==================== EXPORTS ====================
@@ -691,6 +852,19 @@ export const updateRescueTaskStatus = ApiService.updateRescueTaskStatus.bind(Api
 export const updateRescueTask = ApiService.updateRescueTask.bind(ApiService);
 export const deleteRescueTask = ApiService.deleteRescueTask.bind(ApiService);
 export const createRescueTask = ApiService.createRescueTask.bind(ApiService);
+
+// Community
+export const getCommunityFeed = ApiService.getCommunityFeed.bind(ApiService);
+export const getCommunityPostDetails = ApiService.getCommunityPostDetails.bind(ApiService);
+export const createCommunityPost = ApiService.createCommunityPost.bind(ApiService);
+export const deleteCommunityPost = ApiService.deleteCommunityPost.bind(ApiService);
+export const deleteCommunityComment = ApiService.deleteCommunityComment.bind(ApiService);
+export const addCommunityComment = ApiService.addCommunityComment.bind(ApiService);
+
+export const askAI = ApiService.askAI.bind(ApiService);
+export const getAIHistory = ApiService.getAIHistory.bind(ApiService);
+export const getFullAIHistory = ApiService.getFullAIHistory.bind(ApiService);
+export const clearAIHistory = ApiService.clearAIHistory.bind(ApiService);
 
 // ==================== DONATION API RE-EXPORTS ====================
 // Re-export donation-related functions from donationApi.js

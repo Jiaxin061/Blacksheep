@@ -76,7 +76,7 @@ export default function AdoptionHubScreen({ navigation }) {
   };
 
   const handleAnimalPress = (animal) => {
-    navigation.navigate('AnimalDetails', {
+    navigation.navigate('AnimalDetailView', {
       animalId: animal.id,
       isAdmin: false
     });

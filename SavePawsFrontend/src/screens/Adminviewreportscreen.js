@@ -20,11 +20,11 @@ const AdminViewReportScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedReport, setSelectedReport] = useState(null);
-  
+
   // Modals
   const [statusModalVisible, setStatusModalVisible] = useState(false);
   const [rescueTaskModalVisible, setRescueTaskModalVisible] = useState(false);
-  
+
   // Form states
   const [selectedStatus, setSelectedStatus] = useState('');
   const [selectedUrgency, setSelectedUrgency] = useState('medium');
@@ -93,15 +93,17 @@ const AdminViewReportScreen = ({ navigation }) => {
         report_id: selectedReport.id,
         urgency_level: selectedUrgency,
       });
-      
+
       if (response.success) {
         Alert.alert(
           '✅ Rescue Task Created!',
           `Task created with ${selectedUrgency} urgency.\nLocation will be shown from report details.`,
-          [{ text: 'OK', onPress: () => {
-            setRescueTaskModalVisible(false);
-            fetchReports();
-          }}]
+          [{
+            text: 'OK', onPress: () => {
+              setRescueTaskModalVisible(false);
+              fetchReports();
+            }
+          }]
         );
       } else {
         Alert.alert('Error', response.message || 'Failed to create rescue task');
@@ -241,8 +243,8 @@ const AdminViewReportScreen = ({ navigation }) => {
                     {report.animal_type === 'dog'
                       ? '🐕 Dog'
                       : report.animal_type === 'cat'
-                      ? '🐈 Cat'
-                      : '🐾 Other'}
+                        ? '🐈 Cat'
+                        : '🐾 Other'}
                   </Text>
                 </View>
 
@@ -432,7 +434,7 @@ const AdminViewReportScreen = ({ navigation }) => {
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('AdminHome')}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('AdminDashboard')}>
           <Text style={styles.navIcon}>🏠</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
