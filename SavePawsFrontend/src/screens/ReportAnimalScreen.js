@@ -173,7 +173,7 @@ const ReportAnimalScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -182,7 +182,7 @@ const ReportAnimalScreen = ({ navigation }) => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Report Animal</Text>
         <View style={{ width: 44 }} />
-      </View>
+      </View> */}
 
       <ScrollView
         style={styles.scrollView}

@@ -310,7 +310,7 @@ const AcceptRescueTaskScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -324,7 +324,7 @@ const AcceptRescueTaskScreen = ({ navigation }) => {
         <View style={styles.taskCountBadge}>
           <Text style={styles.taskCountText}>{tasks.length}</Text>
         </View>
-      </View>
+      </View> */}
 
       {/* Info Banner */}
       <View style={styles.infoBanner}>

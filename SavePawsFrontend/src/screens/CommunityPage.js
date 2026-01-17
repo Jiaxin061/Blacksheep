@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
         color: Colors.text,
         fontSize: 14,
     },
-    listContent: { padding: Spacing.m, paddingBottom: 80 },
+    listContent: { padding: Spacing.m, paddingBottom: 180 },
     card: {
         backgroundColor: Colors.white,
         borderRadius: BorderRadius.l,

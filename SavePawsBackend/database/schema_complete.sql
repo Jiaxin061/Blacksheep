@@ -37,11 +37,15 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash VARCHAR(255) NOT NULL,
   is_active BOOLEAN DEFAULT TRUE,
   status ENUM('active', 'banned') DEFAULT 'active',
+  is_volunteer BOOLEAN DEFAULT FALSE,
+  volunteer_badge VARCHAR(50) DEFAULT NULL,
+  volunteer_approval_date TIMESTAMP NULL DEFAULT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_email (email),
   INDEX idx_is_active (is_active),
-  INDEX idx_status (status)
+  INDEX idx_status (status),
+  INDEX idx_is_volunteer (is_volunteer)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
@@ -51,10 +55,14 @@ CREATE TABLE IF NOT EXISTS admins (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(100) NOT NULL UNIQUE,
   email VARCHAR(255) NOT NULL UNIQUE,
+  first_name VARCHAR(100) DEFAULT NULL,
+  last_name VARCHAR(100) DEFAULT NULL,
+  phone_number VARCHAR(20) DEFAULT NULL,
   password_hash VARCHAR(255) NOT NULL,
   full_name VARCHAR(200) NOT NULL,
   role ENUM('super_admin', 'admin', 'moderator') DEFAULT 'admin',
   is_active BOOLEAN DEFAULT TRUE,
+  account_status ENUM('Active','Inactive') DEFAULT 'Active',
   last_login TIMESTAMP NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -509,19 +517,6 @@ END;
 -- =====================================================
 -- PART 16: INTEGRATED LEGACY SCHEMA
 -- =====================================================
-
--- 16.1 Missing User Columns
-ALTER TABLE users 
-ADD COLUMN IF NOT EXISTS is_volunteer BOOLEAN DEFAULT 0,
-ADD COLUMN IF NOT EXISTS volunteer_badge VARCHAR(50) DEFAULT NULL,
-ADD COLUMN IF NOT EXISTS volunteer_approval_date TIMESTAMP NULL DEFAULT NULL;
-
--- 16.2 Missing Admin Columns
-ALTER TABLE admins
-ADD COLUMN IF NOT EXISTS first_name VARCHAR(100) DEFAULT NULL,
-ADD COLUMN IF NOT EXISTS last_name VARCHAR(100) DEFAULT NULL,
-ADD COLUMN IF NOT EXISTS phone_number VARCHAR(20) DEFAULT NULL,
-ADD COLUMN IF NOT EXISTS account_status ENUM('Active','Inactive') DEFAULT 'Active';
 
 -- 16.3 AI Chats Table
 CREATE TABLE IF NOT EXISTS ai_chats (

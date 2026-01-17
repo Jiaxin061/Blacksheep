@@ -86,10 +86,10 @@ export default function UserHomeScreen() {
         contentContainerStyle={styles.scrollContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-        <View style={styles.header}>
+        {/* <View style={styles.header}>
           <Text style={styles.welcomeText}>Welcome Back!</Text>
           <Text style={styles.subText}>Ready to make a difference today?</Text>
-        </View>
+        </View> */}
 
         {/* SECTION 1: Animals Needing Donation (Preview) */}
         <View style={styles.section}>
@@ -167,24 +167,6 @@ export default function UserHomeScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-
-      {/* MOCK BOTTOM NAVIGATION BAR */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push("/")}>
-          <Ionicons name="home-outline" size={24} color={colors.textSecondary} />
-          <Text style={styles.navText}>Home</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push("/animal-list")}>
-          <Ionicons name="paw" size={24} color={colors.primary} />
-          <Text style={[styles.navText, { color: colors.primary }]}>Donate</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push("/donation-impact")}>
-          <Ionicons name="heart-outline" size={24} color={colors.textSecondary} />
-          <Text style={styles.navText}>Impact</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -198,7 +180,7 @@ const styles = StyleSheet.create({
   subText: { fontSize: 16, color: colors.textSecondary, marginTop: 4 },
 
   section: { padding: 20, paddingTop: 0, marginBottom: 10 },
-  sectionHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 15 },
+  sectionHeader: { paddingTop: 20, flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 15 },
   sectionTitle: { fontSize: 20, fontWeight: "bold", color: colors.textPrimary },
   seeAllText: { fontSize: 16, color: colors.primary, fontWeight: "600" },
 
@@ -215,14 +197,6 @@ const styles = StyleSheet.create({
   impactValue: { color: "white", fontSize: 24, fontWeight: "bold" },
   impactButton: { backgroundColor: "white", borderRadius: 8, paddingVertical: 12, alignItems: "center" },
   impactButtonText: { color: colors.primary, fontWeight: "bold", fontSize: 16 },
-
-  bottomNav: {
-    position: "absolute", bottom: 0, left: 0, right: 0,
-    backgroundColor: colors.surface, flexDirection: "row", justifyContent: "space-around",
-    paddingVertical: 10, borderTopWidth: 1, borderTopColor: colors.border, elevation: 8
-  },
-  navItem: { alignItems: "center" },
-  navText: { fontSize: 12, marginTop: 4, color: colors.textSecondary },
 
   // New Reward Card Styles
   rewardCard: {

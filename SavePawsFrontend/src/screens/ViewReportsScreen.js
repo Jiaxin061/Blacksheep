@@ -85,7 +85,7 @@ const UserViewReportsScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -99,7 +99,7 @@ const UserViewReportsScreen = ({ navigation }) => {
           </View>
         </View>
         <View style={{ width: 44 }} />
-      </View>
+      </View> */}
 
       {/* Tabs */}
       <View style={styles.tabs}>
