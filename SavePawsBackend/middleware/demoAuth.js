@@ -12,17 +12,17 @@ exports.requireAuth = async (req, res, next) => {
   try {
     // Try JWT token first (Bearer token)
     const authHeader = req.headers.authorization;
-    
+
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
-      
+
       try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        
+
         // Check if it's a user token
         if (decoded.type === 'user') {
           const user = await User.getById(decoded.id);
-          
+
           if (!user) {
             return res.status(401).json({
               success: false,
@@ -99,17 +99,17 @@ exports.requireAdmin = async (req, res, next) => {
   try {
     // Try JWT token first (Bearer token)
     const authHeader = req.headers.authorization;
-    
+
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
-      
+
       try {
         const decoded = jwt.verify(token, JWT_SECRET);
-        
+
         // Check if it's an admin token
         if (decoded.type === 'admin') {
           const admin = await Admin.getById(decoded.id);
-          
+
           if (!admin) {
             return res.status(401).json({
               success: false,
@@ -148,8 +148,10 @@ exports.requireAdmin = async (req, res, next) => {
 
     // Check admins table (not users table)
     const admin = await Admin.getById(parseInt(userID));
+    console.log(`👤 Admin lookup for ID ${userID}:`, admin ? 'Found' : 'Not Found');
 
     if (!admin) {
+      console.log('❌ Admin not found in DB');
       return res.status(403).json({
         success: false,
         message: "Admin access required. User not found in admins table.",
@@ -158,6 +160,7 @@ exports.requireAdmin = async (req, res, next) => {
 
     // Check if admin is active
     if (admin.is_active === false || admin.is_active === 0) {
+      console.log('❌ Admin account deactivated');
       return res.status(401).json({
         success: false,
         message: "Admin account is deactivated.",

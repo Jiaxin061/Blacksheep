@@ -16,7 +16,9 @@ const AIAssistantFAB = ({ bottom = 24, right = 24 }) => {
         return state.routes[state.routes.length - 1].name;
     });
 
-    if (currentRoute === 'AIAssistant') return null;
+    const routesToHide = ['AIAssistant', 'CommunityCreatePost', 'CommunityPostDetails', 'Landing', 'Login', 'AdminLogin', 'Signup', 'ForgotPassword'];
+    if (routesToHide.includes(currentRoute)) return null;
+
 
     const handlePress = () => {
         navigation.navigate('AIAssistant');
@@ -25,11 +27,13 @@ const AIAssistantFAB = ({ bottom = 24, right = 24 }) => {
     // Screens that have bottom navigation (custom nav bar)
     const screensWithBottomNav = [
         'UserHome', 'RescueTasks', 'AcceptRescueTask', 'ViewReports',
-        'DonationHome', 'AdoptionHub', 'AnimalList'
+        'DonationHome', 'AdoptionHub', 'AnimalList', 'Volunteer',
+        'CommunityPage', 'VolunteerContribution', 'VolunteerEventList', 'VolunteerEventDetails'
     ];
 
     // Adjusted bottom position
     const adjustedBottom = screensWithBottomNav.includes(currentRoute) ? 90 : 24;
+
 
     return (
         <TouchableOpacity

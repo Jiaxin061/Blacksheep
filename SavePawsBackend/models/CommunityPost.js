@@ -5,7 +5,7 @@
  * Maps database fields to application object
  */
 class CommunityPost {
-    constructor(id, userId, userName, contentText, contentImage, status, createdAt) {
+    constructor({ id, userId, userName, contentText, contentImage, status, createdAt }) {
         this.id = id;
         this.userId = userId;
         this.userName = userName; // Derived from join
@@ -20,15 +20,15 @@ class CommunityPost {
      * @param {Object} row - Row from MySQL query result
      */
     static fromDatabase(row) {
-        return new CommunityPost(
-            row.postID,
-            row.userID,
-            `${row.first_name} ${row.last_name}`,
-            row.content_text,
-            row.content_image,
-            row.post_status,
-            row.post_created_at
-        );
+        return new CommunityPost({
+            id: row.postID,
+            userId: row.userID,
+            userName: row.userName || `${row.first_name} ${row.last_name}`,
+            contentText: row.content_text,
+            contentImage: row.content_image,
+            status: row.post_status,
+            createdAt: row.post_created_at
+        });
     }
 }
 

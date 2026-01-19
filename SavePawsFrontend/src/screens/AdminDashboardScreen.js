@@ -113,6 +113,18 @@ const AdminDashboardScreen = ({ navigation }) => {
       desc: 'Review and manage adoption applications',
       screen: 'AdminAdoptionList'
     },
+    {
+      icon: '🤝',
+      title: 'Volunteer Management',
+      desc: 'Manage events & registrations',
+      screen: 'AdminVolunteerHub'
+    },
+    {
+      icon: '💬',
+      title: 'Community Management',
+      desc: 'Moderate community posts',
+      screen: 'AdminCommunityManagement'
+    },
   ];
 
   if (loading) {

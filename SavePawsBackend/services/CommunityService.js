@@ -120,6 +120,37 @@ const CommunityService = {
             console.error('Error deleting post:', error);
             throw error;
         }
+    },
+
+    // Admin: Restore a post
+    restorePost: async (postId) => {
+        try {
+            const sql = "UPDATE community_posts SET post_status = 'Active' WHERE postID = ?";
+            const result = await query(sql, [postId]);
+            if (result.affectedRows === 0) throw new Error('Post not found');
+            return { success: true, message: 'Post restored successfully' };
+        } catch (error) {
+            console.error('Error restoring post:', error);
+            throw error;
+        }
+    },
+
+    // Admin: Get all posts including deleted ones
+    getAllPostsAdmin: async (status = 'Active') => {
+        try {
+            const sql = `
+                SELECT cp.*, u.first_name, u.last_name 
+                FROM community_posts cp
+                JOIN users u ON cp.userID = u.id
+                WHERE cp.post_status = ?
+                ORDER BY cp.post_created_at DESC
+            `;
+            const results = await query(sql, [status]);
+            return results;
+        } catch (error) {
+            console.error('Error fetching admin posts:', error);
+            throw error;
+        }
     }
 };
 

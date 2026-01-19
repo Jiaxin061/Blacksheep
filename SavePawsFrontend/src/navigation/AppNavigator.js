@@ -49,7 +49,6 @@ import RewardsVoucherScreen from '../screens/RewardsVoucherScreen';
 import AdminAnimalsScreen from '../screens/AdminAnimalsScreen';
 import AdminAddAnimalScreen from '../screens/AdminAddAnimalScreen';
 import AdminEditAnimalScreen from '../screens/AdminEditAnimalScreen';
-import AIAssistantFAB from '../components/AIAssistantFAB';
 import BottomNav from '../components/BottomNav';
 import AdminFundAllocationScreen from '../screens/AdminFundAllocationScreen';
 import AdminFundAllocationDetailScreen from '../screens/AdminFundAllocationDetailScreen';
@@ -64,6 +63,20 @@ import AdoptionRequestScreen from '../features/adoption/screens/AdoptionRequestS
 import AdminAdoptionListScreen from '../features/adoption/screens/AdminAdoptionListScreen';
 import AdminAdoptionDetailScreen from '../features/adoption/screens/AdminAdoptionDetailScreen';
 import AnimalDetail from '../features/animals/components/AnimalDetail';
+
+// New Admin Management Screens
+import AdminCommunityManagementPage from '../screens/adminCommunityManagementPage';
+import AdminVolunteerHubScreen from '../screens/AdminVolunteerHubScreen';
+import AdminVolunteerManagementPage from '../screens/adminVolunteerManagementPage'; // Unified fallback
+import AdminEventManagementPage from '../screens/adminEventManagementPage';
+import AdminRegistrationManagementPage from '../screens/adminRegistrationManagementPage';
+import AdminRegistrationDetailsPage from '../screens/adminRegistrationDetailsPage';
+
+// Volunteer Screens
+import VolunteerRegistrationScreen from '../screens/volunteerRegistrationPage';
+import VolunteerContributionScreen from '../screens/volunteerContributionPage';
+import VolunteerEventListScreen from '../screens/volunteerEventListPage';
+import VolunteerEventDetailsScreen from '../screens/volunteerEventDetailsPage';
 
 const Stack = createStackNavigator();
 
@@ -112,9 +125,20 @@ const NavigationContent = ({ initialRoute }) => {
     'AdminRewardsEdit',
     'AdminAdoptionList',
     'AdminAdoptionDetail',
+    'VolunteerRegistration',
+    'AdminCommunityManagement',
+    'AdminVolunteerHub',
+    'AdminEventManagement',
+    'AdminRegistrationManagement',
+    'AdminRegistrationDetails',
+  ];
+
+  const hideFabScreens = [
+    ...hideNavScreens,
   ];
 
   const shouldShowNav = !hideNavScreens.includes(currentRoute);
+  const shouldShowFab = !hideFabScreens.includes(currentRoute);
 
   return (
     <View style={{ flex: 1 }}>
@@ -177,6 +201,36 @@ const NavigationContent = ({ initialRoute }) => {
         />
 
         {/* Admin Screens */}
+        <Stack.Screen
+          name="AdminCommunityManagement"
+          component={AdminCommunityManagementPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AdminVolunteerHub"
+          component={AdminVolunteerHubScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AdminEventManagement"
+          component={AdminEventManagementPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AdminRegistrationManagement"
+          component={AdminRegistrationManagementPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AdminVolunteerManagement"
+          component={AdminVolunteerManagementPage}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AdminRegistrationDetails"
+          component={AdminRegistrationDetailsPage}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="AdminLogin"
           component={AdminLoginScreen}
@@ -449,9 +503,49 @@ const NavigationContent = ({ initialRoute }) => {
             headerShown: true,
           }}
         />
+        {/* Volunteer Screens */}
+        <Stack.Screen
+          name="VolunteerRegistration"
+          component={VolunteerRegistrationScreen}
+          options={{
+            title: 'Volunteer Registration',
+            headerShown: true,
+            headerStyle: { backgroundColor: '#14b8a6', shadowColor: 'transparent', elevation: 0 },
+            headerTintColor: '#ffffff',
+          }}
+        />
+        <Stack.Screen
+          name="VolunteerContribution"
+          component={VolunteerContributionScreen}
+          options={{
+            title: 'My Contributions',
+            headerShown: true,
+            headerStyle: { backgroundColor: '#14b8a6', shadowColor: 'transparent', elevation: 0 },
+            headerTintColor: '#ffffff',
+          }}
+        />
+        <Stack.Screen
+          name="VolunteerEventList"
+          component={VolunteerEventListScreen}
+          options={{
+            title: 'Volunteer Events',
+            headerShown: true,
+            headerStyle: { backgroundColor: '#14b8a6', shadowColor: 'transparent', elevation: 0 },
+            headerTintColor: '#ffffff',
+          }}
+        />
+        <Stack.Screen
+          name="VolunteerEventDetails"
+          component={VolunteerEventDetailsScreen}
+          options={{
+            title: 'Event Details',
+            headerShown: true,
+            headerStyle: { backgroundColor: '#14b8a6', shadowColor: 'transparent', elevation: 0 },
+            headerTintColor: '#ffffff',
+          }}
+        />
       </Stack.Navigator>
       {shouldShowNav && <BottomNav />}
-      {shouldShowNav && <AIAssistantFAB bottom={110} />}
     </View>
   );
 };

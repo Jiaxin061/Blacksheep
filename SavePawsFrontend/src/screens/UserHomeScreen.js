@@ -13,6 +13,8 @@ import {
 import Svg, { Path } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
 import ApiService from '../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 // Dog Icon SVG Component
 const DogIcon = ({ size = 32, color = "#ffffff" }) => (
@@ -63,6 +65,58 @@ const UserHomeScreen = ({ navigation }) => {
     } finally {
       setLoadingTasks(false);
       setRefreshing(false);
+    }
+  };
+
+  const handleServicePress = async (service) => {
+    if (service.title === 'Volunteer') {
+      try {
+        const userId = await AsyncStorage.getItem('userId');
+        if (!userId) {
+          Alert.alert('Error', 'User ID not found. Please log in again.');
+          return;
+        }
+
+        // Show loading indicator or toast if possible, otherwise just wait
+        const statusData = await ApiService.getVolunteerStatus(userId);
+
+        console.log('Volunteer Status:', statusData);
+
+        if (!statusData.hasRegistration) {
+          // Not registered -> Go to Registration
+          navigation.navigate('VolunteerRegistration');
+        } else {
+          switch (statusData.status) {
+            case 'Pending':
+              Alert.alert(
+                'Application Pending',
+                'Your volunteer application is currently under review by an admin. Please check back later.'
+              );
+              break;
+            case 'Approved':
+              // Approved -> Go to Contribution/Dashboard
+              navigation.navigate('VolunteerContribution');
+              break;
+            case 'Rejected':
+              Alert.alert(
+                'Application Rejected',
+                `Your application was rejected. Reason: ${statusData.rejectionReason || 'No reason provided.'}.`,
+                [
+                  { text: "Cancel", style: "cancel" },
+                  { text: "Apply Again", onPress: () => navigation.navigate('VolunteerRegistration') }
+                ]
+              );
+              break;
+            default:
+              Alert.alert('Error', 'Unknown volunteer status.');
+          }
+        }
+      } catch (error) {
+        console.error('Navigation Error:', error);
+        Alert.alert('Error', 'Failed to check volunteer status. Please try again.');
+      }
+    } else {
+      navigation.navigate(service.screen);
     }
   };
 
@@ -350,7 +404,7 @@ const UserHomeScreen = ({ navigation }) => {
               <TouchableOpacity
                 key={service.id}
                 style={styles.serviceCard}
-                onPress={() => navigation.navigate(service.screen)}
+                onPress={() => handleServicePress(service)}
                 activeOpacity={0.8}
               >
                 <View style={[styles.serviceIcon, { backgroundColor: service.color }]}>

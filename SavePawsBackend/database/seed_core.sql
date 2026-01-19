@@ -90,12 +90,17 @@ INSERT INTO community_posts (postID, userID, content_text, content_image, post_s
 -- Dumping data for table `volunteer_events`
 INSERT INTO volunteer_events (eventID, title, description, eventLocation, start_date, end_date, max_volunteers, adminID, image_url, hours) VALUES
 (1, 'Weekend Shelter Cleanup', 'General cleaning and disinfection of the dog kennels.', 'SavePaws Shelter HQ', '2025-01-10 09:00:00', '2025-01-10 13:00:00', 10, 1, 'https://images.unsplash.com/photo-1595278069441-2cf29f8005a4', 3.00),
-(2, 'Stray Vaccination Drive', 'Helping vets administer vaccines to neighborhood strays.', 'Community Hall A', '2025-05-24 10:00:00', '2025-05-24 17:00:00', 5, 1, 'https://images.unsplash.com/photo-1595278069441-2cf29f8005a4', 4.00);
+(2, 'Stray Vaccination Drive', 'Helping vets administer vaccines to neighborhood strays.', 'Community Hall A', '2026-05-24 10:00:00', '2025-05-24 17:00:00', 5, 1, 'https://images.unsplash.com/photo-1595278069441-2cf29f8005a4', 4.00)
+ON DUPLICATE KEY UPDATE eventID=eventID;
+
 
 -- Dumping data for table `event_records`
 INSERT INTO event_records (recordID, userID, eventID, register_date, status) VALUES
 (1, 1, 1, '2025-01-01 13:25:51', 'Registered'),
-(2, 3, 1, '2025-01-02 13:25:51', 'Registered');
+(2, 3, 1, '2025-01-02 13:25:51', 'Registered'),
+(3, 3, 2, '2026-01-19 08:14:17', 'Registered')
+ON DUPLICATE KEY UPDATE recordID=recordID;
+
 
 -- Dumping data for table `post_comments`
 INSERT INTO post_comments (commentID, postID, userID, comment_text, comment_date) VALUES
@@ -103,8 +108,13 @@ INSERT INTO post_comments (commentID, postID, userID, comment_text, comment_date
 
 -- Dumping data for table `volunteer_contribution`
 INSERT INTO volunteer_contribution (contributionID, userID, eventID, hours_contributed, participation_status) VALUES
-(1, 1, 1, 4.00, 'Attended');
+(1, 3, 1, 4.00, 'Attended')
+ON DUPLICATE KEY UPDATE contributionID=contributionID;
+
 
 -- Dumping data for table `volunteer_registration`
 INSERT INTO volunteer_registration (registrationID, userID, userName, location, experience, capability, registration_status, submition_date, adminID, reviewed_date, rejection_reason) VALUES
-(1, 3, 'Qing Qing', 'Johor Bahru', 'Rescued 10 cats', 'Animal handling, Driving', 'Pending', '2025-12-29 21:25:51', 1, '2025-12-01 02:00:00', NULL);
+(2, 3, 'Qing Qing', '117, Taman Universiti, Skudai, 81300, Johor Darul Ta''zim', 'I joined an animal rescue event in 2018.', 'First Aid', 'Rejected', '2026-01-19 07:35:47', NULL, NULL, NULL),
+(3, 3, 'Qing', '38, Taman Universiti, Skudai, 81300, Johor Darul Ta''zim', 'Test', 'Test', 'Approved', '2026-01-19 07:40:04', NULL, NULL, NULL)
+ON DUPLICATE KEY UPDATE registrationID=registrationID;
+

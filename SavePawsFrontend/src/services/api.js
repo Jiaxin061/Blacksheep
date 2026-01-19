@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const API_BASE_URL = Config.API_BASE_URL || 'http://192.168.1.100:3000/api';
 
 class ApiService {
+    static BASE_URL = API_BASE_URL;
 
     // ==================== CONNECTION TEST ====================
 
@@ -804,6 +805,110 @@ class ApiService {
         }
     }
 
+    // ==================== VOLUNTEER MODULE ====================
+
+    // Submit Volunteer Registration
+    static async submitVolunteerRegistration(registrationData) {
+        try {
+            console.log('🤝 Submitting volunteer registration:', registrationData);
+            const response = await ApiService._protectedFetch('/volunteer/register', 'POST', registrationData);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ submitVolunteerRegistration error:', error);
+            return { success: false, message: error.message };
+        }
+    }
+
+    // Check Volunteer Status
+    static async getVolunteerStatus(userId) {
+        try {
+            console.log('🤝 Checking volunteer status for:', userId);
+            const response = await ApiService._protectedFetch(`/volunteer/status/${userId}`, 'GET');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ getVolunteerStatus error:', error);
+            return { hasRegistration: false, status: null, error: true };
+        }
+    }
+
+    // Get Registration Details
+    static async getRegistrationDetails(userId) {
+        try {
+            const response = await ApiService._protectedFetch(`/volunteer/registration/${userId}`, 'GET');
+            if (response.status === 404) return null;
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ getRegistrationDetails error:', error);
+            return null;
+        }
+    }
+
+    // Get Volunteer Contributions
+    static async getContributions(userId) {
+        try {
+            const response = await ApiService._protectedFetch(`/volunteer/contributions/${userId}`, 'GET');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ getContributions error:', error);
+            return [];
+        }
+    }
+
+    // Get All Available Events
+    static async getAvailableEvents() {
+        try {
+            const response = await ApiService._protectedFetch('/events', 'GET');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ getAvailableEvents error:', error);
+            return [];
+        }
+    }
+
+    // Get Event Details
+    static async getEventDetails(eventId) {
+        try {
+            const response = await ApiService._protectedFetch(`/events/${eventId}`, 'GET');
+            if (response.status === 404) return null;
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ getEventDetails error:', error);
+            return null;
+        }
+    }
+
+    // Register for Event
+    static async registerForEvent(userId, eventId) {
+        try {
+            console.log(`🤝 Registering user ${userId} for event ${eventId}`);
+            const response = await ApiService._protectedFetch('/events/register', 'POST', { userID: userId, eventID: eventId });
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ registerForEvent error:', error);
+            return { success: false, message: error.message };
+        }
+    }
+
+    // Get User's Registered Events
+    static async getUserEvents(userId) {
+        try {
+            const response = await ApiService._protectedFetch(`/events/user/${userId}`, 'GET');
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('❌ getUserEvents error:', error);
+            return [];
+        }
+    }
+
+
     static async getFullAIHistory(userId) {
         try {
             const response = await ApiService._protectedFetch(`/ai/history/all/${userId}`);
@@ -824,6 +929,63 @@ class ApiService {
         }
     }
 
+    // ==================== ADMIN COMMUNITY ====================
+    static async getAdminCommunityPosts(status = 'Active') {
+        const response = await ApiService._protectedFetch(`/community/admin/posts?status=${status}`);
+        if (!response.ok) throw new Error('Failed to fetch admin posts');
+        return await response.json();
+    }
+
+    static async restoreCommunityPost(postId) {
+        const response = await ApiService._protectedFetch(`/community/admin/posts/${postId}/restore`, 'POST');
+        if (!response.ok) throw new Error('Failed to restore post');
+        return await response.json();
+    }
+
+    static async adminDeleteCommunityPost(postId) {
+        const response = await ApiService._protectedFetch(`/community/admin/posts/${postId}`, 'DELETE');
+        if (!response.ok) throw new Error('Failed to delete post');
+        return await response.json();
+    }
+
+    // ==================== ADMIN EVENTS ====================
+    static async getAdminEvents() {
+        const response = await ApiService._protectedFetch('/admin/events');
+        if (!response.ok) throw new Error('Failed to fetch events');
+        return await response.json();
+    }
+
+    static async createAdminEvent(eventData) {
+        const response = await ApiService._protectedFetch('/admin/events', 'POST', eventData);
+        return await response.json();
+    }
+
+    static async updateAdminEvent(id, eventData) {
+        const response = await ApiService._protectedFetch(`/admin/events/${id}`, 'PUT', eventData);
+        return await response.json();
+    }
+
+    static async deleteAdminEvent(id) {
+        const response = await ApiService._protectedFetch(`/admin/events/${id}`, 'DELETE');
+        return await response.json();
+    }
+
+    // ==================== ADMIN REGISTRATIONS ====================
+    static async getAdminRegistrations() {
+        const response = await ApiService._protectedFetch('/admin/registrations');
+        if (!response.ok) throw new Error('Failed to fetch registrations');
+        return await response.json();
+    }
+
+    static async approveRegistration(id) {
+        const response = await ApiService._protectedFetch(`/admin/registrations/${id}/approve`, 'POST', { adminID: 1 });
+        return await response.json();
+    }
+
+    static async rejectRegistration(id, reason) {
+        const response = await ApiService._protectedFetch(`/admin/registrations/${id}/reject`, 'POST', { adminID: 1, reason });
+        return await response.json();
+    }
 }
 
 // ==================== EXPORTS ====================
@@ -865,6 +1027,32 @@ export const askAI = ApiService.askAI.bind(ApiService);
 export const getAIHistory = ApiService.getAIHistory.bind(ApiService);
 export const getFullAIHistory = ApiService.getFullAIHistory.bind(ApiService);
 export const clearAIHistory = ApiService.clearAIHistory.bind(ApiService);
+
+// Volunteer
+export const submitVolunteerRegistration = ApiService.submitVolunteerRegistration.bind(ApiService);
+export const getVolunteerStatus = ApiService.getVolunteerStatus.bind(ApiService);
+export const getRegistrationDetails = ApiService.getRegistrationDetails.bind(ApiService);
+export const getContributions = ApiService.getContributions.bind(ApiService);
+export const getAvailableEvents = ApiService.getAvailableEvents.bind(ApiService);
+export const getEventDetails = ApiService.getEventDetails.bind(ApiService);
+export const registerForEvent = ApiService.registerForEvent.bind(ApiService);
+export const getUserEvents = ApiService.getUserEvents.bind(ApiService);
+
+// Admin Community
+export const getAdminCommunityPosts = ApiService.getAdminCommunityPosts.bind(ApiService);
+export const restoreCommunityPost = ApiService.restoreCommunityPost.bind(ApiService);
+export const adminDeleteCommunityPost = ApiService.adminDeleteCommunityPost.bind(ApiService);
+
+// Admin Events
+export const getAdminEvents = ApiService.getAdminEvents.bind(ApiService);
+export const createAdminEvent = ApiService.createAdminEvent.bind(ApiService);
+export const updateAdminEvent = ApiService.updateAdminEvent.bind(ApiService);
+export const deleteAdminEvent = ApiService.deleteAdminEvent.bind(ApiService);
+
+// Admin Registrations
+export const getAdminRegistrations = ApiService.getAdminRegistrations.bind(ApiService);
+export const approveRegistration = ApiService.approveRegistration.bind(ApiService);
+export const rejectRegistration = ApiService.rejectRegistration.bind(ApiService);
 
 // ==================== DONATION API RE-EXPORTS ====================
 // Re-export donation-related functions from donationApi.js

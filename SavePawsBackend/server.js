@@ -157,6 +157,13 @@ app.use('/api/community', communityRoutes);
 // AI routes
 app.use('/api/ai', aiRoutes);
 
+// Adoption routes (loaded asynchronously)
+// Note: Adoption routes use ES6 modules, so we load them dynamically
+
+// Volunteer routes (Moved up to avoid conflict with /api/admin mount)
+const volunteerRoutes = require('./routes/volunteer');
+app.use('/api', volunteerRoutes);
+
 // Donation Portal routes
 app.use('/api/animals', animalsRoutes);
 app.use('/api/admin/animals', adminAnimalsRoutes);
@@ -165,9 +172,6 @@ app.use('/api/admin', adminFundsRoutes);
 app.use('/api/admin/rewards', adminRewardsRoutes);
 app.use('/api/rewards', rewardsRoutes);
 app.use('/api/donations', donationsRoutes);
-
-// Adoption routes (loaded asynchronously)
-// Note: Adoption routes use ES6 modules, so we load them dynamically
 
 
 

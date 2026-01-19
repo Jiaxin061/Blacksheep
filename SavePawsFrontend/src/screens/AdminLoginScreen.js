@@ -47,7 +47,7 @@ const AdminLoginScreen = ({ navigation }) => {
 
         const adminName = response.admin.first_name || response.admin.full_name || response.admin.email?.split('@')[0] || 'Admin';
         Alert.alert('Success', `Welcome, ${adminName}!`);
-        navigation.replace('AdminHome');
+        navigation.replace('AdminDashboard');
       } else {
         Alert.alert('Error', response.message || 'Invalid admin credentials');
       }

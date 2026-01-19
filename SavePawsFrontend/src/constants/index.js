@@ -10,14 +10,14 @@ export const Colors = {
   primary100: '#ccfbf1',
   primary600: '#0d9488',
   primary700: '#0f766e',
-  
+
   // Accent Colors
   secondary: '#fbbf24',
   success: '#10b981',
   warning: '#f59e0b',
   danger: '#ef4444',
   info: '#3b82f6',
-  
+
   // Grayscale
   text: '#111827',
   textMuted: '#5b6b7c',
@@ -33,14 +33,14 @@ export const Colors = {
   gray900: '#0f1720',
   white: '#ffffff',
   black: '#000000',
-  
+
   // Status Colors
   statusPending: '#f2994a',
   statusAssigned: '#0f766e',
   statusInProgress: '#0369a1',
   statusRescued: '#10b981',
   statusClosed: '#6b7c8e',
-  
+
   // Urgency Colors
   urgencyLow: '#10b981',
   urgencyMedium: '#f2994a',
@@ -106,13 +106,15 @@ export const Shadows = {
 };
 
 // ==================== API CONFIG ====================
+import { Platform } from 'react-native';
+
 export const Config = {
-  // For Android Studio Emulator - use 10.0.2.2
-  API_BASE_URL: 'http://10.0.2.2:3000/api',
-  
-  // For Physical Device or if 10.0.2.2 doesn't work, use your actual IP:
-  // API_BASE_URL: 'http://192.168.56.1:3000/api',
-  
+  API_BASE_URL: Platform.select({
+    android: 'http://10.0.2.2:3000/api',
+    ios: 'http://localhost:3000/api',
+    default: 'http://localhost:3000/api',
+  }),
+
   API_TIMEOUT: 10000,
 };
 

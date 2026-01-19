@@ -118,4 +118,16 @@ router.post('/comments', upload.none(), async (req, res) => {
     res.json(result);
 });
 
+// ==================== ADMIN ROUTES ====================
+const AdminCommunityController = require('../controllers/AdminCommunityController');
+
+// GET /admin/posts - Get all posts (filtered by status)
+router.get('/admin/posts', AdminCommunityController.getAllPosts);
+
+// POST /admin/posts/:id/restore - Restore a deleted post
+router.post('/admin/posts/:id/restore', AdminCommunityController.restorePost);
+
+// Admin can also delete posts using the existing DELETE /delete/:id or a specific admin route
+router.delete('/admin/posts/:id', AdminCommunityController.deletePost);
+
 module.exports = router;
