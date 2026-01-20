@@ -175,12 +175,9 @@ const AdminViewReportScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backIcon}>←</Text>
-        </TouchableOpacity>
+
         <View>
           <Text style={styles.headerSubtitle}>Admin</Text>
-          <Text style={styles.headerTitle}>All Reports</Text>
         </View>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>{reports.length}</Text>

@@ -203,22 +203,22 @@ const NavigationContent = ({ initialRoute }) => {
         <Stack.Screen
           name="ReportAnimal"
           component={ReportAnimalScreen}
-          options={{ title: 'Report Animal', headerShown: false }}
+          options={{ title: 'Report Animal'}}
         />
         <Stack.Screen
           name="ViewReports"
           component={ViewReportsScreen}
-          options={{ title: 'All Reports', headerShown: false }}
+          options={{ title: 'All Reports' }}
         />
         <Stack.Screen
           name="AcceptRescueTask"
           component={AcceptRescueTaskScreen}
-          options={{ title: 'Available Tasks', headerShown: false }}
+          options={{ title: 'Available Tasks'}}
         />
         <Stack.Screen
           name="MyRescueTaskDetail"
           component={MyRescueTaskDetailScreen}
-          options={{ title: 'My Task' }}
+          options={{ title: 'My Task'}}
         />
 
         {/* Admin Screens */}
@@ -265,29 +265,29 @@ const NavigationContent = ({ initialRoute }) => {
         <Stack.Screen
           name="ManageRescueTasks"
           component={ManageRescueTasksScreen}
-          options={{ headerShown: false }}
+          options={{ title: 'Manage Rescue Task' }}
         />
         <Stack.Screen
           name="AdminViewReport"
           component={AdminViewReportScreen}
-          options={{ headerShown: false }}
+          options={{ title: 'All Report' }}
         />
 
         <Stack.Screen
           name="AdminEvidenceView"
           component={AdminEvidenceViewScreen}
-          options={{ headerShown: false }}
+          options={{title: 'View Evidence'  }}
         />
         <Stack.Screen
           name="UserRescueHistory"
           component={UserRescueHistoryScreen}
-          options={{ headerShown: false }}
+          options={{ title: 'My Rescue Task' }}
         />
 
         <Stack.Screen
           name="BlacklistManagement"
           component={BlacklistManagementScreen}
-          options={{ headerShown: false }}
+          options={{ title: 'Blacklisted User' }}
         />
 
         {/* Module 4: Donation Portal */}

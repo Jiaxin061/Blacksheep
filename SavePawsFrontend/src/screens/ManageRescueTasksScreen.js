@@ -609,7 +609,7 @@ const ManageRescueTasksScreen = ({ navigation }) => {
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={styles.headerTitle}>Manage Rescue Tasks</Text>
+
           <Text style={styles.headerSubtitle}>
             {filteredReports.length} of {allReports.length} tasks
           </Text>

@@ -212,11 +212,8 @@ const MyRescueTaskDetailScreen = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backIcon}>←</Text>
-        </TouchableOpacity>
         <View>
-          <Text style={styles.headerTitle}>Task #{task.id}</Text>
+          <Text style={styles.headerTitle}>Task ID#{task.id}</Text>
         </View>
         <View style={{ width: 44 }} />
       </View>

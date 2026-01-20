@@ -152,16 +152,6 @@ const BlacklistManagementScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.backIcon}>←</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Blacklist Management</Text>
-        <View style={{ width: 44 }} />
-      </View>
 
       {/* Stats Bar */}
       <View style={styles.statsBar}>
