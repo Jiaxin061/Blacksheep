@@ -80,6 +80,7 @@ import AdminVolunteerManagementPage from '../screens/adminVolunteerManagementPag
 import AdminEventManagementPage from '../screens/adminEventManagementPage';
 import AdminRegistrationManagementPage from '../screens/adminRegistrationManagementPage';
 import AdminRegistrationDetailsPage from '../screens/adminRegistrationDetailsPage';
+import UserProfilePage from '../screens/UserProfilePage';
 
 // Volunteer Screens
 import VolunteerRegistrationScreen from '../screens/volunteerRegistrationPage';
@@ -144,6 +145,7 @@ const NavigationContent = ({ initialRoute }) => {
     'AnimalDetailView',
     'AnimalsScreen',
     'AnimalForm',
+    'UserProfile',
   ];
 
   const hideFabScreens = [
@@ -203,7 +205,7 @@ const NavigationContent = ({ initialRoute }) => {
         <Stack.Screen
           name="ReportAnimal"
           component={ReportAnimalScreen}
-          options={{ title: 'Report Animal'}}
+          options={{ title: 'Report Animal' }}
         />
         <Stack.Screen
           name="ViewReports"
@@ -213,12 +215,22 @@ const NavigationContent = ({ initialRoute }) => {
         <Stack.Screen
           name="AcceptRescueTask"
           component={AcceptRescueTaskScreen}
-          options={{ title: 'Available Tasks'}}
+          options={{ title: 'Available Tasks' }}
         />
         <Stack.Screen
           name="MyRescueTaskDetail"
           component={MyRescueTaskDetailScreen}
-          options={{ title: 'My Task'}}
+          options={{ title: 'My Task' }}
+        />
+        <Stack.Screen
+          name="UserProfile"
+          component={UserProfilePage}
+          options={{
+            title: 'My Profile',
+            headerShown: true,
+            headerStyle: { backgroundColor: '#ffffff', elevation: 0, shadowOpacity: 0 },
+            headerTintColor: '#14b8a6',
+          }}
         />
 
         {/* Admin Screens */}
@@ -276,7 +288,7 @@ const NavigationContent = ({ initialRoute }) => {
         <Stack.Screen
           name="AdminEvidenceView"
           component={AdminEvidenceViewScreen}
-          options={{title: 'View Evidence'  }}
+          options={{ title: 'View Evidence' }}
         />
         <Stack.Screen
           name="UserRescueHistory"
