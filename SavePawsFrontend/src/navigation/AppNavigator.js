@@ -61,8 +61,14 @@ import AdminRewardsEditScreen from '../screens/AdminRewardsEditScreen';
 import AdoptionHubScreen from '../features/adoption/screens/AdoptionHubScreen';
 import AdoptionRequestScreen from '../features/adoption/screens/AdoptionRequestScreen';
 import AdminAdoptionListScreen from '../features/adoption/screens/AdminAdoptionListScreen';
+import AdminAdoptionManagerScreen from '../features/adoption/screens/AdminAdoptionManagerScreen';
 import AdminAdoptionDetailScreen from '../features/adoption/screens/AdminAdoptionDetailScreen';
 import AnimalDetail from '../features/animals/components/AnimalDetail';
+import AdoptionHistoryScreen from '../screens/adoption/AdoptionHistoryScreen';
+import AdoptionRequestDetailScreen from '../screens/adoption/AdoptionRequestDetailScreen';
+import AdoptionFollowUpScreen from '../screens/adoption/AdoptionFollowUpScreen';
+import AnimalForm from '../screens/animal/AnimalForm';
+import AnimalsScreen from '../screens/animal/AnimalsScreen';
 
 // New Admin Management Screens
 import AdminCommunityManagementPage from '../screens/adminCommunityManagementPage';
@@ -328,6 +334,30 @@ const NavigationContent = ({ initialRoute }) => {
           }}
         />
         <Stack.Screen
+          name="AnimalScreen"
+          component={AnimalListScreen}
+          options={{
+            title: 'Our Animals',
+            headerShown: true,
+          }}
+        />
+        <Stack.Screen
+          name="AnimalForm"
+          component={AnimalForm}
+          options={{
+            title: 'Animal Form',
+            headerShown: true,
+          }}
+        />
+        <Stack.Screen
+          name="AnimalsScreen"
+          component={AnimalsScreen}
+          options={{
+            title: 'Animals',
+            headerShown: true,
+          }}
+        />
+        <Stack.Screen
           name="AnimalDetails"
           component={AnimalDetailsScreen}
           options={{
@@ -480,10 +510,42 @@ const NavigationContent = ({ initialRoute }) => {
           }}
         />
         <Stack.Screen
+          name="AdoptionHistory"
+          component={AdoptionHistoryScreen}
+          options={{
+            title: 'My Requests',
+            headerShown: true,
+          }}
+        />
+        <Stack.Screen
+          name="AdoptionRequestDetail"
+          component={AdoptionRequestDetailScreen}
+          options={{
+            title: 'Request Details',
+            headerShown: true,
+          }}
+        />
+        <Stack.Screen
+          name="AdoptionFollowUp"
+          component={AdoptionFollowUpScreen}
+          options={{
+            title: 'Adoption Updates',
+            headerShown: true,
+          }}
+        />
+        <Stack.Screen
           name="AdminAdoptionList"
           component={AdminAdoptionListScreen}
           options={{
             title: 'Adoption Requests',
+            headerShown: true,
+          }}
+        />
+        <Stack.Screen
+          name="AdminAdoptionManager"
+          component={AdminAdoptionManagerScreen}
+          options={{
+            title: 'Adoption Management',
             headerShown: true,
           }}
         />

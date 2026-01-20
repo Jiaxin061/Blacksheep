@@ -190,7 +190,7 @@ export default function EditAnimalScreen() {
       Alert.alert("Success", "Animal profile updated successfully.", [
         {
           text: "OK",
-          onPress: () => router.replace("/admin/dashboard"),
+          onPress: () => router.back(),
         },
       ]);
     } catch (error: any) {

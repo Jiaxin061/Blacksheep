@@ -10,7 +10,7 @@ const BottomNav = () => {
     const navItems = [
         { name: 'Home', icon: 'home-outline', route: 'UserHome' },
         { name: 'Adoption', icon: 'paw-outline', route: 'AdoptionHub' },
-        { name: 'Volunteer', icon: 'hand-left-outline', route: 'Volunteer' },
+        { name: 'Volunteer', icon: 'hand-left-outline', route: 'VolunteerContribution' },
         { name: 'Community', icon: 'people-outline', route: 'CommunityPage' },
         { name: 'Donate', icon: 'heart-outline', route: 'DonationHome' },
     ];

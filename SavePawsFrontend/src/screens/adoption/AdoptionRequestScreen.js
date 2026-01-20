@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   submitButton: {
-    backgroundColor: '#14b8a6',
+    backgroundColor: '#4CAF50',
   },
   cancelButton: {
     backgroundColor: '#9E9E9E',
@@ -382,4 +382,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+
 

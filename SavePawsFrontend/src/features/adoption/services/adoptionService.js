@@ -114,6 +114,57 @@ export const adoptionService = {
       }
     }
   },
+
+  // UC025: Get my adoption updates
+  getMyAdoptionUpdates: async () => {
+    try {
+      const response = await api.get('/api/adoption/updates/my');
+      return response.data;
+    } catch (error) {
+      console.error("Error in getMyAdoptionUpdates:", error);
+      throw error;
+    }
+  },
+
+  // UC025: Upload adoption update
+  uploadAdoptionUpdate: async (formData) => {
+    try {
+      const response = await api.post('/api/adoption/updates', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error in uploadAdoptionUpdate:", error);
+      throw error;
+    }
+  },
+
+  // UC026: Get all updates (Admin)
+  getAdoptionUpdates: async (filters = {}) => {
+    try {
+      const response = await api.get('/api/adoption/updates', { params: filters });
+      return response.data;
+    } catch (error) {
+      console.error("Error in getAdoptionUpdates:", error);
+      throw error;
+    }
+  },
+
+  // UC026: Review update (Admin)
+  reviewAdoptionUpdate: async (id, status, notes) => {
+    try {
+      const response = await api.patch(`/api/adoption/updates/${id}/review`, {
+        review_status: status,
+        admin_notes: notes
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error in reviewAdoptionUpdate:", error);
+      throw error;
+    }
+  }
 };
 
 export default adoptionService;

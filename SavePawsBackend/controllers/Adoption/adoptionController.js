@@ -1,14 +1,15 @@
-const { query, pool } = require('../config/database');
+const { query, getPool } = require('../../config/database');
 
 // UC016: Create adoption request
 const createRequest = async (req, res) => {
+  const pool = getPool();
   const connection = await pool.getConnection();
 
   try {
     await connection.beginTransaction();
 
     const { animal_id, adoption_reason, housing_type } = req.body;
-    const user_id = req.user?.userId || req.user?.id;
+    const user_id = req.userId || req.user?.userId || req.user?.id;
 
     // Validation
     if (!animal_id || !adoption_reason || !housing_type) {
@@ -70,7 +71,7 @@ const createRequest = async (req, res) => {
               u.first_name, u.last_name, u.email,
               a.name as animal_name, a.species, a.breed
        FROM adoption_requests ar
-       LEFT JOIN user u ON ar.user_id = u.id
+       LEFT JOIN users u ON ar.user_id = u.id
        LEFT JOIN animals a ON ar.animal_id = a.id
        WHERE ar.id = ?`,
       [result.insertId]
@@ -103,10 +104,10 @@ const getMyRequests = async (req, res) => {
 
     // Safety check: if user_id is still undefined, stop and return an error
     if (!user_id) {
-        return res.status(401).json({
-            success: false,
-            message: 'User authentication failed: ID not found'
-        });
+      return res.status(401).json({
+        success: false,
+        message: 'User authentication failed: ID not found'
+      });
     }
 
     const requests = await query(
@@ -141,10 +142,10 @@ const getAllRequests = async (req, res) => {
 
     let query = `
       SELECT ar.*,
-             u.id, u.first_name, u.last_name, u.email, u.phone_number,
+             u.id as user_obj_id, u.first_name, u.last_name, u.email, u.phone_number,
              a.id as animal_id, a.name as animal_name, a.species, a.breed, a.status as animal_status
       FROM adoption_requests ar
-      LEFT JOIN user u ON ar.user_id = u.id
+      LEFT JOIN users u ON ar.user_id = u.id
       LEFT JOIN animals a ON ar.animal_id = a.id
     `;
 
@@ -157,6 +158,7 @@ const getAllRequests = async (req, res) => {
 
     query += ' ORDER BY ar.request_date DESC';
 
+    const pool = getPool();
     const [requests] = await pool.execute(query, params);
 
     res.json({
@@ -176,6 +178,7 @@ const getAllRequests = async (req, res) => {
 
 // UC017: Update adoption request status
 const updateStatus = async (req, res) => {
+  const pool = getPool();
   const connection = await pool.getConnection();
 
   try {
@@ -245,15 +248,16 @@ const updateStatus = async (req, res) => {
       connection.release();
 
       // Fetch updated request
+      const pool = getPool();
       const [updated] = await pool.execute(
-  `SELECT ar.*,
+        `SELECT ar.*,
           u.first_name, u.last_name, u.email,
           a.name as animal_name, a.species, a.breed, a.status as animal_status
    FROM adoption_requests ar
-   LEFT JOIN users u ON ar.user_id = u.id -- Fixed: 'users' and 'u.id'
+   LEFT JOIN users u ON ar.user_id = u.id
    LEFT JOIN animals a ON ar.animal_id = a.id
    WHERE ar.id = ?`,
-  [id]
+        [id]
       );
 
       res.json({
@@ -277,7 +281,7 @@ const updateStatus = async (req, res) => {
                 u.first_name, u.last_name, u.email,
                 a.name as animal_name, a.species, a.breed
          FROM adoption_requests ar
-         LEFT JOIN user u ON ar.user_id = u.id
+         LEFT JOIN users u ON ar.user_id = u.id
          LEFT JOIN animals a ON ar.animal_id = a.id
          WHERE ar.id = ?`,
         [id]
@@ -305,20 +309,25 @@ const updateStatus = async (req, res) => {
 const getRequestById = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(`[Adoption] getRequestById called with ID: ${id}`);
 
+    const pool = getPool();
     const [requests] = await pool.execute(
       `SELECT ar.*,
-              u.id, u.first_name, u.last_name, u.email, u.phone_number,
+              u.id as user_obj_id, u.first_name, u.last_name, u.email, u.phone_number,
               a.id as animal_id, a.name as animal_name, a.species, a.breed, 
               a.age, a.gender, a.status as animal_status, a.description, a.image_url
        FROM adoption_requests ar
-       LEFT JOIN user u ON ar.user_id = u.id
+       LEFT JOIN users u ON ar.user_id = u.id
        LEFT JOIN animals a ON ar.animal_id = a.id
        WHERE ar.id = ?`,
       [id]
     );
 
+    console.log(`[Adoption] getRequestById result count: ${requests.length}`);
+
     if (requests.length === 0) {
+      console.log(`[Adoption] Request ${id} not found.`);
       return res.status(404).json({
         success: false,
         message: 'Adoption request not found'

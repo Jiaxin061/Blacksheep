@@ -1,8 +1,9 @@
-import pool from '../config/database.js';
+const { getPool } = require('../../config/database');
 
 // UC05: Get all animal records (Public)
-export const getAllAnimals = async (req, res) => {
+const getAllAnimals = async (req, res) => {
     try {
+        const pool = getPool();
         const [animals] = await pool.execute(
             'SELECT id, name, species, breed, age, gender, status, description, image_url, weight, color, location, created_at, updated_at FROM animals ORDER BY created_at DESC'
         );
@@ -31,10 +32,10 @@ export const getAllAnimals = async (req, res) => {
 };
 
 // UC05: Get single animal record by ID (Public)
-export const getAnimalById = async (req, res) => {
+const getAnimalById = async (req, res) => {
     try {
         const { id } = req.params;
-
+        const pool = getPool();
         const [animals] = await pool.execute(
             'SELECT * FROM animals WHERE id = ?',
             [id]
@@ -62,7 +63,7 @@ export const getAnimalById = async (req, res) => {
 };
 
 // UC06: Search and filter animal records (Public)
-export const searchAnimals = async (req, res) => {
+const searchAnimals = async (req, res) => {
     try {
         const { keyword, species, status, gender, minAge, maxAge } = req.query;
 
@@ -107,6 +108,7 @@ export const searchAnimals = async (req, res) => {
 
         query += ' ORDER BY created_at DESC';
 
+        const pool = getPool();
         const [animals] = await pool.execute(query, params);
 
         if (animals.length === 0) {
@@ -133,7 +135,7 @@ export const searchAnimals = async (req, res) => {
 };
 
 // UC07: Create new animal record (Admin only)
-export const createAnimal = async (req, res) => {
+const createAnimal = async (req, res) => {
     try {
         const {
             name,
@@ -158,6 +160,7 @@ export const createAnimal = async (req, res) => {
             });
         }
 
+        const pool = getPool();
         const [result] = await pool.execute(
             `INSERT INTO animals 
        (name, species, breed, age, gender, status, description, image_url, weight, color, location, medical_notes, created_by)
@@ -201,7 +204,7 @@ export const createAnimal = async (req, res) => {
 };
 
 // UC07: Update animal record (Admin only)
-export const updateAnimal = async (req, res) => {
+const updateAnimal = async (req, res) => {
     try {
         const { id } = req.params;
         const {
@@ -219,6 +222,7 @@ export const updateAnimal = async (req, res) => {
             medical_notes
         } = req.body;
 
+        const pool = getPool();
         // Check if animal exists
         const [existing] = await pool.execute(
             'SELECT id FROM animals WHERE id = ?',
@@ -284,10 +288,11 @@ export const updateAnimal = async (req, res) => {
 };
 
 // UC07: Delete animal record (Admin only)
-export const deleteAnimal = async (req, res) => {
+const deleteAnimal = async (req, res) => {
     try {
         const { id } = req.params;
 
+        const pool = getPool();
         // Check if animal exists
         const [existing] = await pool.execute(
             'SELECT id FROM animals WHERE id = ?',
@@ -315,4 +320,13 @@ export const deleteAnimal = async (req, res) => {
             error: error.message
         });
     }
+};
+
+module.exports = {
+    getAllAnimals,
+    getAnimalById,
+    searchAnimals,
+    createAnimal,
+    updateAnimal,
+    deleteAnimal
 };

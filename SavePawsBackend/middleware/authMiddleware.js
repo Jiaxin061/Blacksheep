@@ -5,11 +5,11 @@ const Admin = require('../models/Admin');
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this-in-production';
 
 // Middleware to verify JWT token
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   try {
     // Get token from header
     const authHeader = req.headers.authorization;
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
         success: false,
@@ -20,29 +20,63 @@ const verifyToken = (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     // Verify token
-    const decoded = jwt.verify(token, JWT_SECRET);
-    
-    // Attach user info to request
-    req.userId = decoded.id;
-    req.userEmail = decoded.email;
-    req.userType = decoded.type;
-    req.userRole = decoded.role; // For admins
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
 
-    next();
-  } catch (error) {
-    if (error.name === 'TokenExpiredError') {
+      // Attach user info to request
+      req.userId = decoded.id;
+      req.userEmail = decoded.email;
+      req.userType = decoded.type;
+      req.userRole = decoded.role; // For admins
+
+      next();
+    } catch (jwtError) {
+      // If JWT verification fails, check for fallback mechanism (x-user-id) regarding MyDigitalID demo
+      const userID = req.headers["x-user-id"];
+
+      if (userID) {
+        // Verify user exists in database
+        const user = await User.getById(parseInt(userID));
+
+        if (user) {
+          // Check if user is active
+          if (user.is_active === false || user.is_active === 0) {
+            return res.status(401).json({
+              success: false,
+              message: "Account is deactivated.",
+            });
+          }
+
+          // Successful fallback
+          req.userId = user.id;
+          req.userType = 'user';
+          req.user = user;
+          return next();
+        }
+      }
+
+      // If no fallback or fallback failed, return original error
+      if (jwtError.name === 'TokenExpiredError') {
+        return res.status(401).json({
+          success: false,
+          message: 'Token expired. Please login again.'
+        });
+      }
+
       return res.status(401).json({
         success: false,
-        message: 'Token expired. Please login again.'
+        message: 'Invalid token. Please login again.'
       });
     }
-    
-    return res.status(401).json({
+  } catch (error) {
+    console.error("Auth middleware error:", error);
+    return res.status(500).json({
       success: false,
-      message: 'Invalid token. Please login again.'
+      message: 'Authentication error'
     });
   }
 };
+
 
 // Middleware to verify user authentication
 const authenticateUser = async (req, res, next) => {
@@ -57,7 +91,7 @@ const authenticateUser = async (req, res, next) => {
 
       // Get full user data
       const user = await User.getById(req.userId);
-      
+
       if (!user) {
         return res.status(401).json({
           success: false,
@@ -100,7 +134,7 @@ const authenticateAdmin = async (req, res, next) => {
 
       // Get full admin data
       const admin = await Admin.getById(req.userId);
-      
+
       if (!admin) {
         return res.status(401).json({
           success: false,
@@ -154,24 +188,24 @@ const requireAdminOrAbove = (req, res, next) => {
 const optionalAuth = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-    
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return next(); // Continue without authentication
     }
 
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, JWT_SECRET);
-    
+
     req.userId = decoded.id;
     req.userEmail = decoded.email;
     req.userType = decoded.type;
-    
+
     if (decoded.type === 'user') {
       req.user = await User.getById(decoded.id);
     } else if (decoded.type === 'admin') {
       req.admin = await Admin.getById(decoded.id);
     }
-    
+
     next();
   } catch (error) {
     // Continue without authentication even if token is invalid

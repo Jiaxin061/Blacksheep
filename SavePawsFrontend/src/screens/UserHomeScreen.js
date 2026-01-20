@@ -190,7 +190,7 @@ const UserHomeScreen = ({ navigation }) => {
       title: 'Volunteer',
       subtitle: 'Join our team',
       icon: '🤝',
-      screen: 'Volunteer',
+      screen: 'VolunteerEventList',
       color: '#10b981',
     },
     {

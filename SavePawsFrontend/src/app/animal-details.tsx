@@ -38,27 +38,47 @@ export default function AnimalDetailsScreen() {
     const navigation = useNavigation<any>();
     const route = useRoute<RouteProp<RootStackParamList, 'AnimalDetail'>>();
 
-    // id is extracted from route.params
-    const { id } = route.params || {};
+    // Support both id and animalId from different navigation sources
+    const { id, animalId } = route.params || {};
+    const effectiveId = id || animalId;
 
     const [animal, setAnimal] = useState<Animal | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (id) {
+        if (effectiveId) {
             fetchAnimalDetails();
         } else {
             setError("No ID provided");
             setLoading(false);
         }
-    }, [id]);
+    }, [effectiveId]);
 
     const fetchAnimalDetails = async () => {
         try {
             setError(null);
-            const response = await axios.get(`${API_BASE_URL}/api/animals/${id}`);
-            setAnimal(response.data);
+            const response = await axios.get(`${API_BASE_URL}/api/animals/${effectiveId}`);
+
+            // Map backend data to component expected shape if needed
+            const data = response.data;
+            // Detect if this is from "animals" table (has species/image_url) vs "animal_profile" (type/photoURL)
+            // and normalize it.
+            const normalizedAnimal = {
+                ...data,
+                // If it's the management animal, map fields to what this view expects
+                animalID: data.id || data.animalID,
+                type: data.species || data.type,
+                photoURL: data.image_url || data.photoURL,
+                story: data.description || data.story,
+                // Default funding fields if missing (management animals might not have them)
+                fundingGoal: data.fundingGoal || 0,
+                amountRaised: data.amountRaised || 0,
+                status: data.status || 'Available',
+                name: data.name
+            };
+
+            setAnimal(normalizedAnimal);
         } catch (err: any) {
             console.error("Error fetching animal details:", err);
             if (err.response?.status === 404) {

@@ -25,8 +25,8 @@ const adminRewardsRoutes = require('./routes/adminRewards');
 const rewardsRoutes = require('./routes/rewards');
 const donationsRoutes = require('./routes/donations');
 
-// Adoption routes (ES6 module - will be loaded asynchronously)
-let adoptionRoutes = null;
+// Adoption routes
+const adoptionRoutes = require('./routes/adoption/adoptionRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -157,8 +157,8 @@ app.use('/api/community', communityRoutes);
 // AI routes
 app.use('/api/ai', aiRoutes);
 
-// Adoption routes (loaded asynchronously)
-// Note: Adoption routes use ES6 modules, so we load them dynamically
+// Adoption routes
+app.use('/api/adoption', adoptionRoutes);
 
 // Volunteer routes (Moved up to avoid conflict with /api/admin mount)
 const volunteerRoutes = require('./routes/volunteer');
@@ -193,14 +193,8 @@ const startServer = async () => {
     await initializeDatabase();
 
     // Load adoption routes (ES6 module)
-    try {
-      const adoptionRoutesModule = await import('./routes/adoptionRoutes.js');
-      adoptionRoutes = adoptionRoutesModule.default;
-      app.use('/api/adoption', adoptionRoutes);
-      console.log('✅ Adoption routes loaded');
-    } catch (error) {
-      console.warn('⚠️  Adoption routes not available:', error.message);
-    }
+    // Adoption routes loaded via standard require
+    console.log('✅ Adoption routes loaded');
     // ==================== ERROR HANDLING ====================
 
     // 404 handler

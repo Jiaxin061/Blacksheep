@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F44336',
   },
   adoptButton: {
-    backgroundColor: '#E91E63',
+    backgroundColor: '#14b8a6',
   },
   actionButtonText: {
     color: '#fff',

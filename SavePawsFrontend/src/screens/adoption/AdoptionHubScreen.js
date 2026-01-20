@@ -17,7 +17,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import animalService from '../../animals/services/animalService';
 import adoptionService from '../services/adoptionService';
 
-
+const HEADER_MAX_HEIGHT = 260;
+const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 90 : 70;
+const SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 export default function AdoptionHubScreen({ navigation }) {
   const [animals, setAnimals] = useState([]);
@@ -26,14 +28,10 @@ export default function AdoptionHubScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
 
-
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     loadData();
-    // Explicitly hide any header buttons since we moved navigation to the body tabs
-    navigation.setOptions({
-      headerRight: () => null,
-    });
   }, []);
 
   const loadData = async () => {
@@ -50,7 +48,7 @@ export default function AdoptionHubScreen({ navigation }) {
         setUserRequests(requestedAnimalIds);
       }
     } catch (err) {
-      // console.error('Error loading user requests:', err);
+      console.error('Error loading user requests:', err);
     }
   };
 
@@ -78,7 +76,7 @@ export default function AdoptionHubScreen({ navigation }) {
   };
 
   const handleAnimalPress = (animal) => {
-    navigation.navigate('AnimalDetailView', {
+    navigation.navigate('AnimalDetail', {
       animalId: animal.id,
       isAdmin: false
     });
@@ -95,30 +93,30 @@ export default function AdoptionHubScreen({ navigation }) {
     return statusColors[status] || statusColors.available;
   };
 
-  const renderHeader = () => (
-    <View style={styles.customHeader}>
-      <TouchableOpacity
-        style={[styles.headerTab, styles.activeTab]}
-        onPress={() => navigation.navigate('AdoptionHub')}
-      >
-        <Text style={[styles.headerTabText, styles.activeTabText]}>Animals</Text>
-      </TouchableOpacity>
+  // Animation Interpolations
+  const headerHeight = scrollY.interpolate({
+    inputRange: [0, SCROLL_DISTANCE],
+    outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
+    extrapolate: 'clamp',
+  });
 
-      <TouchableOpacity
-        style={styles.headerTab}
-        onPress={() => navigation.navigate('AdoptionHistory')}
-      >
-        <Text style={styles.headerTabText}>History</Text>
-      </TouchableOpacity>
+  const imageOpacity = scrollY.interpolate({
+    inputRange: [0, SCROLL_DISTANCE / 2],
+    outputRange: [1, 0],
+    extrapolate: 'clamp',
+  });
 
-      <TouchableOpacity
-        style={styles.headerTab}
-        onPress={() => navigation.navigate('AdoptionFollowUp')}
-      >
-        <Text style={styles.headerTabText}>Updates</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const imageTranslate = scrollY.interpolate({
+    inputRange: [0, SCROLL_DISTANCE],
+    outputRange: [0, -50],
+    extrapolate: 'clamp',
+  });
+
+  const titleScale = scrollY.interpolate({
+    inputRange: [0, SCROLL_DISTANCE],
+    outputRange: [1, 0.8],
+    extrapolate: 'clamp',
+  });
 
   const renderAnimalItem = ({ item }) => {
     const isRequested = userRequests.has(item.id);
@@ -176,14 +174,7 @@ export default function AdoptionHubScreen({ navigation }) {
     );
   };
 
-  if (loading) {
-    return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#14b8a6" />
-        <Text style={styles.loadingText}>Loading available animals...</Text>
-      </View>
-    );
-  }
+
 
   if (error) {
     return (
@@ -198,8 +189,10 @@ export default function AdoptionHubScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
+      <StatusBar barStyle="light-content" backgroundColor="#E91E63" />
+
       {renderHeader()}
+
       {animals.length === 0 ? (
         <View style={styles.centerContainer}>
           <Text style={styles.emptyText}>No animals available for adoption at the moment</Text>
@@ -216,12 +209,17 @@ export default function AdoptionHubScreen({ navigation }) {
           renderItem={renderAnimalItem}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContainer}
-          onScroll={null}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+            { useNativeDriver: false } // layout properties like height don't support native driver
+          )}
+          scrollEventThrottle={16}
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              tintColor="#14b8a6"
+              tintColor="#E91E63"
+              progressViewOffset={HEADER_MAX_HEIGHT} // start spinner below transparent header if needed
             />
           }
           showsVerticalScrollIndicator={false}
@@ -287,7 +285,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     padding: 16,
-    paddingTop: 16,
+    paddingTop: HEADER_MAX_HEIGHT + 16, // Push list down by max header height
   },
   animalCard: {
     backgroundColor: '#fff',
@@ -359,7 +357,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   adoptButton: {
-    backgroundColor: '#14b8a6',
+    backgroundColor: '#E91E63',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -379,7 +377,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    paddingTop: 0,
+    paddingTop: HEADER_MAX_HEIGHT, // Ensure loading overlaps properly
   },
   loadingText: {
     marginTop: 12,
@@ -406,7 +404,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   retryButton: {
-    backgroundColor: '#14b8a6',
+    backgroundColor: '#E91E63',
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
@@ -416,33 +414,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
-  customHeader: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    padding: 10,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    marginBottom: 5,
-  },
-  headerTab: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-    borderRadius: 20,
-    marginHorizontal: 4,
-  },
-  activeTab: {
-    backgroundColor: '#14b8a6',
-  },
-  headerTabText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#666',
-  },
-  activeTabText: {
-    color: '#fff',
-  },
 });
+
+
 

@@ -109,9 +109,15 @@ const AdminDashboardScreen = ({ navigation }) => {
     },
     {
       icon: '❤️',
-      title: 'Adoption Requests',
+      title: 'Adoption',
       desc: 'Review and manage adoption applications',
-      screen: 'AdminAdoptionList'
+      screen: 'AdminAdoptionManager'
+    },
+    {
+      icon: '🐾',
+      title: 'Animal List',
+      desc: 'Manage animal profiles',
+      screen: 'AnimalsScreen'
     },
     {
       icon: '🤝',
@@ -227,7 +233,7 @@ const AdminDashboardScreen = ({ navigation }) => {
               <TouchableOpacity
                 key={index}
                 style={styles.actionCard}
-                onPress={() => action.screen && navigation.navigate(action.screen)}
+                onPress={() => action.screen && navigation.navigate(action.screen, { isAdmin: true })}
               >
                 <View style={styles.actionIcon}>
                   <Text style={styles.actionEmoji}>{action.icon}</Text>
