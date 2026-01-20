@@ -203,17 +203,17 @@ const NavigationContent = ({ initialRoute }) => {
         <Stack.Screen
           name="ReportAnimal"
           component={ReportAnimalScreen}
-          options={{ title: 'Report Animal' }}
+          options={{ title: 'Report Animal', headerShown: false }}
         />
         <Stack.Screen
           name="ViewReports"
           component={ViewReportsScreen}
-          options={{ title: 'All Reports' }}
+          options={{ title: 'All Reports', headerShown: false }}
         />
         <Stack.Screen
           name="AcceptRescueTask"
           component={AcceptRescueTaskScreen}
-          options={{ title: 'Available Tasks' }}
+          options={{ title: 'Available Tasks', headerShown: false }}
         />
         <Stack.Screen
           name="MyRescueTaskDetail"
@@ -265,29 +265,29 @@ const NavigationContent = ({ initialRoute }) => {
         <Stack.Screen
           name="ManageRescueTasks"
           component={ManageRescueTasksScreen}
-          options={{ title: 'Manage Tasks' }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="AdminViewReport"
           component={AdminViewReportScreen}
-          options={{ title: 'Report Details' }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="AdminEvidenceView"
           component={AdminEvidenceViewScreen}
-          options={{ title: 'Verify Evidence' }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="UserRescueHistory"
           component={UserRescueHistoryScreen}
-          options={{ title: 'My Rescue History' }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
           name="BlacklistManagement"
           component={BlacklistManagementScreen}
-          options={{ title: 'Blacklist Management' }}
+          options={{ headerShown: false }}
         />
 
         {/* Module 4: Donation Portal */}

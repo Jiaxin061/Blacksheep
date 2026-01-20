@@ -69,8 +69,16 @@ FROM donation_transaction
 WHERE payment_status = 'Success';
 
 -- 7. SEED SAMPLE REPORTS
-INSERT INTO reports (user_id, animal_type, urgency_level, description, location, status) VALUES
-(1, 'dog', 'high', 'Injured dog found near the park.', 'Jalan Kiara 1', 'pending');
+INSERT INTO reports (id, user_id, animal_type, description, location, latitude, longitude, reporter_name, reporter_contact, photo_url, status, created_at, updated_at) VALUES (1, 1, 'dog', 'Dog hit by car - bleeding heavily', 'UTM Main Gate', 1.5535, 103.638, 'Ali Hassan', '012-3456789', NULL, 'pending', '2025-12-15 13:51:19', '2026-01-06 11:40:26'),
+(2, 1, 'cat', 'Stray cat with eye infection', 'Taman Universiti', 1.5521, 103.6351, 'Ali Hassan', '012-3456789', NULL, 'closed', '2025-12-15 13:51:19', '2025-12-15 22:44:26'),
+(3, 1, 'dog', 'Friendly lost dog', 'Skudai Town', 1.5423, 103.6445, 'Ali Hassan', '012-3456789', NULL, 'pending', '2025-12-15 13:51:19', '2025-12-15 21:40:40'),
+(4, 2, 'cat', 'Cat stuck in tree', 'Taman Molek', 1.5234, 103.6201, 'Siti Nurhaliza', '013-9876543', NULL, 'active', '2025-12-15 13:51:19', '2026-01-06 10:46:04'),
+(5, 2, 'dog', 'Dog with broken leg', 'KSL Mall', 1.5456, 103.6389, 'Siti Nurhaliza', '013-9876543', NULL, 'pending', '2025-12-15 13:51:19', '2025-12-15 21:40:40'),
+(6, 2, 'other', 'Injured bird', 'Austin Heights', 1.5789, 103.6678, 'Siti Nurhaliza', '013-9876543', NULL, 'pending', '2025-12-15 13:51:19', '2025-12-15 13:51:19'),
+(7, 3, 'cat', 'Pregnant cat needs help', 'Mount Austin', 1.5456, 103.6234, 'Kumar Raj', '014-5554444', NULL, 'closed', '2025-12-15 13:51:19', '2025-12-30 11:02:58'),
+(8, 3, 'dog', 'Abandoned puppies', 'JB City Square', 1.4556, 103.7619, 'Kumar Raj', '014-5554444', NULL, 'approved', '2025-12-15 13:51:19', '2025-12-16 12:11:59'),
+(9, 3, 'cat', 'Cat colony needs feeding', 'Bukit Indah', 1.4756, 103.6234, 'Mary Tan', '015-1112222', NULL, 'pending', '2025-12-15 13:51:19', '2025-12-15 13:51:19');
+
 
 -- Dumping data for table `ai_chats`
 INSERT INTO ai_chats (chatID, userID, user_query, ai_response, chat_timestamp, is_active) VALUES

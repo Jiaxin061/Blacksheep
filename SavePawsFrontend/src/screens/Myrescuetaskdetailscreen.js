@@ -216,7 +216,6 @@ const MyRescueTaskDetailScreen = ({ navigation, route }) => {
           <Text style={styles.backIcon}>←</Text>
         </TouchableOpacity>
         <View>
-          <Text style={styles.headerSubtitle}>My Task</Text>
           <Text style={styles.headerTitle}>Task #{task.id}</Text>
         </View>
         <View style={{ width: 44 }} />

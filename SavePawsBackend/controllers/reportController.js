@@ -12,7 +12,7 @@ exports.getAllReports = async (req, res) => {
     };
 
     const reports = await Report.getAll(filters);
-    
+
     res.json({
       success: true,
       count: reports.length,
@@ -65,9 +65,9 @@ exports.submitReport = async (req, res) => {
       urgency_level,
       animal_condition,
       description,
-      location_latitude,
-      location_longitude,
-      location_address,
+      latitude,
+      longitude,
+      location,
       photo_url,
       reporter_name,
       reporter_phone
@@ -82,7 +82,7 @@ exports.submitReport = async (req, res) => {
     }
 
     // Validate animal type
-    const validTypes = ['dog', 'cat', 'other'];
+    const validTypes = ['dog', 'cat', 'bird', 'rabbit', 'other']; // Added types from frontend
     if (!validTypes.includes(animal_type)) {
       return res.status(400).json({
         success: false,
@@ -90,17 +90,8 @@ exports.submitReport = async (req, res) => {
       });
     }
 
-    // Validate urgency level
-    const validUrgency = ['low', 'medium', 'high', 'critical'];
-    if (urgency_level && !validUrgency.includes(urgency_level)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid urgency level'
-      });
-    }
-
     // Check if location is provided
-    if (!location_latitude || !location_longitude) {
+    if (!latitude || !longitude) {
       return res.status(400).json({
         success: false,
         message: 'Location coordinates are required'
@@ -109,14 +100,13 @@ exports.submitReport = async (req, res) => {
 
     // Create report data
     const reportData = {
-      user_id: req.userId || null, // Will be null for anonymous reports
+      user_id: req.userId || req.body.userID || req.body.user_id || null, // Will be null for anonymous reports
       animal_type,
-      urgency_level: urgency_level || 'medium',
       animal_condition,
       description,
-      location_latitude,
-      location_longitude,
-      location_address,
+      location,
+      latitude,
+      longitude,
       photo_url,
       reporter_name: reporter_name || (req.user ? `${req.user.first_name} ${req.user.last_name}` : null),
       reporter_phone: reporter_phone || (req.user ? req.user.phone_number : null),

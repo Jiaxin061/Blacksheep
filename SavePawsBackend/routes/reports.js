@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { query } = require('../config/database');
 const { authenticateAdmin, authenticateUser } = require('../middleware/authMiddleware');
+const reportController = require('../controllers/reportController');
 
 // ==================== GET USER REPORTS ====================
 
@@ -11,82 +12,13 @@ const { authenticateAdmin, authenticateUser } = require('../middleware/authMiddl
  * 
  * FIX: Made authenticateAdmin OPTIONAL - only checks token if provided
  */
-router.get('/', async (req, res) => {
-  try {
-    const { user_id, urgency, status, area } = req.query;
+// ==================== GET USER REPORTS ====================
 
-    console.log('📊 GET /api/reports - Query params:', { user_id, urgency, status, area });
-    console.log('📊 Auth header:', req.headers.authorization ? 'Present' : 'Missing');
-
-    // If user_id provided, filter by that user (User-specific access)
-    if (user_id) {
-      const sql = `
-                SELECT 
-                    r.*,
-                    r.reporter_name,
-                    r.reporter_contact as reporter_phone
-                FROM reports r
-                WHERE r.user_id = ?
-                ORDER BY r.created_at DESC
-            `;
-
-      const results = await query(sql, [user_id]);
-      console.log(`✅ Found ${results.length} reports for user ${user_id}`);
-
-      return res.json({
-        success: true,
-        reports: results
-      });
-    }
-
-    // Otherwise, get ALL reports (for admin)
-    let sql = `
-            SELECT 
-                r.*,
-                r.reporter_name,
-                r.reporter_contact as reporter_phone
-            FROM reports r
-            WHERE 1=1
-        `;
-
-    const params = [];
-
-    // Apply filters
-    if (urgency) {
-      sql += ' AND r.urgency_level = ?';
-      params.push(urgency);
-    }
-
-    if (status) {
-      sql += ' AND r.status = ?';
-      params.push(status);
-    }
-
-    // Filter by location
-    if (area) {
-      sql += ' AND (r.location LIKE ? OR r.location_address LIKE ?)';
-      params.push(`%${area}%`, `%${area}%`);
-    }
-
-    sql += ' ORDER BY r.created_at DESC';
-
-    const results = await query(sql, params);
-    console.log(`✅ Found ${results.length} total reports`);
-
-    res.json({
-      success: true,
-      reports: results
-    });
-
-  } catch (error) {
-    console.error('❌ GET reports error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch reports',
-      error: error.message
-    });
-  }
-});
+/**
+ * GET /api/reports
+ * Get reports for specific user or ALL reports (Admin view)
+ */
+router.get('/', reportController.getAllReports);
 
 // ==================== GET CURRENT USER REPORTS (token optional) ====================
 /**
@@ -187,69 +119,11 @@ router.get('/:id', async (req, res) => {
  * POST /api/reports
  * Create new report (Public - anyone can submit)
  */
-router.post('/', async (req, res) => {
-  try {
-    const {
-      animal_type,
-      urgency_level,
-      animal_condition,
-      description,
-      location_latitude,
-      location_longitude,
-      location_address,
-      photo_url
-    } = req.body;
-
-    const userID = req.userID || req.body.userID;
-
-    console.log('📝 POST /api/reports - Creating report for user:', userID);
-
-    // Validation
-    if (!userID || !animal_type || !description) {
-      return res.status(400).json({
-        success: false,
-        message: 'Missing required fields: userID, animal_type, description'
-      });
-    }
-
-    const sql = `
-      INSERT INTO reports 
-      (user_id, animal_type, urgency_level, animal_condition, description, 
-       location_latitude, location_longitude, location_address, photo_url, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
-    `;
-
-    const params = [
-      userID,
-      animal_type,
-      urgency_level || 'medium',
-      animal_condition || null,
-      description,
-      location_latitude || null,
-      location_longitude || null,
-      location_address || null,
-      photo_url || null
-    ];
-
-    const result = await query(sql, params);
-
-    console.log('✅ Report created with ID:', result.insertId);
-
-    res.status(201).json({
-      success: true,
-      message: 'Report submitted successfully',
-      reportId: result.insertId
-    });
-
-  } catch (error) {
-    console.error('❌ Create report error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to create report',
-      error: error.message
-    });
-  }
-});
+/**
+ * POST /api/reports
+ * Create new report (Public - anyone can submit)
+ */
+router.post('/', reportController.submitReport);
 
 // ==================== UPDATE REPORT (ADMIN ONLY) ====================
 

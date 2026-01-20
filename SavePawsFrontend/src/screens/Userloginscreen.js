@@ -47,7 +47,7 @@ const UserLoginScreen = ({ navigation }) => {
         await AsyncStorage.setItem('authToken', response.token || 'demo-token');
 
         Alert.alert('Success', `Welcome back, ${response.user.first_name}!`);
-        navigation.replace('UserHome', { 
+        navigation.replace('UserHome', {
           userId: response.user.id,
           icNo: response.user.ic_number,
           name: `${response.user.first_name} ${response.user.last_name}`
@@ -63,61 +63,7 @@ const UserLoginScreen = ({ navigation }) => {
     }
   };
 
-  // MyDigitalID Login - Auto login as User 1
-  const handleMyDigitalIDLogin = async () => {
-    setLoading(true);
 
-    try {
-      // First test connection
-      console.log('🔌 Testing server connection...');
-      const connectionTest = await ApiService.testConnection();
-      
-      if (!connectionTest.success) {
-        Alert.alert(
-          'Connection Error', 
-          connectionTest.message || 'Cannot connect to server. Please check:\n\n1. Backend server is running\n2. Server is accessible\n3. Check network settings'
-        );
-        setLoading(false);
-        return;
-      }
-
-      // Simulate MyDigitalID login - get User 1's data from database
-      console.log('🔍 Fetching user data...');
-      const response = await ApiService.getUserById(1);
-
-      if (response.success && response.user) {
-        // Save user data to AsyncStorage using auth utilities
-        await setCurrentUserID(1);
-        await setAuthToken('mydigitalid-token', 'user');
-        // Also save legacy keys for backward compatibility
-        await AsyncStorage.setItem('userId', '1');
-        await AsyncStorage.setItem('icNumber', response.user.ic_number);
-        await AsyncStorage.setItem('userName', `${response.user.first_name} ${response.user.last_name}`);
-        await AsyncStorage.setItem('authToken', 'mydigitalid-token');
-
-        Alert.alert(
-          '✅ MyDigitalID Login Success', 
-          `Welcome, ${response.user.first_name} ${response.user.last_name}!\n\nIC: ${response.user.ic_number}`
-        );
-        
-        navigation.replace('UserHome', { 
-          userId: 1,
-          icNo: response.user.ic_number,
-          name: `${response.user.first_name} ${response.user.last_name}`
-        });
-      } else {
-        Alert.alert('Error', response.message || 'MyDigitalID authentication failed');
-      }
-    } catch (error) {
-      console.error('MyDigitalID login error:', error);
-      Alert.alert(
-        'Error', 
-        `MyDigitalID login failed: ${error.message}\n\nPlease check:\n1. Backend server is running\n2. Database connection is working\n3. User ID 1 exists in database`
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -173,20 +119,20 @@ const UserLoginScreen = ({ navigation }) => {
                 >
                   <Text style={styles.eyeIcon}>{showPassword ? '🙈' : '👁️'}</Text>
                 </TouchableOpacity>
+              </View>
+
+              {/* Forgot Password Link */}
+              <TouchableOpacity
+                style={styles.forgotPasswordLink}
+                onPress={() => navigation.navigate('ForgotPassword')}
+              >
+                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+              </TouchableOpacity>
             </View>
 
-            {/* Forgot Password Link */}
+            {/* Login Button */}
             <TouchableOpacity
-              style={styles.forgotPasswordLink}
-              onPress={() => navigation.navigate('ForgotPassword')}
-            >
-              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Login Button */}
-          <TouchableOpacity
-              style={[styles.loginButton, loading && styles.buttonDisabled]} 
+              style={[styles.loginButton, loading && styles.buttonDisabled]}
               onPress={handleLogin}
               disabled={loading}
             >
@@ -196,23 +142,6 @@ const UserLoginScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          {/* OR Divider */}
-          <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>OR</Text>
-            <View style={styles.dividerLine} />
-          </View>
-
-          {/* MyDigitalID Login Button */}
-          <TouchableOpacity 
-            style={[styles.myDigitalIDButton, loading && styles.buttonDisabled]}
-            onPress={handleMyDigitalIDLogin}
-            disabled={loading}
-          >
-            <Text style={styles.myDigitalIDIcon}>🇲🇾</Text>
-            <Text style={styles.myDigitalIDButtonText}>Login with MyDigitalID</Text>
-          </TouchableOpacity>
-
           {/* Divider */}
           <View style={styles.divider}>
             <View style={styles.dividerLine} />
@@ -221,7 +150,7 @@ const UserLoginScreen = ({ navigation }) => {
           </View>
 
           {/* Sign Up Link */}
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.signupLink}
             onPress={() => navigation.navigate('Signup')}
           >

@@ -180,7 +180,7 @@ const AdminViewReportScreen = ({ navigation }) => {
         </TouchableOpacity>
         <View>
           <Text style={styles.headerSubtitle}>Admin</Text>
-          <Text style={styles.headerTitle}>Manage Reports</Text>
+          <Text style={styles.headerTitle}>All Reports</Text>
         </View>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>{reports.length}</Text>
