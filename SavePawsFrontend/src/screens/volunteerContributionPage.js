@@ -57,10 +57,14 @@ const VolunteerContributionPage = () => {
                         return;
                     }
 
-                    // 1. Fetch Registered Events (Upcoming)
+                    // 1. Fetch Registered Events (All registrations)
                     const myEvents = await ApiService.getUserEvents(userId);
 
-                    // Map DB events to UI format
+                    // 2. Fetch Contributions (Confirmed attendance)
+                    const myContributions = await ApiService.getContributions(userId);
+                    const completedEventIds = new Set(myContributions.map(c => c.eventID));
+
+                    // 3. Map Registered Events and filter out those already in Contributions
                     const mappedUpcoming = myEvents.map(e => {
                         const start = new Date(e.start_date);
                         const end = new Date(e.end_date);
@@ -69,38 +73,41 @@ const VolunteerContributionPage = () => {
                             : 'Time TBD';
 
                         return {
-                            id: e.recordID || e.eventID,
+                            id: (e.recordID || e.eventID).toString(),
                             eventID: e.eventID,
                             title: e.title,
                             location: e.eventLocation || e.location,
                             time: timeString,
                             startDate: e.start_date,
                             image: e.image_url,
-                            tag: e.tag_text || (new Date(e.start_date) < new Date() ? 'Completed' : 'Upcoming'),
-                            tagColor: new Date(e.start_date) < new Date() ? Colors.textSecondary : Colors.primary,
+                            tag: e.tag_text || (new Date(e.start_date) < new Date() ? 'Ongoing' : 'Upcoming'),
+                            tagColor: new Date(e.start_date) < new Date() ? '#F59E0B' : Colors.primary,
                             volunteers: 0
                         };
                     });
 
-                    // Filter out past events
-                    const futureEvents = mappedUpcoming.filter(e => new Date(e.startDate) >= new Date());
-                    setUpcomingEvents(futureEvents);
+                    // Only show events that aren't marked as "Attended" (contributed)
+                    const activeRegistrations = mappedUpcoming
+                        .filter(e => !completedEventIds.has(e.eventID))
+                        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate)); // Chronological order
 
-                    // 2. Fetch Contributions (Past History)
-                    const myContributions = await ApiService.getContributions(userId);
+                    setUpcomingEvents(activeRegistrations);
 
-                    // Map contributions to UI format
+                    // 4. Map contributions to UI format
                     const mappedContributions = myContributions.map(c => ({
                         id: c.contributionID.toString(),
+                        eventID: c.eventID,
                         title: c.title,
                         hours: c.hours_contributed,
                         date: new Date(c.event_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+                        eventDate: c.event_date,
                         description: c.description,
                         status: c.participation_status
-                    }));
+                    })).sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate)); // Chronological order (Latest behind earlier)
+
                     setContributions(mappedContributions);
 
-                    // 3. Fetch User Name (from Registration)
+                    // 5. Fetch User Name (from Registration)
                     let userName = 'Volunteer';
                     try {
                         const regDetails = await ApiService.getRegistrationDetails(userId);
@@ -111,9 +118,10 @@ const VolunteerContributionPage = () => {
                         console.log('User has no volunteer registration name, using default.');
                     }
 
-                    // 4. Calculate Stats & Set State
+                    // 6. Calculate Stats & Set State
                     const totalHours = mappedContributions.reduce((sum, item) => sum + Number(item.hours), 0);
-                    const totalEvents = mappedUpcoming.length + mappedContributions.length;
+                    // Total unique events = Active registrations + Completed contributions
+                    const totalEvents = activeRegistrations.length + mappedContributions.length;
 
                     setUserStats({
                         name: userName,
