@@ -430,9 +430,38 @@ export const fetchAdminRewards = async () => {
 };
 
 export const createAdminReward = async (payload) => {
-  const headers = await getAuthHeaders();
-  const response = await axios.post(`${API_BASE_URL}/api/admin/rewards`, payload, { headers });
-  return response.data;
+  try {
+    // Get auth headers for fetch request
+    const authHeaders = await getAuthHeaders();
+    const headers = {
+      "Accept": "application/json",
+    };
+
+    // Add Authorization header if token exists
+    if (authHeaders["Authorization"]) {
+      headers["Authorization"] = authHeaders["Authorization"];
+    }
+
+    // Add x-user-id header if exists
+    if (authHeaders["x-user-id"]) {
+      headers["x-user-id"] = authHeaders["x-user-id"];
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/admin/rewards`, {
+      method: "POST",
+      body: payload,
+      headers,
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to create reward");
+    }
+    return result;
+  } catch (error) {
+    console.error('❌ Create reward error:', error);
+    throw error;
+  }
 };
 
 export const updateAdminReward = async (rewardID, payload) => {

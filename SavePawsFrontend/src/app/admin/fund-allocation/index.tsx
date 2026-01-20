@@ -137,7 +137,7 @@ export default function FundAllocationIndex() {
                     Allocated RM{item.totalAllocated.toFixed(2)}
                   </Text>
                   <Text style={styles.remainingText}>
-                    Remaining RM{item.remaining.toFixed(2)}
+                    Remaining RM{Math.max(0, item.remaining).toFixed(2)}
                   </Text>
                 </View>
               </View>

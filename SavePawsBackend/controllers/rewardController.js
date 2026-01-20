@@ -193,21 +193,37 @@ exports.getRewardDetail = async (req, res, next) => {
  */
 exports.createReward = async (req, res, next) => {
     try {
-        const {
-            title, partnerName, category, description,
-            pointsRequired, validityMonths, terms, quantity
-        } = req.body;
+        console.log("📝 Create Reward - Headers:", req.headers['content-type']);
+        console.log("📝 Create Reward - Body:", req.body);
+        console.log("📝 Create Reward - File:", req.file);
 
-        let imageURL = req.body.imageURL;
+        // Extract and convert undefined to null
+        const title = req.body.title || null;
+        const partnerName = req.body.partnerName || null;
+        const category = req.body.category || null;
+        const description = req.body.description || null;
+        const pointsRequired = req.body.pointsRequired ? parseInt(req.body.pointsRequired) : null;
+        const validityMonths = req.body.validityMonths ? parseInt(req.body.validityMonths) : null;
+        const terms = req.body.terms || null;
+        const quantity = req.body.quantity ? parseInt(req.body.quantity) : null;
+
+        let imageURL = req.body.imageURL || null;
         if (req.file) {
             imageURL = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
         }
 
+        // Validation
         if (!title || !partnerName || !category || !pointsRequired || !validityMonths) {
-            return res.status(400).json({ success: false, message: "Missing required fields" });
+            console.error("❌ Missing required fields:", { title, partnerName, category, pointsRequired, validityMonths });
+            return res.status(400).json({
+                success: false,
+                message: "Missing required fields: title, partnerName, category, pointsRequired, validityMonths"
+            });
         }
 
         const rewardID = `rew_${Date.now()}`;
+
+        console.log("✅ Inserting reward:", { rewardID, title, partnerName, category, pointsRequired, validityMonths });
 
         await query(
             `INSERT INTO reward_item 
@@ -216,13 +232,15 @@ exports.createReward = async (req, res, next) => {
             [rewardID, title, partnerName, category, description, imageURL, pointsRequired, validityMonths, terms, quantity]
         );
 
+        console.log("✅ Reward created successfully:", rewardID);
+
         res.status(201).json({
             success: true,
             message: "Reward created successfully",
             data: { rewardID }
         });
     } catch (error) {
-        console.error("Error creating reward:", error);
+        console.error("❌ Error creating reward:", error);
         next(error);
     }
 };

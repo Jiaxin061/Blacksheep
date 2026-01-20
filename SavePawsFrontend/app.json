@@ -8,6 +8,8 @@
       "ios",
       "android"
     ],
-    "plugins": []
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

@@ -57,6 +57,8 @@ import AdminAddAllocationScreen from '../screens/AdminAddAllocationScreen';
 import AdminEditAllocationScreen from '../screens/AdminEditAllocationScreen';
 import AdminRewardsScreen from '../screens/AdminRewardsScreen';
 import AdminRewardsEditScreen from '../screens/AdminRewardsEditScreen';
+import AdminRewardsAddScreen from '../screens/AdminRewardsAddScreen';
+
 
 // Adoption Screens
 import AdoptionHubScreen from '../features/adoption/screens/AdoptionHubScreen';
@@ -130,6 +132,7 @@ const NavigationContent = ({ initialRoute }) => {
     'AdminFundAllocationItem',
     'AdminRewards',
     'AdminRewardsEdit',
+    'AdminRewardsAdd',
     'AdminAdoptionList',
     'AdminAdoptionDetail',
     'AdminCommunityManagement',
@@ -140,6 +143,7 @@ const NavigationContent = ({ initialRoute }) => {
     'AdminAdoptionManager',
     'AnimalDetailView',
     'AnimalsScreen',
+    'AnimalForm',
   ];
 
   const hideFabScreens = [
@@ -499,6 +503,14 @@ const NavigationContent = ({ initialRoute }) => {
           component={AdminRewardsEditScreen}
           options={{
             title: 'Edit Reward',
+            headerShown: true,
+          }}
+        />
+        <Stack.Screen
+          name="AdminRewardsAdd"
+          component={AdminRewardsAddScreen}
+          options={{
+            title: 'Add New Reward',
             headerShown: true,
           }}
         />
