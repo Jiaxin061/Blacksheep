@@ -139,6 +139,7 @@ const NavigationContent = ({ initialRoute }) => {
     'AdminRegistrationDetails',
     'AdminAdoptionManager',
     'AnimalDetailView',
+    'AnimalsScreen',
   ];
 
   const hideFabScreens = [
