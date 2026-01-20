@@ -16,7 +16,7 @@ async function initDatabase() {
     connection = await mysql.createConnection({
       host: 'localhost',
       user: 'root',
-      password: 'karen',          // change if needed
+      password: 'admin123',          // change if needed
       database: 'savepaws_db',  // your DB name
       multipleStatements: true
     });

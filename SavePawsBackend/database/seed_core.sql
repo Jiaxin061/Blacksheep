@@ -114,12 +114,6 @@ ON DUPLICATE KEY UPDATE recordID=recordID;
 INSERT INTO post_comments (commentID, postID, userID, comment_text, comment_date) VALUES
 (1, 1, 2, 'I saw that husky too! I called the local council.', '2025-12-29 13:25:51');
 
--- Dumping data for table `volunteer_contribution`
-INSERT INTO volunteer_contribution (contributionID, userID, eventID, hours_contributed, participation_status) VALUES
-(1, 3, 1, 4.00, 'Attended')
-ON DUPLICATE KEY UPDATE contributionID=contributionID;
-
-
 -- Dumping data for table `volunteer_registration`
 INSERT INTO volunteer_registration (registrationID, userID, userName, location, experience, capability, registration_status, submition_date, adminID, reviewed_date, rejection_reason) VALUES
 (2, 3, 'Qing Qing', '117, Taman Universiti, Skudai, 81300, Johor Darul Ta''zim', 'I joined an animal rescue event in 2018.', 'First Aid', 'Rejected', '2026-01-19 07:35:47', NULL, NULL, NULL),

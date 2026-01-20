@@ -573,17 +573,6 @@ CREATE TABLE IF NOT EXISTS post_comments (
   FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 16.8 Volunteer Contribution Table
-CREATE TABLE IF NOT EXISTS volunteer_contribution (
-  contributionID INT AUTO_INCREMENT PRIMARY KEY,
-  userID INT NOT NULL,
-  eventID INT NOT NULL,
-  hours_contributed DECIMAL(5,2) DEFAULT NULL,
-  participation_status ENUM('Registered','Attended','No-show') DEFAULT 'Registered',
-  FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (eventID) REFERENCES volunteer_events(eventID) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 -- 16.9 Volunteer Registration Table
 CREATE TABLE IF NOT EXISTS volunteer_registration (
   registrationID INT AUTO_INCREMENT PRIMARY KEY,
