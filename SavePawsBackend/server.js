@@ -24,6 +24,7 @@ const adminFundsRoutes = require('./routes/adminFunds');
 const adminRewardsRoutes = require('./routes/adminRewards');
 const rewardsRoutes = require('./routes/rewards');
 const donationsRoutes = require('./routes/donations');
+const donationAnimalsRoutes = require('./routes/donationAnimals');
 
 // Adoption routes
 const adoptionRoutes = require('./routes/adoption/adoptionRoutes');
@@ -172,6 +173,7 @@ app.use('/api/admin', adminFundsRoutes);
 app.use('/api/admin/rewards', adminRewardsRoutes);
 app.use('/api/rewards', rewardsRoutes);
 app.use('/api/donations', donationsRoutes);
+app.use('/api/donation-animals', donationAnimalsRoutes);
 
 
 

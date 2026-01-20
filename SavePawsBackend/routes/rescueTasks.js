@@ -31,12 +31,12 @@ router.get('/', async (req, res) => {
                 rt.update_image,
                 r.animal_type,
                 r.description,
-                r.photo_url as photo_url,
                 r.location as rescue_area,
-                r.latitude as location_latitude,
-                r.longitude as location_longitude,
+                r.location_latitude,
+                r.location_longitude,
                 r.reporter_name,
-                r.reporter_contact as reporter_phone
+                r.reporter_contact as reporter_phone,
+                r.photo_url
             FROM rescue_tasks rt
             INNER JOIN reports r ON rt.report_id = r.id
             WHERE 1=1
@@ -107,8 +107,8 @@ router.get('/my-tasks', async (req, res) => {
                 rt.*,
                 r.animal_type,
                 r.description,
-                r.latitude as location_latitude,
-                r.longitude as location_longitude,
+                r.location_latitude,
+                r.location_longitude,
                 r.location,
                 r.reporter_name,
                 r.reporter_contact as reporter_phone,
@@ -165,12 +165,12 @@ router.get('/:id', async (req, res) => {
                 rt.*,
                 r.animal_type,
                 r.description,
-                r.latitude as location_latitude,
-                r.longitude as location_longitude,
+                r.location_latitude,
+                r.location_longitude,
                 r.location,
                 r.reporter_name,
                 r.reporter_contact as reporter_phone,
-                r.photo_url as photo_url
+                r.photo_url
             FROM rescue_tasks rt
             INNER JOIN reports r ON rt.report_id = r.id
             WHERE rt.id = ? AND rt.assigned_to_user_id = ?

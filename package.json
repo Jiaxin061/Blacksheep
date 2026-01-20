@@ -1,5 +1,11 @@
 {
   "devDependencies": {
     "baseline-browser-mapping": "^2.9.16"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^15.0.3",
+    "all": "^0.0.0",
+    "expo": "^54.0.31",
+    "expo-font": "~14.0.11"
   }
 }

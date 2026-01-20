@@ -58,7 +58,7 @@ export default function AnimalDetailsScreen() {
     const fetchAnimalDetails = async () => {
         try {
             setError(null);
-            const response = await axios.get(`${API_BASE_URL}/api/animals/${effectiveId}`);
+            const response = await axios.get(`${API_BASE_URL}/api/donation-animals/${effectiveId}`);
 
             // Map backend data to component expected shape if needed
             const data = response.data;
