@@ -64,7 +64,7 @@ import AdminAdoptionListScreen from '../features/adoption/screens/AdminAdoptionL
 import AdminAdoptionDetailScreen from '../features/adoption/screens/AdminAdoptionDetailScreen';
 import AnimalDetail from '../features/animals/components/AnimalDetail';
 
-// New Admin Management Screens
+// Community Management Screens
 import AdminCommunityManagementPage from '../screens/adminCommunityManagementPage';
 import AdminVolunteerHubScreen from '../screens/AdminVolunteerHubScreen';
 import AdminVolunteerManagementPage from '../screens/adminVolunteerManagementPage'; // Unified fallback

@@ -2,6 +2,8 @@ import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ApiService from '../services/api';
 
 const BottomNav = () => {
     const navigation = useNavigation();
@@ -15,8 +17,28 @@ const BottomNav = () => {
         { name: 'Donate', icon: 'heart-outline', route: 'DonationHome' },
     ];
 
-    const handlePress = (route) => {
-        navigation.navigate(route);
+    const handlePress = async (route) => {
+        if (route === 'Volunteer') {
+            try {
+                const userId = await AsyncStorage.getItem('userId');
+                if (userId) {
+                    const status = await ApiService.checkVolunteerStatus(userId);
+                    if (status.hasRegistration) {
+                        navigation.navigate('VolunteerContribution');
+                    } else {
+                        navigation.navigate('VolunteerRegistration');
+                    }
+                } else {
+                    // Fallback if no user ID found (shouldn't happen if logged in)
+                    navigation.navigate('VolunteerRegistration');
+                }
+            } catch (error) {
+                console.error('Navigation error:', error);
+                navigation.navigate('VolunteerRegistration');
+            }
+        } else {
+            navigation.navigate(route);
+        }
     };
 
     return (

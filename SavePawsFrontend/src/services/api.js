@@ -795,6 +795,19 @@ class ApiService {
         }
     }
 
+    static async checkVolunteerStatus(userId) {
+        try {
+            console.log('🔍 Checking volunteer status for user:', userId);
+            const response = await ApiService._protectedFetch(`/volunteer/status/${userId}`, 'GET');
+            const data = await response.json();
+            console.log('✅ Volunteer status:', data);
+            return data;
+        } catch (error) {
+            console.error('❌ checkVolunteerStatus error:', error);
+            return { hasRegistration: false, status: null, error: true };
+        }
+    }
+
     static async getAIHistory(userId) {
         try {
             const response = await ApiService._protectedFetch(`/ai/history/${userId}`);
