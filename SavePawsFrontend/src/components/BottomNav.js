@@ -2,6 +2,9 @@ import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useNavigationState } from '@react-navigation/native';
+import { Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ApiService from '../services/api';
 
 const BottomNav = () => {
     const navigation = useNavigation();
@@ -15,8 +18,52 @@ const BottomNav = () => {
         { name: 'Donate', icon: 'heart-outline', route: 'DonationHome' },
     ];
 
-    const handlePress = (route) => {
-        navigation.navigate(route);
+    const handlePress = async (item) => {
+        if (item.name === 'Volunteer') {
+            try {
+                const userId = await AsyncStorage.getItem('userId');
+                if (!userId) {
+                    Alert.alert('Error', 'User ID not found. Please log in again.');
+                    return;
+                }
+
+                const statusData = await ApiService.getVolunteerStatus(userId);
+                console.log('Volunteer Status (Nav):', statusData);
+
+                if (!statusData.hasRegistration) {
+                    navigation.navigate('VolunteerRegistration');
+                } else {
+                    switch (statusData.status) {
+                        case 'Pending':
+                            Alert.alert(
+                                'Application Pending',
+                                'Your volunteer application is currently under review by an admin. Please check back later.'
+                            );
+                            break;
+                        case 'Approved':
+                            navigation.navigate('VolunteerContribution');
+                            break;
+                        case 'Rejected':
+                            Alert.alert(
+                                'Application Rejected',
+                                `Your application was rejected. Reason: ${statusData.rejectionReason || 'No reason provided.'}.`,
+                                [
+                                    { text: "Cancel", style: "cancel" },
+                                    { text: "Apply Again", onPress: () => navigation.navigate('VolunteerRegistration') }
+                                ]
+                            );
+                            break;
+                        default:
+                            Alert.alert('Error', 'Unknown volunteer status.');
+                    }
+                }
+            } catch (error) {
+                console.error('Navigation Error:', error);
+                Alert.alert('Error', 'Failed to check volunteer status. Please try again.');
+            }
+        } else {
+            navigation.navigate(item.route);
+        }
     };
 
     return (
@@ -27,7 +74,7 @@ const BottomNav = () => {
                     <TouchableOpacity
                         key={item.name}
                         style={[styles.navItem, isActive && styles.navItemActive]}
-                        onPress={() => handlePress(item.route)}
+                        onPress={() => handlePress(item)}
                     >
                         <Ionicons
                             name={item.icon}

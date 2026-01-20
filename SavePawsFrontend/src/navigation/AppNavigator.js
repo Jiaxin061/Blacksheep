@@ -1,7 +1,8 @@
 import React from 'react';
-import { View } from 'react-native';
-import { NavigationContainer, useNavigationState } from '@react-navigation/native';
+import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { NavigationContainer, useNavigationState, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Ionicons } from '@expo/vector-icons';
 
 // Import Screens - ONLY FILES THAT EXIST
 import LandingScreen from '../screens/LandingScreen';
@@ -131,20 +132,29 @@ const NavigationContent = ({ initialRoute }) => {
     'AdminRewardsEdit',
     'AdminAdoptionList',
     'AdminAdoptionDetail',
-    'VolunteerRegistration',
     'AdminCommunityManagement',
     'AdminVolunteerHub',
     'AdminEventManagement',
     'AdminRegistrationManagement',
     'AdminRegistrationDetails',
+    'AdminAdoptionManager',
+    'AnimalDetailView',
   ];
 
   const hideFabScreens = [
     ...hideNavScreens,
+    'AIAssistant',
+    'ReportAnimal',
+    'CommunityCreatePost',
+    'AnimalForm',
+    'AdoptionRequest',
+    'CommunityPostDetails',
+    'VolunteerRegistration',
+    'VolunteerEventDetails',
   ];
 
-  const shouldShowNav = !hideNavScreens.includes(currentRoute);
-  const shouldShowFab = !hideFabScreens.includes(currentRoute);
+  const shouldShowNav = currentRoute && !hideNavScreens.includes(currentRoute);
+  const shouldShowFab = currentRoute && !hideFabScreens.includes(currentRoute);
 
   return (
     <View style={{ flex: 1 }}>
@@ -607,9 +617,53 @@ const NavigationContent = ({ initialRoute }) => {
           }}
         />
       </Stack.Navigator>
+      {shouldShowFab && <FloatingAIButton />}
       {shouldShowNav && <BottomNav />}
     </View>
   );
 };
+
+const FloatingAIButton = () => {
+  const navigation = useNavigation();
+
+  return (
+    <TouchableOpacity
+      style={styles.fab}
+      onPress={() => navigation.navigate('AIAssistant')}
+      activeOpacity={0.8}
+    >
+      <View style={styles.fabIconContainer}>
+        <Ionicons name="chatbubbles" size={28} color="#ffffff" />
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  fab: {
+    position: 'absolute',
+    bottom: 90, // Above BottomNav (70px height) + padding
+    right: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#14b8a6', // Primary Teal
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
+    zIndex: 999,
+  },
+  fabIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 export default AppNavigator;
