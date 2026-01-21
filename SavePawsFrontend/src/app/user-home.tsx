@@ -31,9 +31,8 @@ export default function UserHomeScreen() {
   const fetchData = async () => {
     try {
       // 1. Fetch Animals (for preview section)
-      // 1. Fetch Animals (for preview section)
-      const animalsRes = await axios.get(`${API_BASE_URL}/api/donation-animals`);
-      const animalsData = animalsRes.data || [];
+      const animalsRes = await axios.get(`${API_BASE_URL}/api/animals`);
+      const animalsData = animalsRes.data.data || [];
       // Filter only Active and take top 2 for preview
       const activeAnimals = animalsData
         .filter((a: any) => a.status === 'Active')
