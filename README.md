@@ -43,7 +43,7 @@ Our team collaborated to design and implement an application that designed to re
 # SavePaws Project 🐾
 
 ## 🧩 Wei Lam’s Contribution  
-### Adoption & Animal Subsystem
+### Adoption Subsystem
 
 | **Sprint** | **Module Name** | **Frontend** | **Backend** |
 |------------|-----------------|--------------|-------------|
