@@ -9,12 +9,12 @@ axios.defaults.timeout = 30000;
 // ============================================
 
 export const fetchUserAnimals = async () => {
-  const response = await axios.get(`${API_BASE_URL}/api/animals`);
+  const response = await axios.get(`${API_BASE_URL}/api/donation-animals`);
   return response.data;
 };
 
 export const fetchAnimalDetails = async (id) => {
-  const response = await axios.get(`${API_BASE_URL}/api/animals/${id}`);
+  const response = await axios.get(`${API_BASE_URL}/api/donation-animals/${id}`);
   return response.data;
 };
 

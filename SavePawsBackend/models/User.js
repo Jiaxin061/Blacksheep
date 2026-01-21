@@ -14,7 +14,7 @@ class User {
   // Get user by ID
   static async getById(id) {
     const sql = `
-      SELECT id, first_name, last_name, email, phone_number, status, created_at, updated_at
+      SELECT id, ic_number, first_name, last_name, email, phone_number, status, is_volunteer, volunteer_badge, created_at, updated_at
       FROM users 
       WHERE id = ?
     `;
@@ -107,7 +107,7 @@ class User {
 
   // Update password
   static async updatePassword(id, password_hash) {
-    const sql = 'UPDATE users SET password = ? WHERE id = ?';
+    const sql = 'UPDATE users SET password_hash = ? WHERE id = ?';
     const result = await query(sql, [password_hash, id]);
     return result.affectedRows > 0;
   }

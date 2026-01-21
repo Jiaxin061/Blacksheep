@@ -57,53 +57,70 @@ const VolunteerContributionPage = () => {
                         return;
                     }
 
-                    // 1. Fetch Registered Events (All registrations)
+                    // 1. Fetch All Registered Events
                     const myEvents = await ApiService.getUserEvents(userId);
+                    const now = new Date();
 
-                    // 2. Fetch Contributions (Confirmed attendance)
-                    const myContributions = await ApiService.getContributions(userId);
-                    const completedEventIds = new Set(myContributions.map(c => c.eventID));
-
-                    // 3. Map Registered Events and filter out those already in Contributions
-                    const mappedUpcoming = myEvents.map(e => {
+                    // 2. Map All Events and Split into Upcoming vs Completed
+                    const mappedAll = myEvents.map(e => {
                         const start = new Date(e.start_date);
-                        const end = new Date(e.end_date);
-                        const timeString = !isNaN(start) && !isNaN(end)
+                        const end = e.end_date ? new Date(e.end_date) : start;
+
+                        const timeRange = !isNaN(start) && !isNaN(end)
                             ? `${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
                             : 'Time TBD';
+
+                        const isPast = end < now;
+                        const hasStarted = start < now;
+
+                        let tag = 'Upcoming';
+                        let tagColor = Colors.primary;
+
+                        if (isPast) {
+                            tag = 'Completed';
+                            tagColor = Colors.success;
+                        } else if (hasStarted) {
+                            tag = 'Ongoing';
+                            tagColor = '#F59E0B'; // Orange
+                        }
 
                         return {
                             id: (e.recordID || e.eventID).toString(),
                             eventID: e.eventID,
                             title: e.title,
                             location: e.eventLocation || e.location,
-                            time: timeString,
+                            time: timeRange,
                             startDate: e.start_date,
+                            endDate: e.end_date,
                             image: e.image_url,
-                            tag: e.tag_text || (new Date(e.start_date) < new Date() ? 'Ongoing' : 'Upcoming'),
-                            tagColor: new Date(e.start_date) < new Date() ? '#F59E0B' : Colors.primary,
-                            volunteers: 0
+                            tag: e.tag_text || tag,
+                            tagColor: tagColor,
+                            hours: e.hours || 0,
+                            description: e.description,
+                            isPast: isPast,
+                            registrationStatus: e.registration_status || e.status
                         };
                     });
 
-                    // Only show events that aren't marked as "Attended" (contributed)
-                    const activeRegistrations = mappedUpcoming
-                        .filter(e => !completedEventIds.has(e.eventID))
-                        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate)); // Chronological order
+                    // 3. Filter into sections
+                    const activeRegistrations = mappedAll
+                        .filter(e => !e.isPast)
+                        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
 
                     setUpcomingEvents(activeRegistrations);
 
-                    // 4. Map contributions to UI format
-                    const mappedContributions = myContributions.map(c => ({
-                        id: c.contributionID.toString(),
-                        eventID: c.eventID,
-                        title: c.title,
-                        hours: c.hours_contributed,
-                        date: new Date(c.event_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
-                        eventDate: c.event_date,
-                        description: c.description,
-                        status: c.participation_status
-                    })).sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate)); // Chronological order (Latest behind earlier)
+                    const mappedContributions = mappedAll
+                        .filter(e => e.isPast && e.registrationStatus !== 'No-show')
+                        .map(c => ({
+                            id: c.id,
+                            title: c.title,
+                            hours: c.hours,
+                            date: new Date(c.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+                            timeRange: c.time,
+                            location: c.location,
+                            description: c.description
+                        }))
+                        .sort((a, b) => new Date(b.startDate) - new Date(a.startDate)); // Latest first for contributions
 
                     setContributions(mappedContributions);
 
@@ -478,9 +495,20 @@ const ContributionItem = ({ item }) => (
         <View style={styles.contributionInfo}>
             <View style={styles.contributionHeader}>
                 <Text style={styles.contributionTitle}>{item.title}</Text>
-                <Text style={styles.contributionHours}>+{item.hours} hrs</Text>
+                <Text style={styles.contributionHours}>+{Number(item.hours).toFixed(2)} hrs</Text>
             </View>
-            <Text style={styles.contributionDate}>{item.date}</Text>
+            <View style={[styles.detailRow, { marginBottom: 2 }]}>
+                <Ionicons name="calendar-outline" size={14} color={Colors.textSecondary} />
+                <Text style={[styles.detailText, { fontSize: 13, marginLeft: 4 }]}>{item.date}</Text>
+            </View>
+            <View style={[styles.detailRow, { marginBottom: 2 }]}>
+                <Ionicons name="time-outline" size={14} color={Colors.textSecondary} />
+                <Text style={[styles.detailText, { fontSize: 13, marginLeft: 4 }]}>{item.timeRange}</Text>
+            </View>
+            <View style={[styles.detailRow, { marginBottom: 8 }]}>
+                <Ionicons name="location-outline" size={14} color={Colors.textSecondary} />
+                <Text style={[styles.detailText, { fontSize: 13, marginLeft: 4 }]} numberOfLines={1}>{item.location}</Text>
+            </View>
             <Text style={styles.contributionDesc}>{item.description}</Text>
         </View>
     </View>

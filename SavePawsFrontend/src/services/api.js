@@ -187,45 +187,24 @@ class ApiService {
     }
 
     static async getUserById(userId) {
+        // userId is ignored because we fetch based on the token for security/simplicity
         try {
-            console.log('🔍 Getting user by ID:', userId);
-            console.log('🌐 Full URL:', `${API_BASE_URL}/auth/users/${userId}`);
-
-            const response = await fetch(`${API_BASE_URL}/auth/users/${userId}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            console.log('🔍 Getting current user profile');
+            const response = await ApiService._protectedFetch('/auth/user/me', 'GET');
 
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error('❌ Response not OK:', response.status, errorText);
                 return {
                     success: false,
-                    message: `Server error: ${response.status} - ${errorText}`
+                    message: `Server error: ${response.status}`
                 };
             }
 
             const data = await response.json();
-            console.log('✅ User data:', data);
-
-            return data;
+            return data; // returns { success: true, user: {...} }
         } catch (error) {
             console.error('❌ Get user error:', error);
-            console.error('❌ Error details:', {
-                message: error.message,
-                name: error.name,
-                stack: error.stack
-            });
-
-            // More helpful error message
-            let errorMsg = error.message;
-            if (error.message === 'Network request failed' || error.message.includes('Network')) {
-                errorMsg = `Cannot connect to server at ${API_BASE_URL}. Make sure:\n1. Backend server is running\n2. Server is accessible from emulator\n3. Check firewall settings`;
-            }
-
-            return { success: false, message: errorMsg };
+            return { success: false, message: error.message };
         }
     }
 

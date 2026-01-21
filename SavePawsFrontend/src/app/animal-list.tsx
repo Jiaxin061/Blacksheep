@@ -2,15 +2,15 @@ import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    FlatList,
-    Image,
-    RefreshControl,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Image,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { API_BASE_URL } from "../config/api";
 import { colors } from "../theme/colors";
@@ -38,7 +38,7 @@ export default function AnimalListScreen() {
   const fetchAnimals = async () => {
     try {
       setError(null);
-      const response = await axios.get(`${API_BASE_URL}/api/animals`);
+      const response = await axios.get(`${API_BASE_URL}/api/donation-animals`);
       setAnimals(response.data);
     } catch (err: any) {
       console.error("Error fetching animals:", err);

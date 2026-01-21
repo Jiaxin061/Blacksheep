@@ -335,9 +335,9 @@ const RescueTasksScreen = ({ navigation }) => {
                   <Text style={styles.detailValue}>
                     📍 {selectedTask.location_address || selectedTask.location || 'N/A'}
                   </Text>
-                  {selectedTask.location_latitude && selectedTask.location_longitude && (
+                  {selectedTask.latitude && selectedTask.longitude && (
                     <Text style={styles.coordinates}>
-                      GPS: {selectedTask.location_latitude}, {selectedTask.location_longitude}
+                      GPS: {selectedTask.latitude}, {selectedTask.location_longitude}
                     </Text>
                   )}
                 </View>

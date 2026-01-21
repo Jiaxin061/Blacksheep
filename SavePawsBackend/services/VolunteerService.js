@@ -9,7 +9,7 @@ const VolunteerService = {
         try {
             const sql = `
                 SELECT * FROM volunteer_events 
-                WHERE start_date >= CURRENT_DATE()
+                WHERE COALESCE(end_date, start_date) >= NOW()
                 ORDER BY start_date ASC
             `;
             const results = await query(sql);
@@ -163,14 +163,21 @@ const VolunteerService = {
     // Get contributions history (Confirmed attendance)
     getContributions: async (userId) => {
         try {
-            // Get records from volunteer_contribution table where status is Attended
-            // Or get from event_records if you track attendance there?
-            // Schema has `volunteer_contribution` table specifically for points/hours.
             const sql = `
-                SELECT vc.*, ve.title, ve.start_date as event_date, ve.description
-                FROM volunteer_contribution vc
-                JOIN volunteer_events ve ON vc.eventID = ve.eventID
-                WHERE vc.userID = ?
+                SELECT 
+                    er.recordID as contributionID, 
+                    er.userID, 
+                    er.eventID, 
+                    ve.hours as hours_contributed, 
+                    'Attended' as participation_status,
+                    ve.title, 
+                    ve.start_date as event_date, 
+                    ve.description
+                FROM event_records er
+                JOIN volunteer_events ve ON er.eventID = ve.eventID
+                WHERE er.userID = ? 
+                AND COALESCE(ve.end_date, ve.start_date) < NOW() 
+                AND er.status != 'No-show'
                 ORDER BY ve.start_date DESC
             `;
             const results = await query(sql, [userId]);

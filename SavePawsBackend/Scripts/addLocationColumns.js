@@ -25,7 +25,7 @@ const addLocationColumns = async () => {
       FROM INFORMATION_SCHEMA.COLUMNS 
       WHERE TABLE_SCHEMA = DATABASE() 
       AND TABLE_NAME = 'reports' 
-      AND COLUMN_NAME = 'location_latitude'
+      AND COLUMN_NAME = 'latitude'
     `);
 
     const [lngColumn] = await pool.query(`
@@ -33,7 +33,7 @@ const addLocationColumns = async () => {
       FROM INFORMATION_SCHEMA.COLUMNS 
       WHERE TABLE_SCHEMA = DATABASE() 
       AND TABLE_NAME = 'reports' 
-      AND COLUMN_NAME = 'location_longitude'
+      AND COLUMN_NAME = 'longitude'
     `);
 
     if (latColumn[0].count > 0 && lngColumn[0].count > 0) {
@@ -43,9 +43,9 @@ const addLocationColumns = async () => {
       if (latColumn[0].count === 0) {
         await pool.query(`
           ALTER TABLE reports 
-          ADD COLUMN location_latitude DECIMAL(10, 8) NULL
+          ADD COLUMN latitude DECIMAL(10, 8) NULL
         `);
-        console.log('✅ location_latitude column added to reports table');
+        console.log('✅ latitude column added to reports table');
       }
 
       // Add location_longitude if it doesn't exist
@@ -54,7 +54,7 @@ const addLocationColumns = async () => {
           ALTER TABLE reports 
           ADD COLUMN location_longitude DECIMAL(11, 8) NULL
         `);
-        console.log('✅ location_longitude column added to reports table');
+        console.log('✅ longitude column added to reports table');
       }
     }
 
@@ -64,7 +64,7 @@ const addLocationColumns = async () => {
       FROM INFORMATION_SCHEMA.COLUMNS 
       WHERE TABLE_SCHEMA = DATABASE() 
       AND TABLE_NAME = 'reports' 
-      AND COLUMN_NAME IN ('location_latitude', 'location_longitude')
+      AND COLUMN_NAME IN ('latitude', 'longitude')
       ORDER BY COLUMN_NAME
     `);
 

@@ -86,14 +86,14 @@ const ManageRescueTasksScreen = ({ navigation }) => {
         
         // Log tasks with location data for debugging
         const tasksWithLocation = rescueTasks.filter(
-          t => t.location_latitude != null && t.location_longitude != null
+          t => t.latitude != null && t.longitude != null
         );
         console.log('📍 Tasks with location:', tasksWithLocation.length);
         if (tasksWithLocation.length > 0) {
           console.log('📍 Sample location:', {
             id: tasksWithLocation[0].id,
-            lat: tasksWithLocation[0].location_latitude,
-            lng: tasksWithLocation[0].location_longitude
+            lat: tasksWithLocation[0].latitude,
+            lng: tasksWithLocation[0].longitude
           });
         }
         
@@ -103,10 +103,10 @@ const ManageRescueTasksScreen = ({ navigation }) => {
         // Set initial map region to fit all tasks with locations
         if (tasksWithLocation.length > 0) {
           const latitudes = tasksWithLocation
-            .map(t => parseFloat(t.location_latitude))
+            .map(t => parseFloat(t.latitude))
             .filter(lat => !isNaN(lat));
           const longitudes = tasksWithLocation
-            .map(t => parseFloat(t.location_longitude))
+            .map(t => parseFloat(t.ongitude))
             .filter(lng => !isNaN(lng));
           
           if (latitudes.length > 0 && longitudes.length > 0) {
@@ -129,8 +129,8 @@ const ManageRescueTasksScreen = ({ navigation }) => {
             // Fallback to first task location
             const firstTask = tasksWithLocation[0];
             setMapRegion({
-              latitude: parseFloat(firstTask.location_latitude),
-              longitude: parseFloat(firstTask.location_longitude),
+              latitude: parseFloat(firstTask.latitude),
+              longitude: parseFloat(firstTask.longitude),
               latitudeDelta: 0.05,
               longitudeDelta: 0.05,
             });
@@ -304,11 +304,11 @@ const ManageRescueTasksScreen = ({ navigation }) => {
     <TouchableOpacity 
       style={styles.taskCard}
       onPress={() => {
-        if (item.location_latitude && item.location_longitude) {
+        if (item.latitude && item.longitude) {
           setViewMode('map');
           setMapRegion({
-            latitude: parseFloat(item.location_latitude),
-            longitude: parseFloat(item.location_longitude),
+            latitude: parseFloat(item.latitude),
+            longitude: parseFloat(item.longitude),
             latitudeDelta: 0.01,
             longitudeDelta: 0.01,
           });
@@ -364,14 +364,14 @@ const ManageRescueTasksScreen = ({ navigation }) => {
           <Text style={styles.locationText} numberOfLines={1}>
             {item.location_address || item.location || 'Location not specified'}
           </Text>
-          {item.location_latitude && item.location_longitude && (
+          {item.latitude && item.longitude && (
             <TouchableOpacity
               style={styles.mapButton}
               onPress={() => {
                 setViewMode('map');
                 setMapRegion({
-                  latitude: parseFloat(item.location_latitude),
-                  longitude: parseFloat(item.location_longitude),
+                  latitude: parseFloat(item.atitude),
+                  longitude: parseFloat(item.longitude),
                   latitudeDelta: 0.01,
                   longitudeDelta: 0.01,
                 });
@@ -426,10 +426,10 @@ const ManageRescueTasksScreen = ({ navigation }) => {
   const renderMapView = () => {
     // Filter tasks with valid coordinates
     const tasksWithLocation = filteredReports.filter(
-      r => r.location_latitude != null && 
-           r.location_longitude != null &&
-           !isNaN(parseFloat(r.location_latitude)) &&
-           !isNaN(parseFloat(r.location_longitude))
+      r => r.latitude != null && 
+           r.longitude != null &&
+           !isNaN(parseFloat(r.latitude)) &&
+           !isNaN(parseFloat(r.longitude))
     );
 
     console.log('🗺️ Rendering map with', tasksWithLocation.length, 'tasks with valid locations');
@@ -437,8 +437,8 @@ const ManageRescueTasksScreen = ({ navigation }) => {
     // Calculate map region to fit all markers if we have tasks
     let initialRegion = mapRegion;
     if (tasksWithLocation.length > 0) {
-      const latitudes = tasksWithLocation.map(t => parseFloat(t.location_latitude));
-      const longitudes = tasksWithLocation.map(t => parseFloat(t.location_longitude));
+      const latitudes = tasksWithLocation.map(t => parseFloat(t.latitude));
+      const longitudes = tasksWithLocation.map(t => parseFloat(t.longitude));
       const minLat = Math.min(...latitudes);
       const maxLat = Math.max(...latitudes);
       const minLng = Math.min(...longitudes);
@@ -490,8 +490,8 @@ const ManageRescueTasksScreen = ({ navigation }) => {
           onRegionChangeComplete={setMapRegion}
         >
           {tasksWithLocation.map((task) => {
-            const lat = parseFloat(task.location_latitude);
-            const lng = parseFloat(task.location_longitude);
+            const lat = parseFloat(task.latitude);
+            const lng = parseFloat(task.longitude);
             
             if (isNaN(lat) || isNaN(lng)) {
               return null;

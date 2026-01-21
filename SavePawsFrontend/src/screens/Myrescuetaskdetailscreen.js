@@ -80,8 +80,8 @@ const MyRescueTaskDetailScreen = ({ navigation, route }) => {
   };
 
   const handleOpenMap = () => {
-    if (task?.location_latitude && task?.location_longitude) {
-      const url = `https://www.google.com/maps/search/?api=1&query=${task.location_latitude},${task.location_longitude}`;
+    if (task?.latitude && task?.longitude) {
+      const url = `https://www.google.com/maps/search/?api=1&query=${task.latitude},${task.longitude}`;
       Linking.openURL(url);
     } else {
       Alert.alert('Error', 'Location coordinates not available');
@@ -286,15 +286,15 @@ const MyRescueTaskDetailScreen = ({ navigation, route }) => {
               <Text style={styles.locationAddress}>
                 {task.location_address || task.location || 'Address not available'}
               </Text>
-              {task.location_latitude && task.location_longitude && (
+              {task.latitude && task.longitude && (
                 <Text style={styles.coordinates}>
-                  GPS: {task.location_latitude}, {task.location_longitude}
+                  GPS: {task.latitude}, {task.location_longitude}
                 </Text>
               )}
             </View>
           </View>
 
-          {task.location_latitude && task.location_longitude && (
+          {task.latitude && task.longitude && (
             <TouchableOpacity style={styles.mapButton} onPress={handleOpenMap}>
               <Text style={styles.mapButtonIcon}>🗺️</Text>
               <Text style={styles.mapButtonText}>Open in Maps</Text>

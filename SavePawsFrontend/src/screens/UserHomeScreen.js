@@ -215,7 +215,7 @@ const UserHomeScreen = ({ navigation }) => {
         </View>
         <TouchableOpacity
           style={styles.profileButton}
-          onPress={() => navigation.navigate('UserHome')}
+          onPress={() => navigation.navigate('UserProfile')}
         >
           <Text style={styles.profileIcon}>👤</Text>
         </TouchableOpacity>
