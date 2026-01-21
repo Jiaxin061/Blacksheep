@@ -84,7 +84,6 @@ CREATE TABLE IF NOT EXISTS reports (
   longitude DECIMAL(11, 8) NULL,
   photo_url VARCHAR(500) NULL,
   reporter_name VARCHAR(100) NULL,
-  reporter_phone VARCHAR(20) NULL,
   reporter_contact VARCHAR(20) NULL,
   status ENUM('pending','active','approved','closed') DEFAULT 'pending',
   assigned_to INT NULL,

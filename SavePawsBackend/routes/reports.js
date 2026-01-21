@@ -44,7 +44,7 @@ router.get('/my-reports', async (req, res) => {
             SELECT 
                 r.*,
                 r.reporter_name,
-                r.reporter_contact as reporter_phone
+                r.reporter_contact
             FROM reports r
             WHERE r.user_id = ?
             ORDER BY r.created_at DESC
@@ -82,7 +82,7 @@ router.get('/:id', async (req, res) => {
             SELECT 
                 r.*,
                 r.reporter_name,
-                r.reporter_contact as reporter_phone
+                r.reporter_contact
             FROM reports r
             WHERE r.id = ?
         `;

@@ -9,7 +9,7 @@ const VolunteerService = {
         try {
             const sql = `
                 SELECT * FROM volunteer_events 
-                WHERE COALESCE(end_date, start_date) >= NOW()
+                WHERE COALESCE(end_date, DATE_ADD(start_date, INTERVAL 2 HOUR)) >= NOW()
                 ORDER BY start_date ASC
             `;
             const results = await query(sql);
@@ -176,6 +176,7 @@ const VolunteerService = {
                 FROM event_records er
                 JOIN volunteer_events ve ON er.eventID = ve.eventID
                 WHERE er.userID = ? 
+                AND ve.start_date < NOW()
                 AND COALESCE(ve.end_date, ve.start_date) < NOW() 
                 AND er.status != 'No-show'
                 ORDER BY ve.start_date DESC

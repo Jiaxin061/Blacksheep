@@ -306,7 +306,7 @@ const ReportAnimalScreen = ({ navigation }) => {
           <Text style={styles.label}>Contact Information *</Text>
           <TextInput
             style={styles.input}
-            placeholder="Phone number or email"
+            placeholder="Phone number"
             placeholderTextColor={COLORS.textLight}
             value={formData.reporterContact}
             onChangeText={(text) =>

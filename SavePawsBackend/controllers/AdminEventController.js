@@ -17,6 +17,10 @@ class AdminEventController {
     static async createEvent(req, res) {
         try {
             const { title, description, start_date, end_date, location, max_volunteers, hours, image_url } = req.body;
+            // Date validation
+            if (new Date(end_date) < new Date(start_date)) {
+                return res.status(400).json({ success: false, message: 'End date cannot be before start date' });
+            }
             // Schema columns: title, description, eventLocation, start_date, end_date, max_volunteers, adminID, image_url, hours
             await query(
                 'INSERT INTO volunteer_events (title, description, eventLocation, start_date, end_date, max_volunteers, adminID, image_url, hours) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
@@ -33,6 +37,10 @@ class AdminEventController {
         try {
             const { id } = req.params;
             const { title, description, start_date, end_date, location, max_volunteers, hours, image_url } = req.body;
+            // Date validation
+            if (new Date(end_date) < new Date(start_date)) {
+                return res.status(400).json({ success: false, message: 'End date cannot be before start date' });
+            }
             await query(
                 'UPDATE volunteer_events SET title=?, description=?, eventLocation=?, start_date=?, end_date=?, max_volunteers=?, image_url=?, hours=? WHERE eventID=?',
                 [title, description, location, start_date, end_date, max_volunteers, image_url, hours, id]

@@ -70,7 +70,7 @@ exports.submitReport = async (req, res) => {
       location,
       photo_url,
       reporter_name,
-      reporter_phone
+      reporter_contact
     } = req.body;
 
     // Validation
@@ -109,7 +109,7 @@ exports.submitReport = async (req, res) => {
       longitude,
       photo_url,
       reporter_name: reporter_name || (req.user ? `${req.user.first_name} ${req.user.last_name}` : null),
-      reporter_phone: reporter_phone || (req.user ? req.user.phone_number : null),
+      reporter_contact: reporter_contact || (req.user ? req.user.phone_number : null),
       status: 'pending'
     };
 

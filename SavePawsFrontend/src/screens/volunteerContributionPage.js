@@ -70,8 +70,9 @@ const VolunteerContributionPage = () => {
                             ? `${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
                             : 'Time TBD';
 
-                        const isPast = end < now;
-                        const hasStarted = start < now;
+                        const isPast = start < now && end < now;
+                        const hasStarted = start < now && !isPast;
+
 
                         let tag = 'Upcoming';
                         let tagColor = Colors.primary;

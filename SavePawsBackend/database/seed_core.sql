@@ -26,7 +26,13 @@ ON DUPLICATE KEY UPDATE email=email;
 INSERT INTO animals (name, species, breed, age, gender, status, description, image_url, weight, color, location) VALUES
 ('Luna', 'Cat', 'Tabby', 2, 'female', 'available', 'Friendly tabby cat found abandoned in a parking lot.', 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400', 3.5, 'Orange/White', 'Shelter A'),
 ('Max', 'Dog', 'Golden Retriever', 3, 'male', 'available', 'Well-trained and friendly with children.', 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400', 25.0, 'Golden', 'Shelter B'),
-('Daisy', 'Dog', 'Beagle', 3, 'female', 'available', 'House-trained and knows basic commands.', 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400', 12.0, 'Tri-color', 'Shelter A')
+('Daisy', 'Dog', 'Beagle', 3, 'female', 'available', 'House-trained and knows basic commands.', 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400', 12.0, 'Tri-color', 'Shelter A'),
+('Buddy','Dog','Golden Retriever',3,'male','available','Friendly and energetic dog who loves playing fetch.','https://images.unsplash.com/photo-1561948955-570d7b15f2c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',28.50,'Golden','SavePaws Shelter - Block A'),
+('Lunu','Cat','Domestic Shorthair',2,'female','pending','Calm and affectionate cat, good with children.','https://images.unsplash.com/photo-1592194996308-7b43878e84a6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',4.20,'Grey','SavePaws Shelter - Block B'),
+('Maxi','Dog','German Shepherd',5,'male','fostered','Highly intelligent and loyal, currently in foster care.','https://images.unsplash.com/photo-1601758123927-512d2e0fae50?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',32.10,'Black & Tan','Foster Home - Johor'),
+('Miloo','Cat','Maine Coon',4,'male','adopted','Large fluffy cat with a gentle personality.','https://images.unsplash.com/photo-1614290980210-39b3c8b0ed8e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',6.80,'Brown','Adopted - Kuala Lumpur'),
+('Daisi','Dog','Beagle',1,'female','medical','Playful puppy recovering from minor surgery.','https://images.unsplash.com/photo-1583337130417-2d2d4f2aebee?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',9.75,'Tri-color','SavePaws Clinic'),
+('Oliver','Rabbit','Holland Lop',2,'male','available','Quiet rabbit that enjoys gentle handling.','https://images.unsplash.com/photo-1618836058902-021b8a3d46bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',1.80,'White & Brown','SavePaws Shelter - Small Animals Area')
 ON DUPLICATE KEY UPDATE name=name;
 
 -- 4. SEED ANIMAL PROFILES (For Donations)
@@ -98,7 +104,7 @@ INSERT INTO community_posts (postID, userID, content_text, content_image, post_s
 -- Dumping data for table `volunteer_events`
 INSERT INTO volunteer_events (eventID, title, description, eventLocation, start_date, end_date, max_volunteers, adminID, image_url, hours) VALUES
 (1, 'Weekend Shelter Cleanup', 'General cleaning and disinfection of the dog kennels.', 'SavePaws Shelter HQ', '2025-01-10 09:00:00', '2025-01-10 13:00:00', 10, 1, 'https://images.unsplash.com/photo-1595278069441-2cf29f8005a4', 3.00),
-(2, 'Stray Vaccination Drive', 'Helping vets administer vaccines to neighborhood strays.', 'Community Hall A', '2026-05-24 10:00:00', '2025-05-24 17:00:00', 5, 1, 'https://images.unsplash.com/photo-1595278069441-2cf29f8005a4', 4.00)
+(2, 'Stray Vaccination Drive', 'Helping vets administer vaccines to neighborhood strays.', 'Community Hall A', '2026-05-24 10:00:00', '2026-05-24 17:00:00', 5, 1, 'https://images.unsplash.com/photo-1595278069441-2cf29f8005a4', 4.00)
 ON DUPLICATE KEY UPDATE eventID=eventID;
 
 

@@ -43,9 +43,15 @@ const EventCard = ({ item, onDetails }) => {
         <TouchableOpacity style={styles.card} onPress={() => onDetails(item)}>
             {image && <Image source={{ uri: image }} style={styles.cardImage} />}
             <View style={styles.cardContent}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: Spacing.xs }}>
                     <Text style={styles.eventTitle}>{title}</Text>
-                    {isRegistered && <Text style={{ color: Colors.primary, fontWeight: 'bold' }}>Registered</Text>}
+                    {item.isOngoing ? (
+                        <View style={[styles.statusBadge, { backgroundColor: '#FADFA1' }]}>
+                            <Text style={[styles.statusText, { color: '#B45309' }]}>Ongoing</Text>
+                        </View>
+                    ) : isRegistered && (
+                        <Text style={{ color: Colors.primary, fontWeight: 'bold' }}>Registered</Text>
+                    )}
                 </View>
                 <View style={styles.detailRow}>
                     <Ionicons name="location-outline" size={16} color={Colors.textSecondary} />
@@ -89,17 +95,25 @@ const VolunteerEventListPage = () => {
             }
             const registeredIds = new Set(userEvents.map(e => e.eventID));
 
-            const mappedEvents = allEvents.map(e => ({
-                id: e.eventID,
-                title: e.title,
-                description: e.description,
-                location: e.eventLocation,
-                startDate: e.start_date,
-                endDate: e.end_date,
-                timeRange: formatTimeRange(e.start_date, e.end_date),
-                image: e.image_url || 'https://images.unsplash.com/photo-1548191265-cc70d3d45ba1', // Fallback
-                isRegistered: registeredIds.has(e.eventID)
-            }));
+            const now = new Date();
+            const mappedEvents = allEvents.map(e => {
+                const startDate = new Date(e.start_date);
+                const endDate = e.end_date ? new Date(e.end_date) : new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+                const isOngoing = startDate <= now && endDate > now;
+
+                return {
+                    id: e.eventID,
+                    title: e.title,
+                    description: e.description,
+                    location: e.eventLocation,
+                    startDate: e.start_date,
+                    endDate: e.end_date,
+                    timeRange: formatTimeRange(e.start_date, e.end_date),
+                    image: e.image_url || 'https://images.unsplash.com/photo-1548191265-cc70d3d45ba1', // Fallback
+                    isRegistered: registeredIds.has(e.eventID),
+                    isOngoing: isOngoing
+                };
+            });
 
             setEvents(mappedEvents);
         } catch (error) {
@@ -222,6 +236,15 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     description: { fontSize: 14, color: Colors.text, lineHeight: 20, marginBottom: Spacing.m, },
+    statusBadge: {
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 6,
+    },
+    statusText: {
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
 });
 
 export default VolunteerEventListPage;

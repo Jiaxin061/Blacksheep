@@ -98,7 +98,7 @@ class Report {
       reportData.longitude || null,
       reportData.photo_url || null, // Mapping photo_url to image_url
       reportData.reporter_name || null,
-      reportData.reporter_phone || null, // Mapping reporter_phone to reporter_contact
+      reportData.reporter_contact || null,
       reportData.status || 'pending'
     ];
     const result = await query(sql, params);

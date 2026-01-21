@@ -58,6 +58,11 @@ const VolunteerEventDetailsPage = () => {
                             isRegistered = userEvents.some(e => e.eventID.toString() === params.id.toString());
                         }
 
+                        const startDate = new Date(eventData.start_date);
+                        const endDate = eventData.end_date ? new Date(eventData.end_date) : new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+                        const now = new Date();
+                        const isOngoing = startDate <= now && endDate > now;
+
                         // Map DB fields to UI fields
                         setEvent({
                             id: eventData.eventID,
@@ -71,7 +76,8 @@ const VolunteerEventDetailsPage = () => {
                             ),
                             startDate: eventData.start_date,
                             image: eventData.image_url || 'https://images.unsplash.com/photo-1548191265-cc70d3d45ba1',
-                            isRegistered: isRegistered
+                            isRegistered: isRegistered,
+                            isOngoing: isOngoing
                         });
                     } catch (error) {
                         console.error(error);
@@ -145,8 +151,10 @@ const VolunteerEventDetailsPage = () => {
                 <View style={styles.contentContainer}>
                     <View style={styles.titleRow}>
                         <Text style={styles.title}>{event.title}</Text>
-                        <View style={styles.badge}>
-                            <Text style={styles.badgeText}>Open</Text>
+                        <View style={[styles.badge, event.isOngoing && { backgroundColor: '#FADFA1' }]}>
+                            <Text style={[styles.badgeText, event.isOngoing && { color: '#B45309' }]}>
+                                {event.isOngoing ? 'Ongoing' : 'Open'}
+                            </Text>
                         </View>
                     </View>
 
@@ -189,12 +197,15 @@ const VolunteerEventDetailsPage = () => {
             {/* Bottom Action Bar */}
             <View style={styles.bottomBar}>
                 <TouchableOpacity
-                    style={[styles.joinButton, event.isRegistered && styles.registeredButton]}
+                    style={[
+                        styles.joinButton,
+                        (event.isRegistered || event.isOngoing) && styles.registeredButton
+                    ]}
                     onPress={handleRegister}
-                    disabled={event.isRegistered}
+                    disabled={event.isRegistered || event.isOngoing}
                 >
                     <Text style={styles.joinButtonText}>
-                        {event.isRegistered ? 'Registered' : 'Register'}
+                       {event.isRegistered ? 'Registered' : (event.isOngoing ? 'Unavailable (Ongoing)' : 'Register')}
                     </Text>
                 </TouchableOpacity>
             </View>

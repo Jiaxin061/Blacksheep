@@ -35,7 +35,7 @@ router.get('/', async (req, res) => {
                 r.latitude,
                 r.longitude,
                 r.reporter_name,
-                r.reporter_contact as reporter_phone,
+                r.reporter_contact,
                 r.photo_url
             FROM rescue_tasks rt
             INNER JOIN reports r ON rt.report_id = r.id
@@ -111,7 +111,7 @@ router.get('/my-tasks', async (req, res) => {
                 r.longitude,
                 r.location,
                 r.reporter_name,
-                r.reporter_contact as reporter_phone,
+                r.reporter_contact,
                 r.photo_url
             FROM rescue_tasks rt
             INNER JOIN reports r ON rt.report_id = r.id
@@ -165,11 +165,11 @@ router.get('/:id', async (req, res) => {
                 rt.*,
                 r.animal_type,
                 r.description,
-                r.atitude,
+                r.latitude,
                 r.longitude,
                 r.location,
                 r.reporter_name,
-                r.reporter_contact as reporter_phone,
+                r.reporter_contact,
                 r.photo_url
             FROM rescue_tasks rt
             INNER JOIN reports r ON rt.report_id = r.id
