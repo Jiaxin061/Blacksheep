@@ -1,7 +1,7 @@
 const { query } = require('../config/database');
 const User = require('../models/User');
 
-// ==================== UC01: VIEW RESCUE EVIDENCE (ADMIN) ====================
+// ==================== VIEW RESCUE EVIDENCE (ADMIN) ====================
 
 /**
  * GET /api/rescue-tasks/:id/evidence
@@ -89,7 +89,7 @@ exports.getTaskEvidence = async (req, res) => {
   }
 };
 
-// ==================== UC02: REPORT & BLACKLIST USER (ADMIN) ====================
+// ==================== REPORT & BLACKLIST USER (ADMIN) ====================
 
 /**
  * POST /api/rescue-tasks/:id/verify
@@ -334,7 +334,7 @@ exports.blacklistUser = async (req, res) => {
   }
 };
 
-// ==================== UC03: VIEW TASK OUTCOME (USER) ====================
+// ==================== VIEW TASK OUTCOME (USER) ====================
 
 /**
  * GET /api/rescue-tasks/my-tasks/outcomes
