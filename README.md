@@ -31,18 +31,23 @@ To run this project locally, follow these steps:
    ```
 
 ### Frontend Setup
-1. Navigate to the frontend directory:
+1. **Prerequisite**: Install **Android Studio**.
+   - Open Android Studio and go to **More Actions** > **Virtual Device Manager**.
+   - Create and launch a virtual device (emulator).
+
+2. Navigate to the frontend directory:
    ```bash
    cd SavePawsFrontend
    ```
-2. Install dependencies:
+3. Install dependencies:
    ```bash
    npm install
    ```
-3. Start the application:
+4. Start the application:
    ```bash
    npx expo start
    ```
+   - Once the server starts, press `a` in the terminal to open the app on the connected Android Emulator.
 
 ## Main Screen
 
