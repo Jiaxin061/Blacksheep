@@ -58,6 +58,7 @@ To run this project locally, follow these steps:
 - [`ForgotPasswordScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsFrontend/src/screens/ForgotPasswordScreen.js) - Password recovery
 - [`UserHomeScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsFrontend/src/screens/UserHomeScreen.js) - User dashboard
 - [`AdminLoginScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsFrontend/src/screens/AdminLoginScreen.js) - Admin login
+- [`AdminDashboardScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsFrontend/src/screens/AdminDashboardScreen.js) - Admin dashboard
 
 ### Backend Authentication
 - **Controllers:**<br>• [`authController.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsBackend/controllers/authController.js)
