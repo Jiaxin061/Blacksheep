@@ -52,18 +52,18 @@ To run this project locally, follow these steps:
 ## Main Screen
 
 ### Authentication & User Management
-- [`LandingScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavepawsFrontend/src/screens/LandingScreen.js) - Landing page
-- [`Userloginscreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavepawsFrontend/src/screens/Userloginscreen.js) - User login
-- [`SignupScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavepawsFrontend/src/screens/SignupScreen.js) - User registration
-- [`ForgotPasswordScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavepawsFrontend/src/screens/ForgotPasswordScreen.js) - Password recovery
-- [`UserHomeScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavepawsFrontend/src/screens/UserHomeScreen.js) - User dashboard
-- [`AdminLoginScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavepawsFrontend/src/screens/AdminLoginScreen.js) - Admin login
+- [`LandingScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsFrontend/src/screens/LandingScreen.js) - Landing page
+- [`Userloginscreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsFrontend/src/screens/Userloginscreen.js) - User login
+- [`SignupScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsFrontend/src/screens/SignupScreen.js) - User registration
+- [`ForgotPasswordScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsFrontend/src/screens/ForgotPasswordScreen.js) - Password recovery
+- [`UserHomeScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsFrontend/src/screens/UserHomeScreen.js) - User dashboard
+- [`AdminLoginScreen.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsFrontend/src/screens/AdminLoginScreen.js) - Admin login
 
 ### Backend Authentication
-- **Controllers:**<br>• [`authController.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavepawsBackend/controllers/authController.js)
-- **Routes:**<br>• [`auth.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavepawsBackend/routes/auth.js)
-- **Models:**<br>• [`User.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavepawsBackend/models/User.js)<br>• [`Admin.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavepawsBackend/models/Admin.js)
-- **Middleware:**<br>• [`authMiddleware.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavepawsBackend/middleware/authMiddleware.js)
+- **Controllers:**<br>• [`authController.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsBackend/controllers/authController.js)
+- **Routes:**<br>• [`auth.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsBackend/routes/auth.js)
+- **Models:**<br>• [`User.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsBackend/models/User.js)<br>• [`Admin.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsBackend/models/Admin.js)
+- **Middleware:**<br>• [`authMiddleware.js`](https://github.com/Jiaxin061/Blacksheep/blob/main/SavePawsBackend/middleware/authMiddleware.js)
 
 
 ## 🧩 __Karen’s Contribution__ 
