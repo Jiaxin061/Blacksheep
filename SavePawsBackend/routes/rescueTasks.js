@@ -462,8 +462,8 @@ router.patch('/:id/status', async (req, res) => {
 
         // Update report status
         const reportStatusMap = {
-            available: 'pending',
-            assigned: 'approved',
+            available: 'approved',
+            assigned: 'active',
             in_progress: 'active',
             completed: 'closed'
         };
@@ -582,8 +582,8 @@ router.patch('/:id', async (req, res) => {
             if (taskInfo.length > 0) {
                 const reportId = taskInfo[0].report_id;
                 const reportStatusMap = {
-                    available: 'pending',
-                    assigned: 'approved',
+                    available: 'approved',
+                    assigned: 'active',
                     in_progress: 'active',
                     completed: 'closed'
                 };
