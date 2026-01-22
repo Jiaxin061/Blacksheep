@@ -41,7 +41,7 @@ To run this project locally, follow these steps:
    ```
 3. Start the application:
    ```bash
-   npm start
+   npx expo start
    ```
 
 ## Main Screen
