@@ -12,7 +12,7 @@ const dbConfigWithoutDB = {
 // Database configuration WITH database name
 const dbConfig = {
   ...dbConfigWithoutDB,
-  database: process.env.DB_NAME || 'savepaws_db',
+  database: process.env.DB_NAME || 'savepaws',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -27,7 +27,7 @@ const testConnection = async () => {
     // First, connect without database name
     const tempConnection = await mysql.createConnection(dbConfigWithoutDB);
     // Create database if it doesn't exist
-    const dbName = process.env.DB_NAME || 'savepaws_db';
+    const dbName = process.env.DB_NAME || 'savepaws';
     await tempConnection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
     console.log(`✅ Database '${dbName}' ready!`);
 
