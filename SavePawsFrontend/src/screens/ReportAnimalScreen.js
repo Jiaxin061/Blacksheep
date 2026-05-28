@@ -14,10 +14,7 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
-<<<<<<< HEAD
-=======
 import AsyncStorage from '@react-native-async-storage/async-storage';
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 import ApiService from '../services/api';
 
 // Teal Color Theme
@@ -92,11 +89,6 @@ const ReportAnimalScreen = ({ navigation }) => {
     // Validate lat/long format
     const lat = parseFloat(formData.latitude);
     const lng = parseFloat(formData.longitude);
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     if (isNaN(lat) || lat < -90 || lat > 90) {
       Alert.alert('Error', 'Invalid latitude (must be between -90 and 90)');
       return;
@@ -118,17 +110,12 @@ const ReportAnimalScreen = ({ navigation }) => {
         }
       }
 
-<<<<<<< HEAD
-      // Prepare report data
-      const reportData = {
-=======
       // Retrieve userID from storage
       const userID = await AsyncStorage.getItem('userId');
 
       // Prepare report data
       const reportData = {
         userID: userID,
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         animal_type: formData.animalType,
         description: formData.description,
         location: formData.location,
@@ -185,11 +172,7 @@ const ReportAnimalScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
-<<<<<<< HEAD
-      <View style={styles.header}>
-=======
       {/* <View style={styles.header}>
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -198,11 +181,7 @@ const ReportAnimalScreen = ({ navigation }) => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Report Animal</Text>
         <View style={{ width: 44 }} />
-<<<<<<< HEAD
-      </View>
-=======
       </View> */}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
       <ScrollView
         style={styles.scrollView}
@@ -326,11 +305,7 @@ const ReportAnimalScreen = ({ navigation }) => {
           <Text style={styles.label}>Contact Information *</Text>
           <TextInput
             style={styles.input}
-<<<<<<< HEAD
-            placeholder="Phone number or email"
-=======
             placeholder="Phone number"
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             placeholderTextColor={COLORS.textLight}
             value={formData.reporterContact}
             onChangeText={(text) =>

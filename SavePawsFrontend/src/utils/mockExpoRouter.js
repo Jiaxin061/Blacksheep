@@ -27,11 +27,7 @@ const pathToScreenMap = {
   '/admin/rewards/add': 'AdminRewardsAdd',
   '/admin/rewards/edit/[rewardID]': 'AdminRewardsEdit',
   '/admin/fund-allocation/[animalID]': 'AdminFundAllocationDetail',
-<<<<<<< HEAD
-  '/admin/fund-allocation/[animalID]/add': 'AdminFundAllocationAdd',
-=======
   '/admin/fund-allocation/[animalID]/add': 'AdminAddAllocation',
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   '/admin/fund-allocation/[animalID]/[allocationID]': 'AdminFundAllocationItem',
 };
 
@@ -87,26 +83,14 @@ export const useRouter = () => {
       const screenName = getScreenName(path);
       if (screenName) {
         // Merge params from path object and additional params
-<<<<<<< HEAD
-        const finalParams = typeof path === 'object' && path.params 
-          ? { ...path.params, ...params }
-          : params || {};
-        
-=======
         const finalParams = typeof path === 'object' && path.params
           ? { ...path.params, ...params }
           : params || {};
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         // Extract dynamic route params from path string (e.g., /donation-impact/123 -> { animalID: '123' })
         if (typeof path === 'string' && path.includes('/')) {
           const pathParts = path.split('/').filter(p => p && !p.includes('?'));
           const dynamicParams = {};
-<<<<<<< HEAD
-          
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           // Try to match against dynamic routes
           for (const [routePath, screen] of Object.entries(pathToScreenMap)) {
             if (routePath.includes('[')) {
@@ -115,11 +99,6 @@ export const useRouter = () => {
                 const match = p.match(/\[(.*?)\]/);
                 return match ? match[1] : null;
               });
-<<<<<<< HEAD
-              
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
               if (pathParts.length === routeParts.length) {
                 routeParts.forEach((part, idx) => {
                   if (part.includes('[') && paramNames[idx]) {
@@ -133,11 +112,6 @@ export const useRouter = () => {
             }
           }
         }
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         navigation.navigate(screenName, finalParams);
       } else {
         console.warn('Could not resolve screen name for path:', path);
@@ -147,11 +121,7 @@ export const useRouter = () => {
     replace: (path, params) => {
       const screenName = getScreenName(path);
       if (screenName) {
-<<<<<<< HEAD
-        const finalParams = typeof path === 'object' && path.params 
-=======
         const finalParams = typeof path === 'object' && path.params
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           ? { ...path.params, ...params }
           : params || {};
         navigation.replace(screenName, finalParams);

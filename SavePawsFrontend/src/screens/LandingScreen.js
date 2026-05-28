@@ -21,19 +21,11 @@ const LandingScreen = ({ navigation }) => {
 
       {/* Buttons */}
       <View style={styles.content}>
-<<<<<<< HEAD
-        
-        {/* User Button */}
-        <TouchableOpacity
-          style={styles.userButton}
-          onPress={() => navigation.navigate('UserLogin')}
-=======
 
         {/* User Button */}
         <TouchableOpacity
           style={styles.userButton}
           onPress={() => navigation.navigate('Login')}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         >
           <Text style={styles.buttonEmoji}>👤</Text>
           <Text style={styles.buttonText}>User</Text>

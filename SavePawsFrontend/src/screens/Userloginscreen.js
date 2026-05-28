@@ -47,11 +47,7 @@ const UserLoginScreen = ({ navigation }) => {
         await AsyncStorage.setItem('authToken', response.token || 'demo-token');
 
         Alert.alert('Success', `Welcome back, ${response.user.first_name}!`);
-<<<<<<< HEAD
-        navigation.replace('UserHome', { 
-=======
         navigation.replace('UserHome', {
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           userId: response.user.id,
           icNo: response.user.ic_number,
           name: `${response.user.first_name} ${response.user.last_name}`
@@ -67,65 +63,6 @@ const UserLoginScreen = ({ navigation }) => {
     }
   };
 
-<<<<<<< HEAD
-  // MyDigitalID Login - Auto login as User 1
-  const handleMyDigitalIDLogin = async () => {
-    setLoading(true);
-
-    try {
-      // First test connection
-      console.log('🔌 Testing server connection...');
-      const connectionTest = await ApiService.testConnection();
-      
-      if (!connectionTest.success) {
-        Alert.alert(
-          'Connection Error', 
-          connectionTest.message || 'Cannot connect to server. Please check:\n\n1. Backend server is running\n2. Server is accessible\n3. Check network settings'
-        );
-        setLoading(false);
-        return;
-      }
-
-      // Simulate MyDigitalID login - get User 1's data from database
-      console.log('🔍 Fetching user data...');
-      const response = await ApiService.getUserById(1);
-
-      if (response.success && response.user) {
-        // Save user data to AsyncStorage using auth utilities
-        await setCurrentUserID(1);
-        await setAuthToken('mydigitalid-token', 'user');
-        // Also save legacy keys for backward compatibility
-        await AsyncStorage.setItem('userId', '1');
-        await AsyncStorage.setItem('icNumber', response.user.ic_number);
-        await AsyncStorage.setItem('userName', `${response.user.first_name} ${response.user.last_name}`);
-        await AsyncStorage.setItem('authToken', 'mydigitalid-token');
-
-        Alert.alert(
-          '✅ MyDigitalID Login Success', 
-          `Welcome, ${response.user.first_name} ${response.user.last_name}!\n\nIC: ${response.user.ic_number}`
-        );
-        
-        navigation.replace('UserHome', { 
-          userId: 1,
-          icNo: response.user.ic_number,
-          name: `${response.user.first_name} ${response.user.last_name}`
-        });
-      } else {
-        Alert.alert('Error', response.message || 'MyDigitalID authentication failed');
-      }
-    } catch (error) {
-      console.error('MyDigitalID login error:', error);
-      Alert.alert(
-        'Error', 
-        `MyDigitalID login failed: ${error.message}\n\nPlease check:\n1. Backend server is running\n2. Database connection is working\n3. User ID 1 exists in database`
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
   return (
     <SafeAreaView style={styles.container}>
@@ -181,22 +118,6 @@ const UserLoginScreen = ({ navigation }) => {
                 >
                   <Text style={styles.eyeIcon}>{showPassword ? '🙈' : '👁️'}</Text>
                 </TouchableOpacity>
-<<<<<<< HEAD
-            </View>
-
-            {/* Forgot Password Link */}
-            <TouchableOpacity
-              style={styles.forgotPasswordLink}
-              onPress={() => navigation.navigate('ForgotPassword')}
-            >
-              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Login Button */}
-          <TouchableOpacity
-              style={[styles.loginButton, loading && styles.buttonDisabled]} 
-=======
               </View>
 
               {/* Forgot Password Link */}
@@ -211,7 +132,6 @@ const UserLoginScreen = ({ navigation }) => {
             {/* Login Button */}
             <TouchableOpacity
               style={[styles.loginButton, loading && styles.buttonDisabled]}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
               onPress={handleLogin}
               disabled={loading}
             >
@@ -221,26 +141,6 @@ const UserLoginScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-<<<<<<< HEAD
-          {/* OR Divider */}
-          <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>OR</Text>
-            <View style={styles.dividerLine} />
-          </View>
-
-          {/* MyDigitalID Login Button */}
-          <TouchableOpacity 
-            style={[styles.myDigitalIDButton, loading && styles.buttonDisabled]}
-            onPress={handleMyDigitalIDLogin}
-            disabled={loading}
-          >
-            <Text style={styles.myDigitalIDIcon}>🇲🇾</Text>
-            <Text style={styles.myDigitalIDButtonText}>Login with MyDigitalID</Text>
-          </TouchableOpacity>
-
-=======
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           {/* Divider */}
           <View style={styles.divider}>
             <View style={styles.dividerLine} />
@@ -249,11 +149,7 @@ const UserLoginScreen = ({ navigation }) => {
           </View>
 
           {/* Sign Up Link */}
-<<<<<<< HEAD
-          <TouchableOpacity 
-=======
           <TouchableOpacity
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             style={styles.signupLink}
             onPress={() => navigation.navigate('Signup')}
           >
@@ -396,32 +292,6 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.sm,
     color: Colors.textMuted,
   },
-<<<<<<< HEAD
-  myDigitalIDButton: {
-    height: 48,
-    backgroundColor: '#003366',
-    borderRadius: BorderRadius.full,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: Spacing.sm,
-    shadowColor: '#003366',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 3,
-    marginBottom: Spacing.md,
-  },
-  myDigitalIDIcon: {
-    fontSize: 20,
-  },
-  myDigitalIDButtonText: {
-    fontSize: FontSizes.base,
-    fontWeight: '600',
-    color: Colors.white,
-  },
-=======
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   signupLink: {
     alignItems: 'center',
     marginBottom: Spacing.lg,

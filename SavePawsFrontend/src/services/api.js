@@ -5,16 +5,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const API_BASE_URL = Config.API_BASE_URL || 'http://192.168.1.100:3000/api';
 
 class ApiService {
-<<<<<<< HEAD
-    
-    // ==================== CONNECTION TEST ====================
-    
-=======
     static BASE_URL = API_BASE_URL;
 
     // ==================== CONNECTION TEST ====================
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     static async testConnection() {
         try {
             console.log('🔌 Testing connection to:', API_BASE_URL);
@@ -24,11 +18,6 @@ class ApiService {
                     'Content-Type': 'application/json',
                 },
             });
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             if (response.ok) {
                 const data = await response.json();
                 console.log('✅ Server is reachable:', data);
@@ -39,15 +28,6 @@ class ApiService {
             }
         } catch (error) {
             console.error('❌ Connection test failed:', error);
-<<<<<<< HEAD
-            return { 
-                success: false, 
-                message: `Cannot connect to server. Make sure:\n1. Backend is running\n2. URL is correct: ${API_BASE_URL}\n3. Emulator can reach host` 
-            };
-        }
-    }
-    
-=======
             return {
                 success: false,
                 message: `Cannot connect to server. Make sure:\n1. Backend is running\n2. URL is correct: ${API_BASE_URL}\n3. Emulator can reach host`
@@ -55,16 +35,11 @@ class ApiService {
         }
     }
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     // ==================== PROTECTED FETCH HELPER ====================
     static async _protectedFetch(url, method = 'GET', data = null, contentType = 'application/json') {
         let token = null;
         try {
-<<<<<<< HEAD
-            token = await AsyncStorage.getItem('authToken'); 
-=======
             token = await AsyncStorage.getItem('authToken');
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         } catch (e) {
             console.error('Error retrieving token:', e);
         }
@@ -72,15 +47,9 @@ class ApiService {
         const headers = {
             'Content-Type': contentType,
         };
-<<<<<<< HEAD
-        
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`; 
-=======
 
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         }
 
         const requestUrl = url.startsWith('http') ? url : `${API_BASE_URL}${url}`;
@@ -94,19 +63,11 @@ class ApiService {
 
         try {
             const response = await fetch(requestUrl, config);
-<<<<<<< HEAD
-            
-            if (response.status === 401) {
-                 console.log('401 Unauthorized - Token missing/expired. Logging out user.');
-            }
-            
-=======
 
             if (response.status === 401) {
                 console.log('401 Unauthorized - Token missing/expired. Logging out user.');
             }
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             return response;
 
         } catch (error) {
@@ -115,28 +76,6 @@ class ApiService {
     }
 
     // ==================== AUTHENTICATION ====================
-<<<<<<< HEAD
-    
-    static async login(credentials) {
-        try {
-          console.log('🔐 Logging in with IC:', credentials.ic_number);
-          
-          const response = await fetch(`${API_BASE_URL}/auth/user/login`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(credentials),
-          });
-
-          const data = await response.json();
-          console.log('✅ Login response:', data);
-
-          return data;
-        } catch (error) {
-          console.error('❌ Login error:', error);
-          return { success: false, message: error.message };
-=======
 
     static async login(credentials) {
         try {
@@ -157,31 +96,11 @@ class ApiService {
         } catch (error) {
             console.error('❌ Login error:', error);
             return { success: false, message: error.message };
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         }
     }
 
     static async signup(userData) {
         try {
-<<<<<<< HEAD
-          console.log('🔐 Signing up user:', userData.ic_number);
-          
-          const response = await fetch(`${API_BASE_URL}/auth/user/signup`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData),
-          });
-
-          const data = await response.json();
-          console.log('✅ Signup response:', data);
-
-          return data;
-        } catch (error) {
-          console.error('❌ Signup error:', error);
-          return { success: false, message: error.message };
-=======
             console.log('🔐 Signing up user:', userData.ic_number);
 
             const response = await fetch(`${API_BASE_URL}/auth/user/signup`, {
@@ -199,30 +118,11 @@ class ApiService {
         } catch (error) {
             console.error('❌ Signup error:', error);
             return { success: false, message: error.message };
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         }
     }
 
     static async forgotPasswordRequest(data) {
         try {
-<<<<<<< HEAD
-          console.log('🔐 Forgot password request:', data);
-          
-          const response = await fetch(`${API_BASE_URL}/auth/user/forgot-password`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-          });
-
-          const result = await response.json();
-          console.log('✅ Forgot password response:', result);
-          return result;
-        } catch (error) {
-          console.error('❌ Forgot password error:', error);
-          return { success: false, message: error.message };
-=======
             console.log('🔐 Forgot password request:', data);
 
             const response = await fetch(`${API_BASE_URL}/auth/user/forgot-password`, {
@@ -239,30 +139,11 @@ class ApiService {
         } catch (error) {
             console.error('❌ Forgot password error:', error);
             return { success: false, message: error.message };
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         }
     }
 
     static async resetPassword(data) {
         try {
-<<<<<<< HEAD
-          console.log('🔐 Resetting password for user:', data.user_id);
-          
-          const response = await fetch(`${API_BASE_URL}/auth/user/reset-password`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-          });
-
-          const result = await response.json();
-          console.log('✅ Reset password response:', result);
-          return result;
-        } catch (error) {
-          console.error('❌ Reset password error:', error);
-          return { success: false, message: error.message };
-=======
             console.log('🔐 Resetting password for user:', data.user_id);
 
             const response = await fetch(`${API_BASE_URL}/auth/user/reset-password`, {
@@ -279,31 +160,11 @@ class ApiService {
         } catch (error) {
             console.error('❌ Reset password error:', error);
             return { success: false, message: error.message };
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         }
     }
 
     static async adminLogin(credentials) {
         try {
-<<<<<<< HEAD
-          console.log('👨‍💼 Admin logging in:', credentials.email);
-          
-          const response = await fetch(`${API_BASE_URL}/auth/admin/login`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(credentials),
-          });
-
-          const data = await response.json();
-          console.log('✅ Admin login response:', data);
-
-          return data;
-        } catch (error) {
-          console.error('❌ Admin login error:', error);
-          return { success: false, message: error.message };
-=======
             console.log('👨‍💼 Admin logging in:', credentials.email);
 
             const response = await fetch(`${API_BASE_URL}/auth/admin/login`, {
@@ -321,52 +182,10 @@ class ApiService {
         } catch (error) {
             console.error('❌ Admin login error:', error);
             return { success: false, message: error.message };
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         }
     }
 
     static async getUserById(userId) {
-<<<<<<< HEAD
-        try {
-          console.log('🔍 Getting user by ID:', userId);
-          console.log('🌐 Full URL:', `${API_BASE_URL}/auth/users/${userId}`);
-          
-          const response = await fetch(`${API_BASE_URL}/auth/users/${userId}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-
-          if (!response.ok) {
-            const errorText = await response.text();
-            console.error('❌ Response not OK:', response.status, errorText);
-            return { 
-              success: false, 
-              message: `Server error: ${response.status} - ${errorText}` 
-            };
-          }
-
-          const data = await response.json();
-          console.log('✅ User data:', data);
-
-          return data;
-        } catch (error) {
-          console.error('❌ Get user error:', error);
-          console.error('❌ Error details:', {
-            message: error.message,
-            name: error.name,
-            stack: error.stack
-          });
-          
-          // More helpful error message
-          let errorMsg = error.message;
-          if (error.message === 'Network request failed' || error.message.includes('Network')) {
-            errorMsg = `Cannot connect to server at ${API_BASE_URL}. Make sure:\n1. Backend server is running\n2. Server is accessible from emulator\n3. Check firewall settings`;
-          }
-          
-          return { success: false, message: errorMsg };
-=======
         // userId is ignored because we fetch based on the token for security/simplicity
         try {
             console.log('🔍 Getting current user profile');
@@ -385,29 +204,10 @@ class ApiService {
         } catch (error) {
             console.error('❌ Get user error:', error);
             return { success: false, message: error.message };
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         }
     }
 
     // ==================== REPORTS ====================
-<<<<<<< HEAD
-    
-    static async getAllReports(filters = {}) {
-        try {
-            const queryParams = new URLSearchParams();
-            
-            if (filters.urgency) queryParams.append('urgency', filters.urgency);
-            if (filters.status) queryParams.append('status', filters.status);
-            if (filters.area) queryParams.append('area', filters.area);
-            
-            const queryString = queryParams.toString();
-            const url = `${API_BASE_URL}/reports${queryString ? `?${queryString}` : ''}`;
-            
-            console.log('📊 Fetching ALL reports from:', url);
-            
-            const response = await ApiService._protectedFetch(url, 'GET'); 
-            
-=======
 
     static async getAllReports(filters = {}) {
         try {
@@ -424,23 +224,11 @@ class ApiService {
 
             const response = await ApiService._protectedFetch(url, 'GET');
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             const data = await response.json();
             console.log('📊 API Response:', data);
 
             // Handle different response formats
             if (Array.isArray(data)) {
-<<<<<<< HEAD
-              return { success: true, reports: data };
-            }
-            
-            if (data.success) {
-              return data;
-            }
-            
-            if (data.reports) {
-              return { success: true, reports: data.reports };
-=======
                 return { success: true, reports: data };
             }
 
@@ -450,42 +238,23 @@ class ApiService {
 
             if (data.reports) {
                 return { success: true, reports: data.reports };
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             }
 
             return { success: true, reports: data };
         } catch (error) {
             console.error('❌ getAllReports error:', error);
-<<<<<<< HEAD
-            return { success: false, reports: [], message: error.message }; 
-=======
             return { success: false, reports: [], message: error.message };
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         }
     }
 
     static async getUserReports() {
         try {
             console.log('👤 Fetching user reports');
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             const userId = await AsyncStorage.getItem('userId');
             const url = userId ? `/reports/my-reports?user_id=${userId}` : '/reports/my-reports';
 
             const response = await ApiService._protectedFetch(url, 'GET');
             const data = await response.json();
-<<<<<<< HEAD
-            
-            console.log('👤 User reports response:', data);
-            
-            if (data.success) {
-                return data; // { success: true, reports: [...] }
-            }
-            
-=======
 
             console.log('👤 User reports response:', data);
 
@@ -493,20 +262,13 @@ class ApiService {
                 return data; // { success: true, reports: [...] }
             }
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             // Handle array response
             if (Array.isArray(data)) {
                 return { success: true, reports: data };
             }
-<<<<<<< HEAD
-            
-            return { success: false, reports: [], message: data.message || 'Failed to fetch reports' };
-            
-=======
 
             return { success: false, reports: [], message: data.message || 'Failed to fetch reports' };
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         } catch (error) {
             console.error('❌ getUserReports error:', error);
             return { success: false, reports: [], message: error.message };
@@ -514,23 +276,6 @@ class ApiService {
     }
 
     static async getReportById(id) {
-<<<<<<< HEAD
-    try {
-        console.log('🔍 Fetching report by ID:', id);
-        
-        // _protectedFetch already returns parsed JSON
-        const data = await ApiService._protectedFetch(`/reports/${id}`);
-        
-        console.log('🔍 Report details:', data);
-        
-        return data; // Already parsed JSON
-        
-    } catch (error) {
-        console.error('❌ getReportById error:', error);
-        return { success: false, message: error.message };
-    }
-}
-=======
         try {
             console.log('🔍 Fetching report by ID:', id);
 
@@ -547,20 +292,13 @@ class ApiService {
             return { success: false, message: error.message };
         }
     }
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
     static async submitReport(reportData) {
         try {
             console.log('📝 Submitting report:', reportData);
-<<<<<<< HEAD
-            
-            const url = `${API_BASE_URL}/reports`;
-            
-=======
 
             const url = `${API_BASE_URL}/reports`;
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             const response = await ApiService._protectedFetch(url, 'POST', reportData);
 
             const data = await response.json();
@@ -576,11 +314,6 @@ class ApiService {
     static async updateReport(id, updates) {
         try {
             console.log('🔄 Updating report:', id, updates);
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             const url = `${API_BASE_URL}/reports/${id}`;
 
             const response = await ApiService._protectedFetch(url, 'PUT', updates);
@@ -589,11 +322,7 @@ class ApiService {
 
             console.log('✅ Update response:', data);
 
-<<<<<<< HEAD
-            return data; 
-=======
             return data;
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
         } catch (error) {
             console.error('❌ updateReport error:', error);
@@ -604,11 +333,6 @@ class ApiService {
     static async updateReportStatus(id, status) {
         try {
             console.log('🔄 Updating status:', id, status);
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             const url = `${API_BASE_URL}/reports/${id}/status`;
 
             const response = await ApiService._protectedFetch(url, 'PATCH', { status });
@@ -626,11 +350,6 @@ class ApiService {
     static async deleteReport(id) {
         try {
             console.log('🗑️ Deleting report:', id);
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             const url = `${API_BASE_URL}/reports/${id}`;
 
             const response = await ApiService._protectedFetch(url, 'DELETE');
@@ -769,11 +488,6 @@ class ApiService {
     static async uploadImage(imageUri) {
         try {
             console.log('📤 Uploading image:', imageUri);
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             const formData = new FormData();
             const filename = imageUri.split('/').pop();
             const match = /\.(\w+)$/.exec(filename);
@@ -786,15 +500,9 @@ class ApiService {
             });
 
             const url = `${API_BASE_URL}/upload`;
-<<<<<<< HEAD
-            
-            let token = await AsyncStorage.getItem('authToken');
-            
-=======
 
             let token = await AsyncStorage.getItem('authToken');
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             const response = await fetch(url, {
                 method: 'POST',
                 body: formData,
@@ -831,21 +539,11 @@ class ApiService {
                 `/rescue-tasks/${taskId}/evidence`,
                 'GET'
             );
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             // Check if response is ok
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ message: 'Failed to fetch task evidence' }));
                 return { success: false, message: errorData.message || 'Failed to fetch task evidence' };
             }
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             const data = await response.json();
             return data;
         } catch (error) {
@@ -922,22 +620,12 @@ class ApiService {
             const userId = await AsyncStorage.getItem('userId');
             const queryParam = userId ? `?user_id=${userId}` : '';
             const response = await ApiService._protectedFetch(`/rescue-tasks/my-tasks/outcomes${queryParam}`, 'GET');
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             // Check if response is ok
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({ message: 'Failed to fetch task outcomes' }));
                 console.log('📋 My task outcomes response:', errorData);
                 return { success: false, message: errorData.message || 'Failed to fetch task outcomes' };
             }
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             const data = await response.json();
             console.log('📋 My task outcomes response:', data);
             return data;
@@ -946,8 +634,6 @@ class ApiService {
             return { success: false, message: error.message || 'Network error' };
         }
     }
-<<<<<<< HEAD
-=======
     // ==================== COMMUNITY ====================
 
     static async getCommunityFeed() {
@@ -1269,7 +955,6 @@ class ApiService {
         const response = await ApiService._protectedFetch(`/admin/registrations/${id}/reject`, 'POST', { adminID: 1, reason });
         return await response.json();
     }
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 }
 
 // ==================== EXPORTS ====================
@@ -1299,8 +984,6 @@ export const updateRescueTask = ApiService.updateRescueTask.bind(ApiService);
 export const deleteRescueTask = ApiService.deleteRescueTask.bind(ApiService);
 export const createRescueTask = ApiService.createRescueTask.bind(ApiService);
 
-<<<<<<< HEAD
-=======
 // Community
 export const getCommunityFeed = ApiService.getCommunityFeed.bind(ApiService);
 export const getCommunityPostDetails = ApiService.getCommunityPostDetails.bind(ApiService);
@@ -1340,7 +1023,6 @@ export const getAdminRegistrations = ApiService.getAdminRegistrations.bind(ApiSe
 export const approveRegistration = ApiService.approveRegistration.bind(ApiService);
 export const rejectRegistration = ApiService.rejectRegistration.bind(ApiService);
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 // ==================== DONATION API RE-EXPORTS ====================
 // Re-export donation-related functions from donationApi.js
 export {

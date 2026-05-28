@@ -20,20 +20,12 @@ const AdminViewReportScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedReport, setSelectedReport] = useState(null);
-<<<<<<< HEAD
-  
-  // Modals
-  const [statusModalVisible, setStatusModalVisible] = useState(false);
-  const [rescueTaskModalVisible, setRescueTaskModalVisible] = useState(false);
-  
-=======
   const [activeTab, setActiveTab] = useState('all'); // all, pending, approved, active, closed
 
   // Modals
   const [statusModalVisible, setStatusModalVisible] = useState(false);
   const [rescueTaskModalVisible, setRescueTaskModalVisible] = useState(false);
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   // Form states
   const [selectedStatus, setSelectedStatus] = useState('');
   const [selectedUrgency, setSelectedUrgency] = useState('medium');
@@ -63,8 +55,6 @@ const AdminViewReportScreen = ({ navigation }) => {
     fetchReports();
   };
 
-<<<<<<< HEAD
-=======
   // ==================== FILTERING ====================
   const getFilteredReports = () => {
     if (activeTab === 'all') return reports;
@@ -85,7 +75,6 @@ const AdminViewReportScreen = ({ navigation }) => {
 
   const filteredReports = getFilteredReports();
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   // ==================== BUTTON 1: UPDATE STATUS ====================
   const handleOpenStatusModal = (report) => {
     setSelectedReport(report);
@@ -125,28 +114,16 @@ const AdminViewReportScreen = ({ navigation }) => {
         report_id: selectedReport.id,
         urgency_level: selectedUrgency,
       });
-<<<<<<< HEAD
-      
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       if (response.success) {
         Alert.alert(
           '✅ Rescue Task Created!',
           `Task created with ${selectedUrgency} urgency.\nLocation will be shown from report details.`,
-<<<<<<< HEAD
-          [{ text: 'OK', onPress: () => {
-            setRescueTaskModalVisible(false);
-            fetchReports();
-          }}]
-=======
           [{
             text: 'OK', onPress: () => {
               setRescueTaskModalVisible(false);
               fetchReports();
             }
           }]
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         );
       } else {
         Alert.alert('Error', response.message || 'Failed to create rescue task');
@@ -218,26 +195,15 @@ const AdminViewReportScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-<<<<<<< HEAD
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backIcon}>←</Text>
-        </TouchableOpacity>
-        <View>
-          <Text style={styles.headerSubtitle}>Admin</Text>
-          <Text style={styles.headerTitle}>Manage Reports</Text>
-=======
 
         <View>
           <Text style={styles.headerSubtitle}>Admin</Text>
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         </View>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>{reports.length}</Text>
         </View>
       </View>
 
-<<<<<<< HEAD
-=======
       {/* Tabs */}
       <View style={styles.tabs}>
         <TouchableOpacity
@@ -291,7 +257,6 @@ const AdminViewReportScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       {/* Reports List */}
       <ScrollView
         style={styles.scrollView}
@@ -302,22 +267,14 @@ const AdminViewReportScreen = ({ navigation }) => {
           <View style={styles.emptyState}>
             <Text style={styles.emptyText}>Loading reports...</Text>
           </View>
-<<<<<<< HEAD
-        ) : reports.length === 0 ? (
-=======
         ) : filteredReports.length === 0 ? (
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           <View style={styles.emptyState}>
             <Text style={styles.emptyIcon}>📋</Text>
             <Text style={styles.emptyTitle}>No reports found</Text>
             <Text style={styles.emptyText}>Reports will appear here once submitted</Text>
           </View>
         ) : (
-<<<<<<< HEAD
-          reports.map((report) => (
-=======
           filteredReports.map((report) => (
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             <View key={report.id} style={styles.reportCard}>
               {/* Report Header */}
               <View style={styles.reportHeader}>
@@ -356,13 +313,8 @@ const AdminViewReportScreen = ({ navigation }) => {
                     {report.animal_type === 'dog'
                       ? '🐕 Dog'
                       : report.animal_type === 'cat'
-<<<<<<< HEAD
-                      ? '🐈 Cat'
-                      : '🐾 Other'}
-=======
                         ? '🐈 Cat'
                         : '🐾 Other'}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                   </Text>
                 </View>
 
@@ -549,26 +501,6 @@ const AdminViewReportScreen = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-<<<<<<< HEAD
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('AdminHome')}>
-          <Text style={styles.navIcon}>🏠</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={[styles.navIcon, styles.navIconActive]}>⚙️</Text>
-          <View style={styles.navDot} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>📈</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>👤</Text>
-        </TouchableOpacity>
-      </View>
-=======
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     </SafeAreaView>
   );
 };
@@ -616,8 +548,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.white,
   },
-<<<<<<< HEAD
-=======
   tabs: {
     flexDirection: 'row',
     backgroundColor: Colors.white,
@@ -651,7 +581,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     borderRadius: 2,
   },
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   scrollView: {
     flex: 1,
   },

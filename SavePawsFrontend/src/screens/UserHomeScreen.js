@@ -10,9 +10,6 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-<<<<<<< HEAD
-import ApiService from '../services/api';
-=======
 import Svg, { Path } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
 import ApiService from '../services/api';
@@ -35,7 +32,6 @@ const DogIcon = ({ size = 32, color = "#ffffff" }) => (
     />
   </Svg>
 );
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 const UserHomeScreen = ({ navigation }) => {
   const [myTasks, setMyTasks] = useState([]);
@@ -72,8 +68,6 @@ const UserHomeScreen = ({ navigation }) => {
     }
   };
 
-<<<<<<< HEAD
-=======
   const handleServicePress = async (service) => {
     if (service.title === 'Volunteer') {
       try {
@@ -126,7 +120,6 @@ const UserHomeScreen = ({ navigation }) => {
     }
   };
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   const onRefresh = () => {
     setRefreshing(true);
     fetchMyTasks();
@@ -150,40 +143,26 @@ const UserHomeScreen = ({ navigation }) => {
       id: 2,
       title: 'My Reports',
       subtitle: 'View your submitted reports',
-<<<<<<< HEAD
-      icon: '📋',
-      screen: 'ViewReport',
-=======
       icon: 'clipboard-outline',
       iconType: 'ionicon',
       screen: 'ViewReports',
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       color: '#0f766e',
     },
     {
       id: 3,
       title: 'Rescue Tasks',
       subtitle: 'Accept & complete rescue missions',
-<<<<<<< HEAD
-      icon: '🚑',
-      screen: 'AcceptRescueTask', 
-=======
       icon: 'medkit-outline',
       iconType: 'ionicon',
       screen: 'AcceptRescueTask',
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       color: '#f59e0b',
     },
     {
       id: 4,
       title: 'Rescue History',
       subtitle: 'View task outcomes & feedback',
-<<<<<<< HEAD
-      icon: '📊',
-=======
       icon: 'bar-chart-outline',
       iconType: 'ionicon',
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       screen: 'UserRescueHistory',
       color: '#8b5cf6',
     },
@@ -211,11 +190,6 @@ const UserHomeScreen = ({ navigation }) => {
       title: 'Volunteer',
       subtitle: 'Join our team',
       icon: '🤝',
-<<<<<<< HEAD
-      screen: 'Volunteer',
-      color: '#10b981',
-    },
-=======
       screen: 'VolunteerEventList',
       color: '#10b981',
     },
@@ -227,34 +201,21 @@ const UserHomeScreen = ({ navigation }) => {
       screen: 'CommunityPage',
       color: '#14b8a6',
     },
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   ];
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#14b8a6" />
-<<<<<<< HEAD
-      
-      {/* Header */}
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.greeting}>Hello, User! 👋</Text>
-=======
 
       {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.greeting}>Hello, User!</Text>
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           <Text style={styles.headerSubtitle}>How can we help today?</Text>
         </View>
         <TouchableOpacity
           style={styles.profileButton}
-<<<<<<< HEAD
-          onPress={() => navigation.navigate('Profile')}
-=======
           onPress={() => navigation.navigate('UserProfile')}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         >
           <Text style={styles.profileIcon}>👤</Text>
         </TouchableOpacity>
@@ -275,11 +236,7 @@ const UserHomeScreen = ({ navigation }) => {
             activeOpacity={0.9}
           >
             <View style={styles.mainActionIcon}>
-<<<<<<< HEAD
-              <Text style={styles.mainActionEmoji}>🐕</Text>
-=======
               <DogIcon size={32} color="#ffffff" />
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             </View>
             <View style={styles.mainActionContent}>
               <Text style={styles.mainActionTitle}>Report Animal</Text>
@@ -293,8 +250,6 @@ const UserHomeScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-<<<<<<< HEAD
-=======
         {/* Quick Stats */}
         <View style={styles.section}>
           <View style={styles.statsCard}>
@@ -314,7 +269,6 @@ const UserHomeScreen = ({ navigation }) => {
           </View>
         </View>
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         {/* My Tasks Section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
@@ -331,11 +285,7 @@ const UserHomeScreen = ({ navigation }) => {
             </View>
           ) : myTasks.length === 0 ? (
             <View style={styles.emptyTasksContainer}>
-<<<<<<< HEAD
-              <Text style={styles.emptyTasksIcon}>📋</Text>
-=======
               <Ionicons name="clipboard-outline" size={48} color="#9CA3AF" />
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
               <Text style={styles.emptyTasksText}>No active tasks</Text>
               <Text style={styles.emptyTasksSubtext}>
                 Accept a rescue task to get started
@@ -397,18 +347,6 @@ const UserHomeScreen = ({ navigation }) => {
         {/* My Actions */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>My Actions</Text>
-<<<<<<< HEAD
-          <View style={styles.actionsGrid}>
-            {secondaryActions.map((action) => (
-              <TouchableOpacity
-                key={action.id}
-                style={[styles.actionCard, { borderLeftColor: action.color }]}
-                onPress={() => navigation.navigate(action.screen)}
-                activeOpacity={0.8}
-              >
-                <View style={[styles.actionIconContainer, { backgroundColor: action.color + '20' }]}>
-                  <Text style={styles.actionIcon}>{action.icon}</Text>
-=======
 
           {/* First 2 items in 2-column grid */}
           <View style={styles.actionsGrid}>
@@ -425,7 +363,6 @@ const UserHomeScreen = ({ navigation }) => {
                   ) : (
                     <Text style={styles.actionEmoji}>{action.icon}</Text>
                   )}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                 </View>
                 <View style={styles.actionTextContainer}>
                   <Text style={styles.actionTitle}>{action.title}</Text>
@@ -434,8 +371,6 @@ const UserHomeScreen = ({ navigation }) => {
               </TouchableOpacity>
             ))}
           </View>
-<<<<<<< HEAD
-=======
 
           {/* Last item as full-width horizontal card */}
           {secondaryActions.slice(2).map((action) => (
@@ -459,7 +394,6 @@ const UserHomeScreen = ({ navigation }) => {
               <Ionicons name="chevron-forward" size={20} color="#9CA3AF" />
             </TouchableOpacity>
           ))}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         </View>
 
         {/* Other Services */}
@@ -470,11 +404,7 @@ const UserHomeScreen = ({ navigation }) => {
               <TouchableOpacity
                 key={service.id}
                 style={styles.serviceCard}
-<<<<<<< HEAD
-                onPress={() => navigation.navigate(service.screen)}
-=======
                 onPress={() => handleServicePress(service)}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                 activeOpacity={0.8}
               >
                 <View style={[styles.serviceIcon, { backgroundColor: service.color }]}>
@@ -487,68 +417,10 @@ const UserHomeScreen = ({ navigation }) => {
           </View>
         </View>
 
-<<<<<<< HEAD
-        {/* Quick Stats */}
-        <View style={styles.section}>
-          <View style={styles.statsCard}>
-            <Text style={styles.statsTitle}>Your Impact</Text>
-            <View style={styles.statsRow}>
-              <View style={styles.statItem}>
-                <Text style={styles.statNumber}>{myTasks.length}</Text>
-                <Text style={styles.statLabel}>Active Tasks</Text>
-              </View>
-              <View style={styles.statItem}>
-                <Text style={styles.statNumber}>
-                  {myTasks.filter(t => t.status === 'completed').length}
-                </Text>
-                <Text style={styles.statLabel}>Completed</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        <View style={{ height: 100 }} />
-      </ScrollView>
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={[styles.navIcon, styles.navIconActive]}>🏠</Text>
-          <View style={styles.navDot} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => navigation.navigate('ViewReport')}
-        >
-          <Text style={styles.navIcon}>📋</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => navigation.navigate('ReportAnimal')}
-        >
-          <View style={styles.navMainButton}>
-            <Text style={styles.navMainIcon}>+</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => navigation.navigate('AcceptRescueTask')}
-        >
-          <Text style={styles.navIcon}>🚑</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={() => navigation.navigate('Profile')}
-        >
-          <Text style={styles.navIcon}>👤</Text>
-        </TouchableOpacity>
-      </View>
-=======
 
 
         <View style={{ height: 100 }} />
       </ScrollView>
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     </SafeAreaView>
   );
 };
@@ -561,12 +433,8 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: '#14b8a6',
     paddingHorizontal: 24,
-<<<<<<< HEAD
-    paddingVertical: 20,
-=======
     paddingTop: 50,
     paddingBottom: 20,
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -657,17 +525,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   actionsGrid: {
-<<<<<<< HEAD
-    gap: 12,
-  },
-  actionCard: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    padding: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderLeftWidth: 4,
-=======
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
@@ -677,25 +534,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 16,
     padding: 16,
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
   },
-<<<<<<< HEAD
-  actionIconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  actionIcon: {
-    fontSize: 28,
-=======
   actionIcon: {
     width: 48,
     height: 48,
@@ -706,25 +550,17 @@ const styles = StyleSheet.create({
   },
   actionEmoji: {
     fontSize: 24,
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   },
   actionTextContainer: {
     flex: 1,
   },
   actionTitle: {
-<<<<<<< HEAD
-    fontSize: 16,
-=======
     fontSize: 15,
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     fontWeight: '600',
     color: '#111827',
     marginBottom: 4,
   },
   actionSubtitle: {
-<<<<<<< HEAD
-    fontSize: 12,
-=======
     fontSize: 11,
     color: '#5b6b7c',
   },
@@ -760,7 +596,6 @@ const styles = StyleSheet.create({
   },
   actionSubtitleHorizontal: {
     fontSize: 11,
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     color: '#5b6b7c',
   },
   servicesGrid: {
@@ -769,11 +604,7 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   serviceCard: {
-<<<<<<< HEAD
-    width: '31%',
-=======
     width: '48%',
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     backgroundColor: '#ffffff',
     borderRadius: 16,
     padding: 16,
@@ -839,51 +670,6 @@ const styles = StyleSheet.create({
   },
   bottomNav: {
     flexDirection: 'row',
-<<<<<<< HEAD
-    height: 64,
-    backgroundColor: '#ffffff',
-    borderTopWidth: 1,
-    borderTopColor: '#e2e8ef',
-    paddingHorizontal: 24,
-  },
-  navItem: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  navIcon: {
-    fontSize: 24,
-    opacity: 0.6,
-  },
-  navIconActive: {
-    opacity: 1,
-  },
-  navDot: {
-    width: 6,
-    height: 6,
-    backgroundColor: '#14b8a6',
-    borderRadius: 3,
-    marginTop: 4,
-  },
-  navMainButton: {
-    width: 56,
-    height: 56,
-    backgroundColor: '#14b8a6',
-    borderRadius: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: -20,
-    shadowColor: '#14b8a6',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  navMainIcon: {
-    fontSize: 28,
-    color: '#ffffff',
-    fontWeight: '300',
-=======
     height: 70,
     backgroundColor: '#ffffff',
     borderTopLeftRadius: 24,
@@ -908,7 +694,6 @@ const styles = StyleSheet.create({
   navTextActive: {
     fontSize: 11,
     fontWeight: '600',
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   },
   sectionHeader: {
     flexDirection: 'row',
