@@ -20,11 +20,20 @@ const AdminViewReportScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedReport, setSelectedReport] = useState(null);
+<<<<<<< HEAD
   
   // Modals
   const [statusModalVisible, setStatusModalVisible] = useState(false);
   const [rescueTaskModalVisible, setRescueTaskModalVisible] = useState(false);
   
+=======
+  const [activeTab, setActiveTab] = useState('all'); // all, pending, approved, active, closed
+
+  // Modals
+  const [statusModalVisible, setStatusModalVisible] = useState(false);
+  const [rescueTaskModalVisible, setRescueTaskModalVisible] = useState(false);
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   // Form states
   const [selectedStatus, setSelectedStatus] = useState('');
   const [selectedUrgency, setSelectedUrgency] = useState('medium');
@@ -54,6 +63,29 @@ const AdminViewReportScreen = ({ navigation }) => {
     fetchReports();
   };
 
+<<<<<<< HEAD
+=======
+  // ==================== FILTERING ====================
+  const getFilteredReports = () => {
+    if (activeTab === 'all') return reports;
+    if (activeTab === 'pending') {
+      return reports.filter((r) => r.status === 'pending');
+    }
+    if (activeTab === 'approved') {
+      return reports.filter((r) => r.status === 'approved');
+    }
+    if (activeTab === 'active') {
+      return reports.filter((r) => r.status === 'active');
+    }
+    if (activeTab === 'closed') {
+      return reports.filter((r) => r.status === 'closed');
+    }
+    return reports;
+  };
+
+  const filteredReports = getFilteredReports();
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   // ==================== BUTTON 1: UPDATE STATUS ====================
   const handleOpenStatusModal = (report) => {
     setSelectedReport(report);
@@ -93,15 +125,28 @@ const AdminViewReportScreen = ({ navigation }) => {
         report_id: selectedReport.id,
         urgency_level: selectedUrgency,
       });
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       if (response.success) {
         Alert.alert(
           '✅ Rescue Task Created!',
           `Task created with ${selectedUrgency} urgency.\nLocation will be shown from report details.`,
+<<<<<<< HEAD
           [{ text: 'OK', onPress: () => {
             setRescueTaskModalVisible(false);
             fetchReports();
           }}]
+=======
+          [{
+            text: 'OK', onPress: () => {
+              setRescueTaskModalVisible(false);
+              fetchReports();
+            }
+          }]
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         );
       } else {
         Alert.alert('Error', response.message || 'Failed to create rescue task');
@@ -173,18 +218,80 @@ const AdminViewReportScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
+<<<<<<< HEAD
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Text style={styles.backIcon}>←</Text>
         </TouchableOpacity>
         <View>
           <Text style={styles.headerSubtitle}>Admin</Text>
           <Text style={styles.headerTitle}>Manage Reports</Text>
+=======
+
+        <View>
+          <Text style={styles.headerSubtitle}>Admin</Text>
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         </View>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>{reports.length}</Text>
         </View>
       </View>
 
+<<<<<<< HEAD
+=======
+      {/* Tabs */}
+      <View style={styles.tabs}>
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'all' && styles.tabActive]}
+          onPress={() => setActiveTab('all')}
+        >
+          <Text style={[styles.tabText, activeTab === 'all' && styles.tabTextActive]}>
+            All
+          </Text>
+          {activeTab === 'all' && <View style={styles.tabIndicator} />}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'pending' && styles.tabActive]}
+          onPress={() => setActiveTab('pending')}
+        >
+          <Text style={[styles.tabText, activeTab === 'pending' && styles.tabTextActive]}>
+            Pending
+          </Text>
+          {activeTab === 'pending' && <View style={styles.tabIndicator} />}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'approved' && styles.tabActive]}
+          onPress={() => setActiveTab('approved')}
+        >
+          <Text style={[styles.tabText, activeTab === 'approved' && styles.tabTextActive]}>
+            Approve
+          </Text>
+          {activeTab === 'approved' && <View style={styles.tabIndicator} />}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'active' && styles.tabActive]}
+          onPress={() => setActiveTab('active')}
+        >
+          <Text style={[styles.tabText, activeTab === 'active' && styles.tabTextActive]}>
+            Active
+          </Text>
+          {activeTab === 'active' && <View style={styles.tabIndicator} />}
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.tab, activeTab === 'closed' && styles.tabActive]}
+          onPress={() => setActiveTab('closed')}
+        >
+          <Text style={[styles.tabText, activeTab === 'closed' && styles.tabTextActive]}>
+            Closed
+          </Text>
+          {activeTab === 'closed' && <View style={styles.tabIndicator} />}
+        </TouchableOpacity>
+      </View>
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       {/* Reports List */}
       <ScrollView
         style={styles.scrollView}
@@ -195,14 +302,22 @@ const AdminViewReportScreen = ({ navigation }) => {
           <View style={styles.emptyState}>
             <Text style={styles.emptyText}>Loading reports...</Text>
           </View>
+<<<<<<< HEAD
         ) : reports.length === 0 ? (
+=======
+        ) : filteredReports.length === 0 ? (
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           <View style={styles.emptyState}>
             <Text style={styles.emptyIcon}>📋</Text>
             <Text style={styles.emptyTitle}>No reports found</Text>
             <Text style={styles.emptyText}>Reports will appear here once submitted</Text>
           </View>
         ) : (
+<<<<<<< HEAD
           reports.map((report) => (
+=======
+          filteredReports.map((report) => (
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             <View key={report.id} style={styles.reportCard}>
               {/* Report Header */}
               <View style={styles.reportHeader}>
@@ -241,8 +356,13 @@ const AdminViewReportScreen = ({ navigation }) => {
                     {report.animal_type === 'dog'
                       ? '🐕 Dog'
                       : report.animal_type === 'cat'
+<<<<<<< HEAD
                       ? '🐈 Cat'
                       : '🐾 Other'}
+=======
+                        ? '🐈 Cat'
+                        : '🐾 Other'}
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                   </Text>
                 </View>
 
@@ -429,6 +549,7 @@ const AdminViewReportScreen = ({ navigation }) => {
           </View>
         </View>
       </Modal>
+<<<<<<< HEAD
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
@@ -446,6 +567,8 @@ const AdminViewReportScreen = ({ navigation }) => {
           <Text style={styles.navIcon}>👤</Text>
         </TouchableOpacity>
       </View>
+=======
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     </SafeAreaView>
   );
 };
@@ -493,6 +616,42 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.white,
   },
+<<<<<<< HEAD
+=======
+  tabs: {
+    flexDirection: 'row',
+    backgroundColor: Colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.gray200,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: Spacing.lg,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  tabActive: {
+    // Active state handled by indicator
+  },
+  tabText: {
+    fontSize: FontSizes.base,
+    fontWeight: '500',
+    color: Colors.textMuted,
+  },
+  tabTextActive: {
+    color: Colors.primary700,
+    fontWeight: '600',
+  },
+  tabIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: Colors.primary,
+    borderRadius: 2,
+  },
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   scrollView: {
     flex: 1,
   },

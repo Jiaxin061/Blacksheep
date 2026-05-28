@@ -8,4 +8,8 @@ async function generateHash(password) {
 }
 
 // Choose a simple, new password (e.g., 'TestAdmin123')
+<<<<<<< HEAD
 generateHash('admin123');
+=======
+generateHash('password');
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0

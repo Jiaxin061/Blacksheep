@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { Stack, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+=======
+import { Stack, useFocusEffect, useRouter, useLocalSearchParams } from "expo-router";
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
@@ -11,7 +15,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+<<<<<<< HEAD
 import { fetchAllocationByAnimal } from "../../../services/api";
+=======
+import { fetchAllocationByAnimal, deleteAllocation } from "../../../services/api";
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 import { colors } from "../../../theme/colors";
 import { getImageUrl } from "../../../utils/imageHelper";
 
@@ -62,13 +70,22 @@ interface AllocationDetails {
 export default function FundAllocationDetail() {
   const router = useRouter();
   const { animalID } = useLocalSearchParams<{ animalID: string }>();
+<<<<<<< HEAD
+=======
+  console.log("🐾 animalID from router:", animalID);
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   const [details, setDetails] = useState<AllocationDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const loadDetails = useCallback(async () => {
+<<<<<<< HEAD
     if (!animalID) return;
+=======
+    if (!animalID || Array.isArray(animalID)) return;
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     try {
       setError(null);
       const data = await fetchAllocationByAnimal(animalID);
@@ -110,19 +127,31 @@ export default function FundAllocationDetail() {
     );
   }
 
+<<<<<<< HEAD
   const { animal, summary, allocations } = details;
+=======
+  // Safely extract data with default fallbacks
+  const animal = details?.animal;
+  const summary = details?.summary;
+  const allocations = details?.allocations || [];
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: "Allocation Details" }} />
       <View style={styles.hero}>
+<<<<<<< HEAD
         {animal.photoURL ? (
+=======
+        {animal?.photoURL ? (
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           <Image
             source={{ uri: getImageUrl(animal.photoURL) }}
             style={styles.heroImage}
           />
         ) : (
           <View style={[styles.heroImage, styles.heroPlaceholder]}>
+<<<<<<< HEAD
             <Text style={styles.heroLetter}>{animal.name.charAt(0)}</Text>
           </View>
         )}
@@ -139,12 +168,33 @@ export default function FundAllocationDetail() {
             </Text>
             <Text style={styles.pillSecondary}>
               Remaining RM{summary.remaining.toFixed(2)}
+=======
+            <Text style={styles.heroLetter}>
+              {animal?.name ? animal.name.charAt(0) : '?'}
+            </Text>
+          </View>
+        )}
+        <View style={styles.heroMeta}>
+          <Text style={styles.heroTitle}>{animal?.name || 'Animal Profile'}</Text>
+          <Text style={styles.muted}>{animal?.type || ''}</Text>
+          <Text style={styles.metaRow}>
+            Goal RM{Number(animal?.fundingGoal || 0).toFixed(2)} ·
+            Raised RM{Number(animal?.amountRaised || 0).toFixed(2)}
+          </Text>
+          <View style={styles.summaryPills}>
+            <Text style={styles.pillPrimary}>
+              Allocated RM{Number(summary?.totalAllocated || 0).toFixed(2)}
+            </Text>
+            <Text style={styles.pillSecondary}>
+              Remaining RM{Number(summary?.remaining || 0).toFixed(2)}
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             </Text>
           </View>
         </View>
       </View>
 
       <View style={styles.actionsRow}>
+<<<<<<< HEAD
         {animal.status === "Archived" ? (
           <TouchableOpacity
             style={styles.addButton}
@@ -153,6 +203,13 @@ export default function FundAllocationDetail() {
                 pathname: "/admin/fund-allocation/[animalID]/add",
                 params: { animalID: animal.animalID.toString() },
               })
+=======
+        {animal?.status === "Archived" ? (
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() =>
+              router.push(`/admin/fund-allocation/${animalID}/add`)
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             }
           >
             <Text style={styles.addButtonText}>+ Add Allocation</Text>
@@ -195,7 +252,11 @@ export default function FundAllocationDetail() {
                 ? colors.success
                 : colors.neutralDark;
 
+<<<<<<< HEAD
           const displayAmount = item.totalCost || item.amount;
+=======
+          const displayAmount = Number(item.totalCost || item.amount || 0);
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           const fundingStatusColor =
             item.fundingStatus === "Fully Funded"
               ? colors.success
@@ -208,7 +269,11 @@ export default function FundAllocationDetail() {
                 router.push({
                   pathname: "/admin/fund-allocation/[animalID]/[allocationID]",
                   params: {
+<<<<<<< HEAD
                     animalID: animal.animalID.toString(),
+=======
+                    animalID: (animal?.animalID || animalID).toString(),
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                     allocationID: item.allocationID.toString(),
                   },
                 })
@@ -241,18 +306,30 @@ export default function FundAllocationDetail() {
               </View>
 
               {/* Funding Breakdown - Show if external funding exists */}
+<<<<<<< HEAD
               {(item.externalCoveredAmount || 0) > 0 && (
+=======
+              {Number(item.externalCoveredAmount || 0) > 0 && (
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                 <View style={styles.fundingBreakdown}>
                   <View style={styles.fundingRow}>
                     <Text style={styles.fundingLabel}>Donations:</Text>
                     <Text style={styles.fundingValue}>
+<<<<<<< HEAD
                       RM{(item.donationCoveredAmount || 0).toFixed(2)}
+=======
+                      RM{Number(item.donationCoveredAmount || 0).toFixed(2)}
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                     </Text>
                   </View>
                   <View style={styles.fundingRow}>
                     <Text style={styles.fundingLabel}>External:</Text>
                     <Text style={[styles.fundingValue, styles.externalAmount]}>
+<<<<<<< HEAD
                       RM{(item.externalCoveredAmount || 0).toFixed(2)}
+=======
+                      RM{Number(item.externalCoveredAmount || 0).toFixed(2)}
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                     </Text>
                   </View>
                   {item.externalFundingSource && (
@@ -314,7 +391,11 @@ export default function FundAllocationDetail() {
                     router.push({
                       pathname: "/admin/fund-allocation/[animalID]/[allocationID]",
                       params: {
+<<<<<<< HEAD
                         animalID: animal.animalID.toString(),
+=======
+                        animalID: (animal?.animalID || animalID).toString(),
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                         allocationID: item.allocationID.toString(),
                       },
                     });
@@ -345,14 +426,35 @@ export default function FundAllocationDetail() {
                     e.stopPropagation();
                     Alert.alert(
                       "Delete Allocation",
+<<<<<<< HEAD
                       `Are you sure you want to delete this allocation of RM${item.amount.toFixed(2)}?`,
+=======
+                      `Are you sure you want to delete this allocation of RM${Number(item.amount).toFixed(2)}?`,
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                       [
                         { text: "Cancel", style: "cancel" },
                         {
                           text: "Delete",
                           style: "destructive",
+<<<<<<< HEAD
                           onPress: () => {
                             Alert.alert("Delete", "Delete functionality to be implemented");
+=======
+                          onPress: async () => {
+                            try {
+                              setLoading(true);
+                              await deleteAllocation(item.allocationID);
+                              Alert.alert("Success", "Allocation deleted successfully");
+                              loadDetails();
+                            } catch (error: any) {
+                              console.error("Delete allocation error:", error);
+                              Alert.alert(
+                                "Error",
+                                error?.response?.data?.message || "Failed to delete allocation"
+                              );
+                              setLoading(false);
+                            }
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                           },
                         },
                       ]

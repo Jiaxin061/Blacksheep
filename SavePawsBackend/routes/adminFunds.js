@@ -30,16 +30,27 @@ router.get(
   "/fund-allocation/animals",
   fundAllocationController.getAllocationAnimals,
 );
+<<<<<<< HEAD
 router.get(
   "/fund-allocation/detail/:allocationID",
   fundAllocationController.getAllocationDetail,
 );
+=======
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 router.get(
   "/fund-allocation/:animalID",
   fundAllocationController.getAnimalAllocationDetails,
 );
 
+<<<<<<< HEAD
+=======
+router.get(
+  "/fund-allocation/detail/:allocationID",
+  fundAllocationController.getAllocationDetail,
+);
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 // 3. Apply Multer Middleware to the POST route
 // .fields() allows us to accept multiple distinct files
 router.post(
@@ -82,6 +93,7 @@ router.get("/animals/:animalID/progress", animalProgressController.getProgressUp
 
 router.post("/animals/:animalID/progress", animalProgressController.createProgressUpdate);
 
+<<<<<<< HEAD
 // FIX: Add upload.fields middleware to handle images during update
 router.put(
   "/allocations/:allocationID", 
@@ -91,5 +103,8 @@ router.put(
   ]),
   fundAllocationController.updateAllocation
 );
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 module.exports = router;

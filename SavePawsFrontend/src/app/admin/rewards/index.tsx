@@ -129,6 +129,17 @@ export default function AdminRewardListScreen() {
                     renderItem={renderItem}
                     keyExtractor={item => item.rewardID}
                     contentContainerStyle={styles.list}
+<<<<<<< HEAD
+=======
+                    ListHeaderComponent={
+                        <TouchableOpacity
+                            style={styles.addNewButton}
+                            onPress={() => router.push("/admin/rewards/add")}
+                        >
+                            <Text style={styles.addNewButtonText}>+ Add New Item</Text>
+                        </TouchableOpacity>
+                    }
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                     ListEmptyComponent={<Text style={styles.empty}>No rewards found.</Text>}
                 />
             )}
@@ -139,6 +150,26 @@ export default function AdminRewardListScreen() {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.background },
     addButton: { fontSize: 18, color: colors.primary, fontWeight: "bold", marginRight: 10 },
+<<<<<<< HEAD
+=======
+    addNewButton: {
+        backgroundColor: "#26A69A",
+        paddingVertical: 14,
+        paddingHorizontal: 20,
+        borderRadius: 12,
+        alignItems: "center",
+        marginBottom: 16,
+        shadowColor: "#000",
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    addNewButtonText: {
+        color: "white",
+        fontSize: 16,
+        fontWeight: "bold",
+    },
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     list: { padding: 16 },
     empty: { textAlign: "center", marginTop: 40, color: colors.textSecondary },
 

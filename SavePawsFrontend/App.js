@@ -1,11 +1,20 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { 
   StyleSheet, 
   View, 
   Text, 
   Image, 
   ActivityIndicator 
+=======
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  ActivityIndicator
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
@@ -56,10 +65,17 @@ function LoadingScreen() {
       <Text style={styles.loadingSubtitle}>
         Getting things ready for your pawsome day...
       </Text>
+<<<<<<< HEAD
       <ActivityIndicator 
         size="large" 
         color="#14b8a6" // Updated to match your AppNavigator teal theme
         style={styles.loadingSpinner} 
+=======
+      <ActivityIndicator
+        size="large"
+        color="#14b8a6" // Updated to match your AppNavigator teal theme
+        style={styles.loadingSpinner}
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       />
     </View>
   );

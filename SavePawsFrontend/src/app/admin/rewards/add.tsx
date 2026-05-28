@@ -75,7 +75,25 @@ export default function AddRewardScreen() {
                 } as any);
             }
 
+<<<<<<< HEAD
             const response = await createAdminReward(formData);
+=======
+            // Log FormData contents
+            console.log("📦 FormData contents:");
+            console.log("  title:", form.title);
+            console.log("  partnerName:", form.partnerName);
+            console.log("  category:", form.category);
+            console.log("  description:", form.description);
+            console.log("  pointsRequired:", form.pointsRequired);
+            console.log("  validityMonths:", form.validityMonths);
+            console.log("  terms:", form.terms);
+            console.log("  quantity:", form.quantity);
+            console.log("  image:", form.image ? "present" : "not present");
+
+            console.log("📤 Submitting reward creation...");
+            const response = await createAdminReward(formData);
+            console.log("✅ Response received:", response);
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
             if (response.success) {
                 Alert.alert("Success", "Reward created successfully", [
@@ -83,7 +101,15 @@ export default function AddRewardScreen() {
                 ]);
             }
         } catch (error: any) {
+<<<<<<< HEAD
             Alert.alert("Error", error.message || "Failed to create reward");
+=======
+            console.error("❌ Create reward error:", error);
+            const errorMessage = error.response?.data?.message
+                || error.message
+                || "Network error. Please check your connection and try again.";
+            Alert.alert("Error", errorMessage);
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         } finally {
             setLoading(false);
         }

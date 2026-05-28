@@ -147,14 +147,22 @@ exports.userLogin = async (req, res) => {
     // Verify password
     // Check if password is stored in password_hash or password column
     const storedPassword = user.password_hash || user.password;
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     if (!storedPassword) {
       return res.status(401).json({
         success: false,
         message: 'Invalid IC number or password'
       });
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     // Check if password is hashed (starts with $2b$) or plain text
     let isPasswordValid = false;
     if (storedPassword.startsWith('$2b$')) {
@@ -164,7 +172,11 @@ exports.userLogin = async (req, res) => {
       // Password is plain text, compare directly
       isPasswordValid = password === storedPassword;
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
@@ -241,6 +253,7 @@ exports.adminLogin = async (req, res) => {
 
     // Verify password
     // Check if password is hashed (starts with $2b$) or plain text
+<<<<<<< HEAD
     let isPasswordValid = false;
     if (admin.password && admin.password.startsWith('$2b$')) {
       // Password is hashed, use bcrypt
@@ -250,6 +263,20 @@ exports.adminLogin = async (req, res) => {
       isPasswordValid = password === admin.password;
     }
     
+=======
+    // Note: Model returns password_hash, not password
+    const storedPassword = admin.password_hash || admin.password;
+
+    let isPasswordValid = false;
+    if (storedPassword && storedPassword.startsWith('$2b$')) {
+      // Password is hashed, use bcrypt
+      isPasswordValid = await bcrypt.compare(password, storedPassword);
+    } else {
+      // Password is plain text, compare directly
+      isPasswordValid = password === storedPassword;
+    }
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
@@ -270,7 +297,11 @@ exports.adminLogin = async (req, res) => {
     // Prepare admin response (remove password, ensure all fields)
     // Extract name from email if needed (e.g., "karen@savepaws.com" -> "karen")
     const emailName = admin.email ? admin.email.split('@')[0] : 'Admin';
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     const adminResponse = {
       id: admin.id,
       email: admin.email,
@@ -494,7 +525,11 @@ exports.verifyToken = async (req, res) => {
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     // Get user/admin data
     let userData;
     if (decoded.type === 'user') {

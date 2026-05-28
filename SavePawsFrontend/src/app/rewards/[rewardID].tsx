@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { Stack, router, useLocalSearchParams } from "expo-router";
+=======
+import { useNavigation, useRoute } from "@react-navigation/native";
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -14,7 +18,13 @@ import { getRewardBalance, getRewardDetail, redeemReward } from "../../services/
 import { colors } from "../../theme/colors";
 
 export default function RewardDetailScreen() {
+<<<<<<< HEAD
     const { rewardID } = useLocalSearchParams<{ rewardID: string }>();
+=======
+    const navigation = useNavigation<any>();
+    const route = useRoute<any>();
+    const { rewardID } = route.params || {};
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     const [loading, setLoading] = useState(true);
     const [reward, setReward] = useState<any>(null);
     const [balance, setBalance] = useState<number>(0);
@@ -35,7 +45,11 @@ export default function RewardDetailScreen() {
             setBalance(balanceData.data.balance);
         } catch (error) {
             Alert.alert("Error", "Failed to load reward details.");
+<<<<<<< HEAD
             router.back();
+=======
+            navigation.goBack();
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         } finally {
             setLoading(false);
         }
@@ -62,7 +76,11 @@ export default function RewardDetailScreen() {
                             Alert.alert(
                                 "🎉 Success!",
                                 "Reward redeemed successfully. Your voucher is ready.",
+<<<<<<< HEAD
                                 [{ text: "View Voucher", onPress: () => router.replace({ pathname: "/rewards/voucher", params: { data: JSON.stringify(result.data) } }) }]
+=======
+                                [{ text: "View Voucher", onPress: () => navigation.navigate("RewardsVoucher", { data: JSON.stringify(result.data) }) }]
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                             );
                         } catch (err: any) {
                             Alert.alert("Redemption Failed", err.response?.data?.message || err.message);
@@ -87,7 +105,10 @@ export default function RewardDetailScreen() {
 
     return (
         <View style={styles.container}>
+<<<<<<< HEAD
             <Stack.Screen options={{ title: "Reward Details" }} />
+=======
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             <ScrollView contentContainerStyle={styles.scroll}>
                 <Image source={{ uri: reward.imageURL }} style={styles.image} />
 

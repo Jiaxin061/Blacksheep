@@ -25,7 +25,11 @@ const addLocationColumns = async () => {
       FROM INFORMATION_SCHEMA.COLUMNS 
       WHERE TABLE_SCHEMA = DATABASE() 
       AND TABLE_NAME = 'reports' 
+<<<<<<< HEAD
       AND COLUMN_NAME = 'location_latitude'
+=======
+      AND COLUMN_NAME = 'latitude'
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     `);
 
     const [lngColumn] = await pool.query(`
@@ -33,7 +37,11 @@ const addLocationColumns = async () => {
       FROM INFORMATION_SCHEMA.COLUMNS 
       WHERE TABLE_SCHEMA = DATABASE() 
       AND TABLE_NAME = 'reports' 
+<<<<<<< HEAD
       AND COLUMN_NAME = 'location_longitude'
+=======
+      AND COLUMN_NAME = 'longitude'
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     `);
 
     if (latColumn[0].count > 0 && lngColumn[0].count > 0) {
@@ -43,9 +51,15 @@ const addLocationColumns = async () => {
       if (latColumn[0].count === 0) {
         await pool.query(`
           ALTER TABLE reports 
+<<<<<<< HEAD
           ADD COLUMN location_latitude DECIMAL(10, 8) NULL
         `);
         console.log('✅ location_latitude column added to reports table');
+=======
+          ADD COLUMN latitude DECIMAL(10, 8) NULL
+        `);
+        console.log('✅ latitude column added to reports table');
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       }
 
       // Add location_longitude if it doesn't exist
@@ -54,7 +68,11 @@ const addLocationColumns = async () => {
           ALTER TABLE reports 
           ADD COLUMN location_longitude DECIMAL(11, 8) NULL
         `);
+<<<<<<< HEAD
         console.log('✅ location_longitude column added to reports table');
+=======
+        console.log('✅ longitude column added to reports table');
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       }
     }
 
@@ -64,7 +82,11 @@ const addLocationColumns = async () => {
       FROM INFORMATION_SCHEMA.COLUMNS 
       WHERE TABLE_SCHEMA = DATABASE() 
       AND TABLE_NAME = 'reports' 
+<<<<<<< HEAD
       AND COLUMN_NAME IN ('location_latitude', 'location_longitude')
+=======
+      AND COLUMN_NAME IN ('latitude', 'longitude')
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       ORDER BY COLUMN_NAME
     `);
 

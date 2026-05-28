@@ -86,14 +86,23 @@ const ManageRescueTasksScreen = ({ navigation }) => {
         
         // Log tasks with location data for debugging
         const tasksWithLocation = rescueTasks.filter(
+<<<<<<< HEAD
           t => t.location_latitude != null && t.location_longitude != null
+=======
+          t => t.latitude != null && t.longitude != null
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         );
         console.log('📍 Tasks with location:', tasksWithLocation.length);
         if (tasksWithLocation.length > 0) {
           console.log('📍 Sample location:', {
             id: tasksWithLocation[0].id,
+<<<<<<< HEAD
             lat: tasksWithLocation[0].location_latitude,
             lng: tasksWithLocation[0].location_longitude
+=======
+            lat: tasksWithLocation[0].latitude,
+            lng: tasksWithLocation[0].longitude
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           });
         }
         
@@ -103,10 +112,17 @@ const ManageRescueTasksScreen = ({ navigation }) => {
         // Set initial map region to fit all tasks with locations
         if (tasksWithLocation.length > 0) {
           const latitudes = tasksWithLocation
+<<<<<<< HEAD
             .map(t => parseFloat(t.location_latitude))
             .filter(lat => !isNaN(lat));
           const longitudes = tasksWithLocation
             .map(t => parseFloat(t.location_longitude))
+=======
+            .map(t => parseFloat(t.latitude))
+            .filter(lat => !isNaN(lat));
+          const longitudes = tasksWithLocation
+            .map(t => parseFloat(t.ongitude))
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             .filter(lng => !isNaN(lng));
           
           if (latitudes.length > 0 && longitudes.length > 0) {
@@ -129,8 +145,13 @@ const ManageRescueTasksScreen = ({ navigation }) => {
             // Fallback to first task location
             const firstTask = tasksWithLocation[0];
             setMapRegion({
+<<<<<<< HEAD
               latitude: parseFloat(firstTask.location_latitude),
               longitude: parseFloat(firstTask.location_longitude),
+=======
+              latitude: parseFloat(firstTask.latitude),
+              longitude: parseFloat(firstTask.longitude),
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
               latitudeDelta: 0.05,
               longitudeDelta: 0.05,
             });
@@ -304,11 +325,19 @@ const ManageRescueTasksScreen = ({ navigation }) => {
     <TouchableOpacity 
       style={styles.taskCard}
       onPress={() => {
+<<<<<<< HEAD
         if (item.location_latitude && item.location_longitude) {
           setViewMode('map');
           setMapRegion({
             latitude: parseFloat(item.location_latitude),
             longitude: parseFloat(item.location_longitude),
+=======
+        if (item.latitude && item.longitude) {
+          setViewMode('map');
+          setMapRegion({
+            latitude: parseFloat(item.latitude),
+            longitude: parseFloat(item.longitude),
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             latitudeDelta: 0.01,
             longitudeDelta: 0.01,
           });
@@ -364,14 +393,23 @@ const ManageRescueTasksScreen = ({ navigation }) => {
           <Text style={styles.locationText} numberOfLines={1}>
             {item.location_address || item.location || 'Location not specified'}
           </Text>
+<<<<<<< HEAD
           {item.location_latitude && item.location_longitude && (
+=======
+          {item.latitude && item.longitude && (
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             <TouchableOpacity
               style={styles.mapButton}
               onPress={() => {
                 setViewMode('map');
                 setMapRegion({
+<<<<<<< HEAD
                   latitude: parseFloat(item.location_latitude),
                   longitude: parseFloat(item.location_longitude),
+=======
+                  latitude: parseFloat(item.atitude),
+                  longitude: parseFloat(item.longitude),
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                   latitudeDelta: 0.01,
                   longitudeDelta: 0.01,
                 });
@@ -426,10 +464,17 @@ const ManageRescueTasksScreen = ({ navigation }) => {
   const renderMapView = () => {
     // Filter tasks with valid coordinates
     const tasksWithLocation = filteredReports.filter(
+<<<<<<< HEAD
       r => r.location_latitude != null && 
            r.location_longitude != null &&
            !isNaN(parseFloat(r.location_latitude)) &&
            !isNaN(parseFloat(r.location_longitude))
+=======
+      r => r.latitude != null && 
+           r.longitude != null &&
+           !isNaN(parseFloat(r.latitude)) &&
+           !isNaN(parseFloat(r.longitude))
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     );
 
     console.log('🗺️ Rendering map with', tasksWithLocation.length, 'tasks with valid locations');
@@ -437,8 +482,13 @@ const ManageRescueTasksScreen = ({ navigation }) => {
     // Calculate map region to fit all markers if we have tasks
     let initialRegion = mapRegion;
     if (tasksWithLocation.length > 0) {
+<<<<<<< HEAD
       const latitudes = tasksWithLocation.map(t => parseFloat(t.location_latitude));
       const longitudes = tasksWithLocation.map(t => parseFloat(t.location_longitude));
+=======
+      const latitudes = tasksWithLocation.map(t => parseFloat(t.latitude));
+      const longitudes = tasksWithLocation.map(t => parseFloat(t.longitude));
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       const minLat = Math.min(...latitudes);
       const maxLat = Math.max(...latitudes);
       const minLng = Math.min(...longitudes);
@@ -490,8 +540,13 @@ const ManageRescueTasksScreen = ({ navigation }) => {
           onRegionChangeComplete={setMapRegion}
         >
           {tasksWithLocation.map((task) => {
+<<<<<<< HEAD
             const lat = parseFloat(task.location_latitude);
             const lng = parseFloat(task.location_longitude);
+=======
+            const lat = parseFloat(task.latitude);
+            const lng = parseFloat(task.longitude);
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             
             if (isNaN(lat) || isNaN(lng)) {
               return null;
@@ -609,7 +664,11 @@ const ManageRescueTasksScreen = ({ navigation }) => {
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
+<<<<<<< HEAD
           <Text style={styles.headerTitle}>Manage Rescue Tasks</Text>
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           <Text style={styles.headerSubtitle}>
             {filteredReports.length} of {allReports.length} tasks
           </Text>

@@ -47,7 +47,11 @@ const UserLoginScreen = ({ navigation }) => {
         await AsyncStorage.setItem('authToken', response.token || 'demo-token');
 
         Alert.alert('Success', `Welcome back, ${response.user.first_name}!`);
+<<<<<<< HEAD
         navigation.replace('UserHome', { 
+=======
+        navigation.replace('UserHome', {
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           userId: response.user.id,
           icNo: response.user.ic_number,
           name: `${response.user.first_name} ${response.user.last_name}`
@@ -63,6 +67,7 @@ const UserLoginScreen = ({ navigation }) => {
     }
   };
 
+<<<<<<< HEAD
   // MyDigitalID Login - Auto login as User 1
   const handleMyDigitalIDLogin = async () => {
     setLoading(true);
@@ -118,6 +123,9 @@ const UserLoginScreen = ({ navigation }) => {
       setLoading(false);
     }
   };
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
   return (
     <SafeAreaView style={styles.container}>
@@ -173,6 +181,7 @@ const UserLoginScreen = ({ navigation }) => {
                 >
                   <Text style={styles.eyeIcon}>{showPassword ? '🙈' : '👁️'}</Text>
                 </TouchableOpacity>
+<<<<<<< HEAD
             </View>
 
             {/* Forgot Password Link */}
@@ -187,6 +196,22 @@ const UserLoginScreen = ({ navigation }) => {
           {/* Login Button */}
           <TouchableOpacity
               style={[styles.loginButton, loading && styles.buttonDisabled]} 
+=======
+              </View>
+
+              {/* Forgot Password Link */}
+              <TouchableOpacity
+                style={styles.forgotPasswordLink}
+                onPress={() => navigation.navigate('ForgotPassword')}
+              >
+                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Login Button */}
+            <TouchableOpacity
+              style={[styles.loginButton, loading && styles.buttonDisabled]}
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
               onPress={handleLogin}
               disabled={loading}
             >
@@ -196,6 +221,7 @@ const UserLoginScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
+<<<<<<< HEAD
           {/* OR Divider */}
           <View style={styles.divider}>
             <View style={styles.dividerLine} />
@@ -213,6 +239,8 @@ const UserLoginScreen = ({ navigation }) => {
             <Text style={styles.myDigitalIDButtonText}>Login with MyDigitalID</Text>
           </TouchableOpacity>
 
+=======
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           {/* Divider */}
           <View style={styles.divider}>
             <View style={styles.dividerLine} />
@@ -221,7 +249,11 @@ const UserLoginScreen = ({ navigation }) => {
           </View>
 
           {/* Sign Up Link */}
+<<<<<<< HEAD
           <TouchableOpacity 
+=======
+          <TouchableOpacity
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             style={styles.signupLink}
             onPress={() => navigation.navigate('Signup')}
           >
@@ -364,6 +396,7 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.sm,
     color: Colors.textMuted,
   },
+<<<<<<< HEAD
   myDigitalIDButton: {
     height: 48,
     backgroundColor: '#003366',
@@ -387,6 +420,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.white,
   },
+=======
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   signupLink: {
     alignItems: 'center',
     marginBottom: Spacing.lg,

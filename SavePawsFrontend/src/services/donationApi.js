@@ -9,12 +9,20 @@ axios.defaults.timeout = 30000;
 // ============================================
 
 export const fetchUserAnimals = async () => {
+<<<<<<< HEAD
   const response = await axios.get(`${API_BASE_URL}/api/animals`);
+=======
+  const response = await axios.get(`${API_BASE_URL}/api/donation-animals`);
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   return response.data;
 };
 
 export const fetchAnimalDetails = async (id) => {
+<<<<<<< HEAD
   const response = await axios.get(`${API_BASE_URL}/api/animals/${id}`);
+=======
+  const response = await axios.get(`${API_BASE_URL}/api/donation-animals/${id}`);
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   return response.data;
 };
 
@@ -51,12 +59,20 @@ export const createAnimal = async (formData) => {
     const headers = {
       "Accept": "application/json",
     };
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     // Add Authorization header if token exists
     if (authHeaders["Authorization"]) {
       headers["Authorization"] = authHeaders["Authorization"];
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     // Add x-user-id header if exists
     if (authHeaders["x-user-id"]) {
       headers["x-user-id"] = authHeaders["x-user-id"];
@@ -107,12 +123,20 @@ export const updateAnimal = async (id, formData) => {
     const headers = {
       "Accept": "application/json",
     };
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     // Add Authorization header if token exists
     if (authHeaders["Authorization"]) {
       headers["Authorization"] = authHeaders["Authorization"];
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     // Add x-user-id header if exists
     if (authHeaders["x-user-id"]) {
       headers["x-user-id"] = authHeaders["x-user-id"];
@@ -162,7 +186,11 @@ export const getDonationImpact = async () => {
     const headers = await getAuthHeaders();
     console.log("EMULATOR AUTH HEADERS:", JSON.stringify(headers, null, 2));
     console.log("🌐 Request URL:", `${API_BASE_URL}/api/user/donations/impact`);
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     const response = await axios.get(`${API_BASE_URL}/api/user/donations/impact`, { headers });
     console.log("✅ Response status:", response.status);
     return response.data.data;
@@ -262,8 +290,22 @@ export const fetchAllocationByAnimal = async (animalID) => {
 
 export const fetchAllocationDetail = async (allocationID) => {
   const headers = await getAuthHeaders();
+<<<<<<< HEAD
   const response = await axios.get(`${API_BASE_URL}/api/admin/fund-allocation/detail/${allocationID}`, { headers });
   return response.data.data;
+=======
+  console.log(`[API] Fetching allocation: ${API_BASE_URL}/api/admin/fund-allocation/detail/${allocationID}`);
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/admin/fund-allocation/detail/${allocationID}`, { headers });
+    console.log("[API] Response status:", response.status);
+    console.log("[API] Response Data:", JSON.stringify(response.data));
+    return response.data.data;
+  } catch (error) {
+    console.error("[API] Error fetching allocation:", error.message);
+    if (error.response) console.error("[API] Error Status:", error.response.status, error.response.data);
+    throw error;
+  }
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 };
 
 export const createAllocationForAnimal = async (animalID, payload) => {
@@ -337,12 +379,20 @@ export const createAllocationForAnimal = async (animalID, payload) => {
     const fetchHeaders = {
       "Accept": "application/json",
     };
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     // Add Authorization header if token exists
     if (authHeadersForFetch["Authorization"]) {
       fetchHeaders["Authorization"] = authHeadersForFetch["Authorization"];
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     // Add x-user-id header if exists
     if (authHeadersForFetch["x-user-id"]) {
       fetchHeaders["x-user-id"] = authHeadersForFetch["x-user-id"];
@@ -421,12 +471,80 @@ export const fetchAdminRewards = async () => {
 };
 
 export const createAdminReward = async (payload) => {
+<<<<<<< HEAD
   const headers = await getAuthHeaders();
   const response = await axios.post(`${API_BASE_URL}/api/admin/rewards`, payload, { headers });
   return response.data;
 };
 
 export const updateAdminReward = async (rewardID, payload) => {
+=======
+  try {
+    // Get auth headers for fetch request
+    const authHeaders = await getAuthHeaders();
+    const headers = {
+      "Accept": "application/json",
+    };
+
+    // Add Authorization header if token exists
+    if (authHeaders["Authorization"]) {
+      headers["Authorization"] = authHeaders["Authorization"];
+    }
+
+    // Add x-user-id header if exists
+    if (authHeaders["x-user-id"]) {
+      headers["x-user-id"] = authHeaders["x-user-id"];
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/admin/rewards`, {
+      method: "POST",
+      body: payload,
+      headers,
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to create reward");
+    }
+    return result;
+  } catch (error) {
+    console.error('❌ Create reward error:', error);
+    throw error;
+  }
+};
+
+export const updateAdminReward = async (rewardID, payload) => {
+  // If payload is FormData, use fetch instead of axios
+  if (payload instanceof FormData) {
+    const authHeaders = await getAuthHeaders();
+    const headers = {
+      "Accept": "application/json",
+    };
+    // Add Authorization header if token exists
+    if (authHeaders["Authorization"]) {
+      headers["Authorization"] = authHeaders["Authorization"];
+    }
+    if (authHeaders["x-user-id"]) {
+      headers["x-user-id"] = authHeaders["x-user-id"];
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/admin/rewards/${rewardID}`, {
+      method: "PUT",
+      body: payload,
+      headers,
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      const error = new Error(result.message || "Failed to update reward");
+      error.response = { data: result, status: response.status };
+      throw error;
+    }
+    return result;
+  }
+
+  // Otherwise use axios
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   const headers = await getAuthHeaders();
   const response = await axios.put(`${API_BASE_URL}/api/admin/rewards/${rewardID}`, payload, { headers });
   return response.data;

@@ -14,7 +14,11 @@ const { authenticateUser, authenticateAdmin } = require('../middleware/authMiddl
 router.get('/', async (req, res) => {
     try {
         const { urgency, status, all } = req.query;
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         console.log('🚑 GET /api/rescue-tasks - Fetching tasks', { urgency, status, all });
 
         let sql = `
@@ -31,6 +35,7 @@ router.get('/', async (req, res) => {
                 rt.update_image,
                 r.animal_type,
                 r.description,
+<<<<<<< HEAD
                 r.image_url as photo_url,
                 r.location as rescue_area,
                 r.location,
@@ -38,6 +43,14 @@ router.get('/', async (req, res) => {
                 r.longitude as location_longitude,
                 r.reporter_name,
                 r.reporter_contact as reporter_phone
+=======
+                r.location as rescue_area,
+                r.latitude,
+                r.longitude,
+                r.reporter_name,
+                r.reporter_contact,
+                r.photo_url
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             FROM rescue_tasks rt
             INNER JOIN reports r ON rt.report_id = r.id
             WHERE 1=1
@@ -65,7 +78,11 @@ router.get('/', async (req, res) => {
         sql += ' ORDER BY rt.urgency_level DESC, rt.created_at DESC';
 
         const results = await query(sql, params);
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         console.log(`✅ Found ${results.length} rescue tasks`);
 
         res.json({
@@ -93,7 +110,11 @@ router.get('/', async (req, res) => {
 router.get('/my-tasks', async (req, res) => {
     try {
         const userId = req.userId || req.query.user_id;
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         console.log('🚑 GET /api/rescue-tasks/my-tasks - User:', userId);
 
         if (!userId) {
@@ -108,12 +129,21 @@ router.get('/my-tasks', async (req, res) => {
                 rt.*,
                 r.animal_type,
                 r.description,
+<<<<<<< HEAD
                 r.latitude as location_latitude,
                 r.longitude as location_longitude,
                 r.location,
                 r.reporter_name,
                 r.reporter_contact as reporter_phone,
                 r.image_url as photo_url
+=======
+                r.latitude,
+                r.longitude,
+                r.location,
+                r.reporter_name,
+                r.reporter_contact,
+                r.photo_url
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             FROM rescue_tasks rt
             INNER JOIN reports r ON rt.report_id = r.id
             WHERE rt.assigned_to_user_id = ?
@@ -122,7 +152,11 @@ router.get('/my-tasks', async (req, res) => {
         `;
 
         const results = await query(sql, [userId]);
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         console.log(`✅ Found ${results.length} tasks for user ${userId}`);
 
         res.json({
@@ -151,7 +185,11 @@ router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const userId = req.userId || req.query.user_id;
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         console.log('🔍 GET /api/rescue-tasks/:id - Task:', id, 'User:', userId);
 
         if (!userId) {
@@ -166,12 +204,21 @@ router.get('/:id', async (req, res) => {
                 rt.*,
                 r.animal_type,
                 r.description,
+<<<<<<< HEAD
                 r.latitude as location_latitude,
                 r.longitude as location_longitude,
                 r.location,
                 r.reporter_name,
                 r.reporter_contact as reporter_phone,
                 r.image_url as photo_url
+=======
+                r.latitude,
+                r.longitude,
+                r.location,
+                r.reporter_name,
+                r.reporter_contact,
+                r.photo_url
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             FROM rescue_tasks rt
             INNER JOIN reports r ON rt.report_id = r.id
             WHERE rt.id = ? AND rt.assigned_to_user_id = ?
@@ -213,7 +260,11 @@ router.post('/', async (req, res) => {
     try {
         const { report_id, urgency_level, admin_id } = req.body;
         const adminId = req.userId || admin_id || null;
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         console.log('📝 POST /api/rescue-tasks - Creating task for report:', report_id);
         console.log('📝 Admin selected urgency:', urgency_level);
 
@@ -244,16 +295,26 @@ router.post('/', async (req, res) => {
             LEFT JOIN rescue_tasks rt ON r.id = rt.report_id
             WHERE r.id = ?
         `;
+<<<<<<< HEAD
         
         const checkResult = await query(checkSql, [report_id]);
         
+=======
+
+        const checkResult = await query(checkSql, [report_id]);
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         if (checkResult.length === 0) {
             return res.status(404).json({
                 success: false,
                 message: 'Report not found'
             });
         }
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         if (checkResult[0].task_id) {
             return res.status(400).json({
                 success: false,
@@ -308,7 +369,11 @@ router.post('/:id/accept', async (req, res) => {
     try {
         const { id } = req.params;
         const userId = req.userId || req.body.user_id;
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         console.log('✋ POST /api/rescue-tasks/:id/accept - Task:', id, 'User:', userId);
 
         if (!userId) {
@@ -405,7 +470,11 @@ router.patch('/:id/status', async (req, res) => {
         const { id } = req.params;
         const { status } = req.body;
         const userId = req.userId || req.body.user_id || req.query.user_id || null;
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         console.log('🔄 PATCH /api/rescue-tasks/:id/status - Task:', id, 'Status:', status);
 
         if (!status) {
@@ -463,8 +532,13 @@ router.patch('/:id/status', async (req, res) => {
 
         // Update report status
         const reportStatusMap = {
+<<<<<<< HEAD
             available: 'pending',
             assigned: 'approved',
+=======
+            available: 'approved',
+            assigned: 'active',
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             in_progress: 'active',
             completed: 'closed'
         };
@@ -583,8 +657,13 @@ router.patch('/:id', async (req, res) => {
             if (taskInfo.length > 0) {
                 const reportId = taskInfo[0].report_id;
                 const reportStatusMap = {
+<<<<<<< HEAD
                     available: 'pending',
                     assigned: 'approved',
+=======
+                    available: 'approved',
+                    assigned: 'active',
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                     in_progress: 'active',
                     completed: 'closed'
                 };
@@ -616,7 +695,11 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         console.log('🗑️ DELETE /api/rescue-tasks/:id - Task:', id);
 
         const sql = 'DELETE FROM rescue_tasks WHERE id = ?';

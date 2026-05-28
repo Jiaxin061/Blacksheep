@@ -14,7 +14,11 @@ class User {
   // Get user by ID
   static async getById(id) {
     const sql = `
+<<<<<<< HEAD
       SELECT id, first_name, last_name, email, phone_number, status, created_at, updated_at
+=======
+      SELECT id, ic_number, first_name, last_name, email, phone_number, status, is_volunteer, volunteer_badge, created_at, updated_at
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       FROM users 
       WHERE id = ?
     `;
@@ -42,7 +46,11 @@ class User {
     const passwordField = userData.password || userData.password_hash;
     const sql = `
       INSERT INTO users 
+<<<<<<< HEAD
       (ic_number, first_name, last_name, email, phone_number, password)
+=======
+      (ic_number, first_name, last_name, email, phone_number, password_hash)
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       VALUES (?, ?, ?, ?, ?, ?)
     `;
     const params = [
@@ -107,7 +115,11 @@ class User {
 
   // Update password
   static async updatePassword(id, password_hash) {
+<<<<<<< HEAD
     const sql = 'UPDATE users SET password = ? WHERE id = ?';
+=======
+    const sql = 'UPDATE users SET password_hash = ? WHERE id = ?';
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     const result = await query(sql, [password_hash, id]);
     return result.affectedRows > 0;
   }

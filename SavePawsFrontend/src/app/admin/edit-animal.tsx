@@ -89,8 +89,15 @@ export default function EditAnimalScreen() {
       }
     };
 
+<<<<<<< HEAD
     loadAnimal();
   }, [id, router]);
+=======
+    if (!form) {
+      loadAnimal();
+    }
+  }, [id]);
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
   const updateField = (key: keyof FormState, value: string) => {
     setForm((prev) => (prev ? { ...prev, [key]: value } : prev));
@@ -176,10 +183,17 @@ export default function EditAnimalScreen() {
         // Only include photo if a new one was selected
         photo: selectedImage
           ? {
+<<<<<<< HEAD
               uri: selectedImage,
               type: "image/jpeg",
               name: "photo.jpg",
             }
+=======
+            uri: selectedImage,
+            type: "image/jpeg",
+            name: "photo.jpg",
+          }
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           : undefined,
       };
 
@@ -188,7 +202,11 @@ export default function EditAnimalScreen() {
       Alert.alert("Success", "Animal profile updated successfully.", [
         {
           text: "OK",
+<<<<<<< HEAD
           onPress: () => router.replace("/admin/dashboard"),
+=======
+          onPress: () => router.back(),
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         },
       ]);
     } catch (error: any) {

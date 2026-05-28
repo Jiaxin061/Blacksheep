@@ -353,7 +353,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#F44336',
   },
   adoptButton: {
+<<<<<<< HEAD
     backgroundColor: '#E91E63',
+=======
+    backgroundColor: '#14b8a6',
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   },
   actionButtonText: {
     color: '#fff',

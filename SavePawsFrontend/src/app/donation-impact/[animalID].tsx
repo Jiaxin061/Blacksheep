@@ -269,7 +269,11 @@ export default function AnimalImpactScreen() {
                         <TouchableOpacity
                             key={donation.transactionID}
                             style={styles.donationRow}
+<<<<<<< HEAD
                             onPress={() => navigation.navigate('DonationImpact', { transactionID: donation.transactionID })}                        >
+=======
+                            onPress={() => navigation.navigate('DonationReceipt', { transactionID: donation.transactionID })}                        >
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                             <View style={styles.donationInfo}>
                                 <Text style={styles.donationAmount}>${donation.amount.toFixed(2)}</Text>
                                 <Text style={styles.donationDate}>{formatDate(donation.date)}</Text>

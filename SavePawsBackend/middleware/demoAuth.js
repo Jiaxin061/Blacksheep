@@ -12,6 +12,7 @@ exports.requireAuth = async (req, res, next) => {
   try {
     // Try JWT token first (Bearer token)
     const authHeader = req.headers.authorization;
+<<<<<<< HEAD
     
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
@@ -23,6 +24,19 @@ exports.requireAuth = async (req, res, next) => {
         if (decoded.type === 'user') {
           const user = await User.getById(decoded.id);
           
+=======
+
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.split(' ')[1];
+
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        // Check if it's a user token
+        if (decoded.type === 'user') {
+          const user = await User.getById(decoded.id);
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           if (!user) {
             return res.status(401).json({
               success: false,
@@ -99,6 +113,7 @@ exports.requireAdmin = async (req, res, next) => {
   try {
     // Try JWT token first (Bearer token)
     const authHeader = req.headers.authorization;
+<<<<<<< HEAD
     
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.split(' ')[1];
@@ -110,6 +125,19 @@ exports.requireAdmin = async (req, res, next) => {
         if (decoded.type === 'admin') {
           const admin = await Admin.getById(decoded.id);
           
+=======
+
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.split(' ')[1];
+
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+
+        // Check if it's an admin token
+        if (decoded.type === 'admin') {
+          const admin = await Admin.getById(decoded.id);
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           if (!admin) {
             return res.status(401).json({
               success: false,
@@ -148,8 +176,15 @@ exports.requireAdmin = async (req, res, next) => {
 
     // Check admins table (not users table)
     const admin = await Admin.getById(parseInt(userID));
+<<<<<<< HEAD
 
     if (!admin) {
+=======
+    console.log(`👤 Admin lookup for ID ${userID}:`, admin ? 'Found' : 'Not Found');
+
+    if (!admin) {
+      console.log('❌ Admin not found in DB');
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       return res.status(403).json({
         success: false,
         message: "Admin access required. User not found in admins table.",
@@ -158,6 +193,10 @@ exports.requireAdmin = async (req, res, next) => {
 
     // Check if admin is active
     if (admin.is_active === false || admin.is_active === 0) {
+<<<<<<< HEAD
+=======
+      console.log('❌ Admin account deactivated');
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       return res.status(401).json({
         success: false,
         message: "Admin account is deactivated.",

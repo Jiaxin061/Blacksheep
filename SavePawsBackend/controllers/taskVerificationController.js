@@ -1,7 +1,11 @@
 const { query } = require('../config/database');
 const User = require('../models/User');
 
+<<<<<<< HEAD
 // ==================== UC01: VIEW RESCUE EVIDENCE (ADMIN) ====================
+=======
+// ==================== VIEW RESCUE EVIDENCE (ADMIN) ====================
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 /**
  * GET /api/rescue-tasks/:id/evidence
@@ -89,7 +93,11 @@ exports.getTaskEvidence = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 // ==================== UC02: REPORT & BLACKLIST USER (ADMIN) ====================
+=======
+// ==================== REPORT & BLACKLIST USER (ADMIN) ====================
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 /**
  * POST /api/rescue-tasks/:id/verify
@@ -334,7 +342,11 @@ exports.blacklistUser = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 // ==================== UC03: VIEW TASK OUTCOME (USER) ====================
+=======
+// ==================== VIEW TASK OUTCOME (USER) ====================
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 /**
  * GET /api/rescue-tasks/my-tasks/outcomes

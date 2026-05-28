@@ -1,5 +1,9 @@
 export const colors = {
+<<<<<<< HEAD
   primary: "#16A99F",
+=======
+  primary: "#14b8a6",
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   primaryDark: "#0E7F78",
   primaryLight: "#1FD5C9",
   background: "#F2FBFA",

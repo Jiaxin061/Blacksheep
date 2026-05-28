@@ -30,7 +30,11 @@ const RescueTasksScreen = ({ navigation }) => {
   const fetchTasks = async () => {
     try {
       setLoading(true);
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       if (activeTab === 'available') {
         const response = await ApiService.getAvailableRescueTasks();
         if (response.success) {
@@ -70,10 +74,19 @@ const RescueTasksScreen = ({ navigation }) => {
                 Alert.alert(
                   '✅ Task Accepted!',
                   'You can now view full details including exact location and reporter contact.',
+<<<<<<< HEAD
                   [{ text: 'OK', onPress: () => {
                     setActiveTab('my-tasks');
                     fetchTasks();
                   }}]
+=======
+                  [{
+                    text: 'OK', onPress: () => {
+                      setActiveTab('my-tasks');
+                      fetchTasks();
+                    }
+                  }]
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                 );
               } else {
                 Alert.alert('Error', response.message || 'Failed to accept task');
@@ -333,9 +346,15 @@ const RescueTasksScreen = ({ navigation }) => {
                   <Text style={styles.detailValue}>
                     📍 {selectedTask.location_address || selectedTask.location || 'N/A'}
                   </Text>
+<<<<<<< HEAD
                   {selectedTask.location_latitude && selectedTask.location_longitude && (
                     <Text style={styles.coordinates}>
                       GPS: {selectedTask.location_latitude}, {selectedTask.location_longitude}
+=======
+                  {selectedTask.latitude && selectedTask.longitude && (
+                    <Text style={styles.coordinates}>
+                      GPS: {selectedTask.latitude}, {selectedTask.location_longitude}
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                     </Text>
                   )}
                 </View>
@@ -391,10 +410,17 @@ const RescueTasksScreen = ({ navigation }) => {
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('ReportAnimal')}>
           <Text style={styles.navIconLarge}>+</Text>
         </TouchableOpacity>
+<<<<<<< HEAD
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('ViewReport')}>
           <Text style={styles.navIcon}>✉</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
+=======
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('ViewReports')}>
+          <Text style={styles.navIcon}>✉</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('UserHome')}>
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           <Text style={styles.navIcon}>👤</Text>
         </TouchableOpacity>
       </View>

@@ -368,7 +368,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   submitButton: {
+<<<<<<< HEAD
     backgroundColor: '#4CAF50',
+=======
+    backgroundColor: '#14b8a6',
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   },
   cancelButton: {
     backgroundColor: '#9E9E9E',

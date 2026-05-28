@@ -4,7 +4,11 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const { testConnection } = require('./config/database');
+<<<<<<< HEAD
 const { initializeDatabase } = require('./config/initDatabase');
+=======
+const initializeDatabase = require('./config/initDatabase');
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 const requestLogger = require('./middleware/logger');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
@@ -13,6 +17,11 @@ const authRoutes = require('./routes/auth');
 const reportRoutes = require('./routes/reports');
 const rescueTaskRoutes = require('./routes/rescueTasks');
 const userManagementRoutes = require('./routes/userManagement');
+<<<<<<< HEAD
+=======
+const communityRoutes = require('./routes/community');
+const aiRoutes = require('./routes/ai'); // Import AI routes
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 // Donation Portal routes
 const animalsRoutes = require('./routes/animals');
@@ -22,9 +31,16 @@ const adminFundsRoutes = require('./routes/adminFunds');
 const adminRewardsRoutes = require('./routes/adminRewards');
 const rewardsRoutes = require('./routes/rewards');
 const donationsRoutes = require('./routes/donations');
+<<<<<<< HEAD
 
 // Adoption routes (ES6 module - will be loaded asynchronously)
 let adoptionRoutes = null;
+=======
+const donationAnimalsRoutes = require('./routes/donationAnimals');
+
+// Adoption routes
+const adoptionRoutes = require('./routes/adoption/adoptionRoutes');
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -73,7 +89,11 @@ const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
+<<<<<<< HEAD
     fileSize: 5 * 1024 * 1024 // 5MB max file size
+=======
+    fileSize: 20 * 1024 * 1024 // 20MB max file size
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   }
 });
 
@@ -92,13 +112,21 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
     // For Android emulator, use 10.0.2.2 if the request came from emulator
     const protocol = req.protocol;
     let imageHost = host;
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     // Check if request is from Android emulator (common pattern)
     if (host.includes('localhost') || host.includes('127.0.0.1')) {
       // For emulator access, use 10.0.2.2
       imageHost = `10.0.2.2:${PORT}`;
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     const imageUrl = `${protocol}://${imageHost}/uploads/${req.file.filename}`;
 
     console.log('📤 Image uploaded:', req.file.filename);
@@ -122,7 +150,16 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 
 // ==================== API ROUTES ====================
 
+<<<<<<< HEAD
 // Health check
+=======
+// Health check (root level for emulator/connectivity tests)
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'Server is reachable' });
+});
+
+// API Health check
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
@@ -144,6 +181,22 @@ app.use('/api/rescue-tasks', rescueTaskRoutes);
 // User management routes (Module 3)
 app.use('/api/users', userManagementRoutes);
 
+<<<<<<< HEAD
+=======
+// Community routes
+app.use('/api/community', communityRoutes);
+
+// AI routes
+app.use('/api/ai', aiRoutes);
+
+// Adoption routes
+app.use('/api/adoption', adoptionRoutes);
+
+// Volunteer routes (Moved up to avoid conflict with /api/admin mount)
+const volunteerRoutes = require('./routes/volunteer');
+app.use('/api', volunteerRoutes);
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 // Donation Portal routes
 app.use('/api/animals', animalsRoutes);
 app.use('/api/admin/animals', adminAnimalsRoutes);
@@ -152,9 +205,13 @@ app.use('/api/admin', adminFundsRoutes);
 app.use('/api/admin/rewards', adminRewardsRoutes);
 app.use('/api/rewards', rewardsRoutes);
 app.use('/api/donations', donationsRoutes);
+<<<<<<< HEAD
 
 // Adoption routes (loaded asynchronously)
 // Note: Adoption routes use ES6 modules, so we load them dynamically
+=======
+app.use('/api/donation-animals', donationAnimalsRoutes);
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 
 
@@ -176,6 +233,7 @@ const startServer = async () => {
     await initializeDatabase();
 
     // Load adoption routes (ES6 module)
+<<<<<<< HEAD
     try {
       const adoptionRoutesModule = await import('./routes/adoptionRoutes.js');
       adoptionRoutes = adoptionRoutesModule.default;
@@ -185,6 +243,11 @@ const startServer = async () => {
       console.warn('⚠️  Adoption routes not available:', error.message);
     }
 // ==================== ERROR HANDLING ====================
+=======
+    // Adoption routes loaded via standard require
+    console.log('✅ Adoption routes loaded');
+    // ==================== ERROR HANDLING ====================
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
     // 404 handler
     app.use(notFound);

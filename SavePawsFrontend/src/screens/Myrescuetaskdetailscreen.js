@@ -80,8 +80,13 @@ const MyRescueTaskDetailScreen = ({ navigation, route }) => {
   };
 
   const handleOpenMap = () => {
+<<<<<<< HEAD
     if (task?.location_latitude && task?.location_longitude) {
       const url = `https://www.google.com/maps/search/?api=1&query=${task.location_latitude},${task.location_longitude}`;
+=======
+    if (task?.latitude && task?.longitude) {
+      const url = `https://www.google.com/maps/search/?api=1&query=${task.latitude},${task.longitude}`;
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       Linking.openURL(url);
     } else {
       Alert.alert('Error', 'Location coordinates not available');
@@ -212,12 +217,17 @@ const MyRescueTaskDetailScreen = ({ navigation, route }) => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
+<<<<<<< HEAD
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Text style={styles.backIcon}>←</Text>
         </TouchableOpacity>
         <View>
           <Text style={styles.headerSubtitle}>My Task</Text>
           <Text style={styles.headerTitle}>Task #{task.id}</Text>
+=======
+        <View>
+          <Text style={styles.headerTitle}>Task ID#{task.id}</Text>
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         </View>
         <View style={{ width: 44 }} />
       </View>
@@ -290,15 +300,25 @@ const MyRescueTaskDetailScreen = ({ navigation, route }) => {
               <Text style={styles.locationAddress}>
                 {task.location_address || task.location || 'Address not available'}
               </Text>
+<<<<<<< HEAD
               {task.location_latitude && task.location_longitude && (
                 <Text style={styles.coordinates}>
                   GPS: {task.location_latitude}, {task.location_longitude}
+=======
+              {task.latitude && task.longitude && (
+                <Text style={styles.coordinates}>
+                  GPS: {task.latitude}, {task.location_longitude}
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                 </Text>
               )}
             </View>
           </View>
 
+<<<<<<< HEAD
           {task.location_latitude && task.location_longitude && (
+=======
+          {task.latitude && task.longitude && (
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             <TouchableOpacity style={styles.mapButton} onPress={handleOpenMap}>
               <Text style={styles.mapButtonIcon}>🗺️</Text>
               <Text style={styles.mapButtonText}>Open in Maps</Text>

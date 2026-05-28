@@ -21,15 +21,24 @@
 -- - redemption_record (reward redemption records)
 -- =====================================================
 
+<<<<<<< HEAD
 DROP DATABASE IF EXISTS savepaws;
 CREATE DATABASE savepaws;
 USE savepaws;
+=======
+-- Database setup is handled by config/database.js and initDatabase.js
+-- USE savepaws_db;
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 -- =====================================================
 -- PART 1: USERS TABLE
 -- =====================================================
 CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
+<<<<<<< HEAD
+=======
+  ic_number VARCHAR(20) NOT NULL UNIQUE,
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   first_name VARCHAR(100) NOT NULL,
   last_name VARCHAR(100) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
@@ -37,11 +46,22 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash VARCHAR(255) NOT NULL,
   is_active BOOLEAN DEFAULT TRUE,
   status ENUM('active', 'banned') DEFAULT 'active',
+<<<<<<< HEAD
+=======
+  is_volunteer BOOLEAN DEFAULT FALSE,
+  volunteer_badge VARCHAR(50) DEFAULT NULL,
+  volunteer_approval_date TIMESTAMP NULL DEFAULT NULL,
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_email (email),
   INDEX idx_is_active (is_active),
+<<<<<<< HEAD
   INDEX idx_status (status)
+=======
+  INDEX idx_status (status),
+  INDEX idx_is_volunteer (is_volunteer)
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
@@ -51,10 +71,20 @@ CREATE TABLE IF NOT EXISTS admins (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(100) NOT NULL UNIQUE,
   email VARCHAR(255) NOT NULL UNIQUE,
+<<<<<<< HEAD
+=======
+  first_name VARCHAR(100) DEFAULT NULL,
+  last_name VARCHAR(100) DEFAULT NULL,
+  phone_number VARCHAR(20) DEFAULT NULL,
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   password_hash VARCHAR(255) NOT NULL,
   full_name VARCHAR(200) NOT NULL,
   role ENUM('super_admin', 'admin', 'moderator') DEFAULT 'admin',
   is_active BOOLEAN DEFAULT TRUE,
+<<<<<<< HEAD
+=======
+  account_status ENUM('Active','Inactive') DEFAULT 'Active',
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   last_login TIMESTAMP NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -70,6 +100,7 @@ CREATE TABLE IF NOT EXISTS reports (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NULL,
   animal_type ENUM('dog', 'cat', 'other') NOT NULL,
+<<<<<<< HEAD
   urgency_level ENUM('low', 'medium', 'high', 'critical') DEFAULT 'medium',
   animal_condition VARCHAR(255) NULL,
   description TEXT NOT NULL,
@@ -82,6 +113,16 @@ CREATE TABLE IF NOT EXISTS reports (
   reporter_phone VARCHAR(20) NULL,
   reporter_contact VARCHAR(20) NULL,
   status ENUM('pending', 'assigned', 'in_progress', 'rescued', 'closed', 'approved') DEFAULT 'pending',
+=======
+  description TEXT NOT NULL,
+  location VARCHAR(500) NULL,
+  latitude DECIMAL(10, 8) NULL,
+  longitude DECIMAL(11, 8) NULL,
+  photo_url VARCHAR(500) NULL,
+  reporter_name VARCHAR(100) NULL,
+  reporter_contact VARCHAR(20) NULL,
+  status ENUM('pending','active','approved','closed') DEFAULT 'pending',
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   assigned_to INT NULL,
   notes TEXT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -90,7 +131,10 @@ CREATE TABLE IF NOT EXISTS reports (
   FOREIGN KEY (assigned_to) REFERENCES admins(id) ON DELETE SET NULL,
   INDEX idx_user_id (user_id),
   INDEX idx_status (status),
+<<<<<<< HEAD
   INDEX idx_urgency_level (urgency_level),
+=======
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   INDEX idx_animal_type (animal_type),
   INDEX idx_created_at (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -220,12 +264,33 @@ CREATE TABLE IF NOT EXISTS donation_transaction (
 -- =====================================================
 CREATE TABLE IF NOT EXISTS fund_allocation (
   allocationID INT PRIMARY KEY AUTO_INCREMENT,
+<<<<<<< HEAD
   transactionID INT NOT NULL,
+=======
+  transactionID INT NULL,
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   animalID INT NOT NULL,
   category ENUM('Vet', 'Medication', 'Food', 'Shelter', 'Other') NOT NULL,
   amount DECIMAL(10, 2) NOT NULL,
   description TEXT,
+<<<<<<< HEAD
   allocationDate DATE NOT NULL,
+=======
+  allocationType VARCHAR(100) NULL,
+  serviceProvider VARCHAR(255) NULL,
+  publicDescription TEXT NULL,
+  internalNotes TEXT NULL,
+  conditionUpdate TEXT NULL,
+  status ENUM('Draft', 'Verified', 'Published') DEFAULT 'Draft',
+  donationCoveredAmount DECIMAL(10, 2) DEFAULT 0,
+  externalCoveredAmount DECIMAL(10, 2) DEFAULT 0,
+  externalFundingSource VARCHAR(255) NULL,
+  externalFundingNotes TEXT NULL,
+  fundingStatus ENUM('Fully Funded', 'Partially Funded') DEFAULT 'Fully Funded',
+  allocationDate DATE NOT NULL,
+  receiptImage VARCHAR(500) NULL,
+  treatmentPhoto VARCHAR(500) NULL,
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (transactionID) REFERENCES donation_transaction(transactionID) ON DELETE CASCADE,
@@ -234,6 +299,10 @@ CREATE TABLE IF NOT EXISTS fund_allocation (
   INDEX idx_animalID (animalID),
   INDEX idx_category (category),
   INDEX idx_allocationDate (allocationDate),
+<<<<<<< HEAD
+=======
+  INDEX idx_status (status),
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   CONSTRAINT chk_positive_amount CHECK (amount > 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -388,9 +457,13 @@ GROUP BY u.id, u.first_name, u.last_name, u.email, dt.transactionID, dt.donation
 -- PART 14: STORED PROCEDURES
 -- =====================================================
 
+<<<<<<< HEAD
 DELIMITER //
 
 DROP PROCEDURE IF EXISTS sp_validate_allocation //
+=======
+DROP PROCEDURE IF EXISTS sp_validate_allocation;
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 CREATE PROCEDURE sp_validate_allocation(
   IN p_transactionID INT,
@@ -425,17 +498,25 @@ BEGIN
       SET p_message = 'Allocation is valid';
     END IF;
   END IF;
+<<<<<<< HEAD
 END //
 
 DELIMITER ;
+=======
+END;
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 -- =====================================================
 -- PART 15: TRIGGERS
 -- =====================================================
 
+<<<<<<< HEAD
 DELIMITER //
 
 DROP TRIGGER IF EXISTS trg_check_allocation_before_insert //
+=======
+DROP TRIGGER IF EXISTS trg_check_allocation_before_insert;
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 CREATE TRIGGER trg_check_allocation_before_insert
 BEFORE INSERT ON fund_allocation
@@ -462,9 +543,15 @@ BEGIN
       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_msg;
     END IF;
   END IF;
+<<<<<<< HEAD
 END //
 
 DROP TRIGGER IF EXISTS trg_check_allocation_before_update //
+=======
+END;
+
+DROP TRIGGER IF EXISTS trg_check_allocation_before_update;
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 CREATE TRIGGER trg_check_allocation_before_update
 BEFORE UPDATE ON fund_allocation
@@ -492,12 +579,118 @@ BEGIN
       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_msg;
     END IF;
   END IF;
+<<<<<<< HEAD
 END //
 
 DELIMITER ;
 
+=======
+END;
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 -- =====================================================
 -- END OF SCHEMA
 -- =====================================================
 
 
+<<<<<<< HEAD
+=======
+-- =====================================================
+-- PART 16: INTEGRATED LEGACY SCHEMA
+-- =====================================================
+
+-- 16.3 AI Chats Table
+CREATE TABLE IF NOT EXISTS ai_chats (
+  chatID INT AUTO_INCREMENT PRIMARY KEY,
+  userID INT NOT NULL,
+  user_query TEXT NOT NULL,
+  ai_response TEXT NOT NULL,
+  chat_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  is_active BOOLEAN DEFAULT TRUE,
+  FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 16.4 Community Posts Table
+CREATE TABLE IF NOT EXISTS community_posts (
+  postID INT AUTO_INCREMENT PRIMARY KEY,
+  userID INT NOT NULL,
+  content_text TEXT DEFAULT NULL,
+  content_image VARCHAR(255) DEFAULT NULL,
+  post_status ENUM('Active','Deleted') DEFAULT 'Active',
+  post_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 16.5 Volunteer Events Table
+CREATE TABLE IF NOT EXISTS volunteer_events (
+  eventID INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT DEFAULT NULL,
+  eventLocation VARCHAR(255) DEFAULT NULL,
+  start_date DATETIME DEFAULT NULL,
+  end_date DATETIME DEFAULT NULL,
+  max_volunteers INT DEFAULT NULL,
+  adminID INT NOT NULL,
+  image_url TEXT DEFAULT NULL,
+  hours DECIMAL(5,2) DEFAULT 0.00,
+  FOREIGN KEY (adminID) REFERENCES admins(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 16.6 Event Records Table
+CREATE TABLE IF NOT EXISTS event_records (
+  recordID INT AUTO_INCREMENT PRIMARY KEY,
+  userID INT NOT NULL,
+  eventID INT NOT NULL,
+  register_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  status ENUM('Registered','No-show') DEFAULT 'Registered',
+  FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (eventID) REFERENCES volunteer_events(eventID) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 16.7 Post Comments Table
+CREATE TABLE IF NOT EXISTS post_comments (
+  commentID INT AUTO_INCREMENT PRIMARY KEY,
+  postID INT NOT NULL,
+  userID INT NOT NULL,
+  comment_text TEXT NOT NULL,
+  comment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (postID) REFERENCES community_posts(postID) ON DELETE CASCADE,
+  FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 16.9 Volunteer Registration Table
+CREATE TABLE IF NOT EXISTS volunteer_registration (
+  registrationID INT AUTO_INCREMENT PRIMARY KEY,
+  userID INT NOT NULL,
+  userName VARCHAR(255) DEFAULT NULL,
+  location VARCHAR(255) DEFAULT NULL,
+  experience TEXT DEFAULT NULL,
+  capability TEXT DEFAULT NULL,
+  registration_status ENUM('Pending','Approved','Rejected') DEFAULT 'Pending',
+  submition_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  adminID INT DEFAULT NULL,
+  reviewed_date TIMESTAMP NULL DEFAULT NULL,
+  rejection_reason TEXT DEFAULT NULL,
+  FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (adminID) REFERENCES admins(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- =====================================================
+-- PART 16.10: ADOPTION UPDATES TABLE
+-- =====================================================
+CREATE TABLE IF NOT EXISTS adoption_updates (
+    review_id INT AUTO_INCREMENT PRIMARY KEY,
+    adoption_request_id INT NOT NULL,
+    user_id INT NOT NULL,
+    health_status VARCHAR(255),
+    description TEXT,
+    photo_url VARCHAR(500),
+    review_status ENUM('pending', 'satisfactory', 'needs_visit') DEFAULT 'pending',
+    admin_notes TEXT,
+    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (adoption_request_id) REFERENCES adoption_requests(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_adoption_request (adoption_request_id),
+    INDEX idx_user (user_id),
+    INDEX idx_status (review_status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0

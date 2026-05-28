@@ -9,8 +9,13 @@ class Report {
              u.last_name as user_last_name,
              a.full_name as assigned_admin_name
       FROM reports r
+<<<<<<< HEAD
      LEFT JOIN users u ON r.user_id = u.id  // ASSUMES reports.user_id exists
      LEFT JOIN admins a ON r.assigned_to = a.id // ASSUMES reports.assigned_to exists
+=======
+      LEFT JOIN users u ON r.user_id = u.id
+      LEFT JOIN admins a ON r.assigned_to = a.id
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       WHERE 1=1
     `;
     const params = [];
@@ -84,6 +89,7 @@ class Report {
   static async create(reportData) {
     const sql = `
       INSERT INTO reports 
+<<<<<<< HEAD
       (user_id, animal_type, urgency_level, animal_condition, description, 
        location_latitude, location_longitude, location_address, photo_url,
        reporter_name, reporter_phone, status)
@@ -101,6 +107,23 @@ class Report {
       reportData.photo_url || null,
       reportData.reporter_name || null,
       reportData.reporter_phone || null,
+=======
+      (user_id, animal_type, description, 
+       location, latitude, longitude, photo_url,
+       reporter_name, reporter_contact, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    const params = [
+      reportData.user_id || null, // Note: reports.sql uses 'userID', we need to check if we should map user_id to userID
+      reportData.animal_type,
+      reportData.description,
+      reportData.location || null,
+      reportData.latitude || null,
+      reportData.longitude || null,
+      reportData.photo_url || null, // Mapping photo_url to image_url
+      reportData.reporter_name || null,
+      reportData.reporter_contact || null,
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       reportData.status || 'pending'
     ];
     const result = await query(sql, params);
@@ -108,6 +131,7 @@ class Report {
   }
 
   static async update(id, reportData) {
+<<<<<<< HEAD
     // This function is used for general updates, including the first 'rescue task' assignment
     const updates = [];
     const params = [];
@@ -151,10 +175,57 @@ class Report {
     }
 
     const sql = `
+=======
+    // This function is used for general updates, including the first 'rescue task' assignment
+    const updates = [];
+    const params = [];
+
+    // --- 1. Admin Review Fields ---
+    if (reportData.status !== undefined) {
+      updates.push('status = ?');
+      params.push(reportData.status);
+    }
+
+    // if (reportData.urgency_level !== undefined) {
+    //   updates.push('urgency_level = ?');
+    //   params.push(reportData.urgency_level);
+    // }
+
+    // NOTE: Assuming 'location' is the column for the admin-defined rescue area or general location
+    if (reportData.rescue_area !== undefined) {
+      // Use the existing column 'location'? Or is this a new field?
+      // commenting out to prevent crash if column doesn't exist
+      // updates.push('location = ?'); 
+      // params.push(reportData.rescue_area);
+    }
+
+    // --- 2. Optional Fields ---
+    // if (reportData.animal_condition !== undefined) {
+    //   updates.push('animal_condition = ?');
+    //   params.push(reportData.animal_condition || null);
+    // }
+    // NOTE: Assuming 'notes' column exists for admin comments
+    // if (reportData.notes !== undefined) {
+    //   updates.push('notes = ?');
+    //   params.push(reportData.notes || null);
+    // }
+    // if (reportData.assigned_to !== undefined) {
+    //   updates.push('assigned_to = ?');
+    //   params.push(reportData.assigned_to || null);
+    // }
+
+    if (updates.length === 0) {
+      // Nothing to update
+      return true;
+    }
+
+    const sql = `
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       UPDATE reports 
       SET ${updates.join(', ')}
       WHERE id = ?
     `;
+<<<<<<< HEAD
     params.push(id);
 
     const result = await query(sql, params);
@@ -167,6 +238,20 @@ class Report {
     const result = await query(sql, [status, id]);
     return result.affectedRows > 0;
   }
+=======
+    params.push(id);
+
+    const result = await query(sql, params);
+    return result.affectedRows > 0;
+  }
+
+  // Update report status only (Used for simple status changes like 'rescued' or 'closed')
+  static async updateStatus(id, status) {
+    const sql = 'UPDATE reports SET status = ? WHERE id = ?';
+    const result = await query(sql, [status, id]);
+    return result.affectedRows > 0;
+  }
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
   // Assign report to admin
   static async assignToAdmin(id, adminId) {

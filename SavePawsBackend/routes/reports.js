@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { query } = require('../config/database');
+<<<<<<< HEAD
 const { authenticateAdmin, authenticateUser } = require('../middleware/authMiddleware'); 
+=======
+const { authenticateAdmin, authenticateUser } = require('../middleware/authMiddleware');
+const reportController = require('../controllers/reportController');
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 // ==================== GET USER REPORTS ====================
 
@@ -11,6 +16,7 @@ const { authenticateAdmin, authenticateUser } = require('../middleware/authMiddl
  * 
  * FIX: Made authenticateAdmin OPTIONAL - only checks token if provided
  */
+<<<<<<< HEAD
 router.get('/', async (req, res) => {
     try {
         const { user_id, urgency, status, area } = req.query;
@@ -87,6 +93,15 @@ router.get('/', async (req, res) => {
         });
     }
 });
+=======
+// ==================== GET USER REPORTS ====================
+
+/**
+ * GET /api/reports
+ * Get reports for specific user or ALL reports (Admin view)
+ */
+router.get('/', reportController.getAllReports);
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 // ==================== GET CURRENT USER REPORTS (token optional) ====================
 /**
@@ -96,6 +111,7 @@ router.get('/', async (req, res) => {
  *  - query param ?user_id=#
  */
 router.get('/my-reports', async (req, res) => {
+<<<<<<< HEAD
     try {
         const userId = req.userId || req.query.user_id;
 
@@ -132,6 +148,44 @@ router.get('/my-reports', async (req, res) => {
             error: error.message
         });
     }
+=======
+  try {
+    const userId = req.userId || req.query.user_id;
+
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: 'user_id is required when no token is provided'
+      });
+    }
+
+    console.log('👤 GET /api/reports/my-reports - User:', userId);
+
+    const sql = `
+            SELECT 
+                r.*,
+                r.reporter_name,
+                r.reporter_contact
+            FROM reports r
+            WHERE r.user_id = ?
+            ORDER BY r.created_at DESC
+        `;
+
+    const results = await query(sql, [userId]);
+
+    res.json({
+      success: true,
+      reports: results
+    });
+  } catch (error) {
+    console.error('❌ GET my-reports error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch reports',
+      error: error.message
+    });
+  }
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 });
 
 // ==================== GET SINGLE REPORT ====================
@@ -141,6 +195,7 @@ router.get('/my-reports', async (req, res) => {
  * Get report by ID (Public - no auth required)
  */
 router.get('/:id', async (req, res) => {
+<<<<<<< HEAD
     try {
         const { id } = req.params;
 
@@ -151,10 +206,23 @@ router.get('/:id', async (req, res) => {
                 r.*,
                 r.reporter_name,
                 r.reporter_contact as reporter_phone
+=======
+  try {
+    const { id } = req.params;
+
+    console.log('🔍 GET /api/reports/:id - Report ID:', id);
+
+    const sql = `
+            SELECT 
+                r.*,
+                r.reporter_name,
+                r.reporter_contact
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             FROM reports r
             WHERE r.id = ?
         `;
 
+<<<<<<< HEAD
         const results = await query(sql, [id]);
 
         if (results.length === 0) {
@@ -179,6 +247,32 @@ router.get('/:id', async (req, res) => {
             error: error.message
         });
     }
+=======
+    const results = await query(sql, [id]);
+
+    if (results.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Report not found'
+      });
+    }
+
+    console.log('✅ Found report:', results[0].id);
+
+    res.json({
+      success: true,
+      report: results[0]
+    });
+
+  } catch (error) {
+    console.error('❌ GET report by ID error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch report',
+      error: error.message
+    });
+  }
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 });
 
 // ==================== CREATE REPORT ====================
@@ -187,6 +281,7 @@ router.get('/:id', async (req, res) => {
  * POST /api/reports
  * Create new report (Public - anyone can submit)
  */
+<<<<<<< HEAD
 router.post('/', async (req, res) => {
   try {
     const {
@@ -249,6 +344,13 @@ router.post('/', async (req, res) => {
     });
   }
 });
+=======
+/**
+ * POST /api/reports
+ * Create new report (Public - anyone can submit)
+ */
+router.post('/', reportController.submitReport);
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 // ==================== UPDATE REPORT (ADMIN ONLY) ====================
 
@@ -257,6 +359,7 @@ router.post('/', async (req, res) => {
  * Update report (Requires Admin Authentication)
  */
 router.put('/:id', authenticateAdmin, async (req, res) => {
+<<<<<<< HEAD
     try {
         const { id } = req.params;
         const { status, urgency_level, location, location_address, rescue_area } = req.body; 
@@ -327,6 +430,78 @@ router.put('/:id', authenticateAdmin, async (req, res) => {
             error: error.message
         });
     }
+=======
+  try {
+    const { id } = req.params;
+    const { status, urgency_level, location, location_address, rescue_area } = req.body;
+
+    console.log('🔄 PUT /api/reports/:id - Updating report:', id);
+
+    let sql = 'UPDATE reports SET ';
+    const updates = [];
+    const params = [];
+
+    if (status) {
+      updates.push('status = ?');
+      params.push(status);
+    }
+
+    if (urgency_level) {
+      updates.push('urgency_level = ?');
+      params.push(urgency_level);
+    }
+
+    if (location !== undefined) {
+      updates.push('location = ?');
+      params.push(location);
+    }
+
+    if (location_address !== undefined) {
+      updates.push('location_address = ?');
+      params.push(location_address);
+    }
+
+    if (rescue_area !== undefined) {
+      updates.push('rescue_area = ?');
+      params.push(rescue_area);
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No fields to update'
+      });
+    }
+
+    sql += updates.join(', ');
+    sql += ' WHERE id = ?';
+    params.push(id);
+
+    const result = await query(sql, params);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'Report not found'
+      });
+    }
+
+    console.log('✅ Report updated:', id);
+
+    res.json({
+      success: true,
+      message: 'Report updated successfully'
+    });
+
+  } catch (error) {
+    console.error('❌ Update report error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update report',
+      error: error.message
+    });
+  }
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 });
 
 // ==================== UPDATE STATUS (ADMIN ONLY) ====================

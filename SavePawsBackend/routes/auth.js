@@ -4,6 +4,7 @@ const authController = require('../controllers/authController');
 const { authenticateUser, authenticateAdmin } = require('../middleware/authMiddleware');
 const { query } = require('../config/database');
 
+<<<<<<< HEAD
 // ==================== MYDIGITALID ROUTE ====================
 
 /**
@@ -37,6 +38,8 @@ router.get('/users/:id', async (req, res) => {
   }
 });
 
+=======
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 // ==================== USER ROUTES ====================
 
 /**

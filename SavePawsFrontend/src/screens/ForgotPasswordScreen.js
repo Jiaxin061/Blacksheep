@@ -83,7 +83,11 @@ const ForgotPasswordScreen = ({ navigation }) => {
           [
             {
               text: 'OK',
+<<<<<<< HEAD
               onPress: () => navigation.navigate('UserLogin'),
+=======
+              onPress: () => navigation.navigate('Login'),
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             },
           ]
         );

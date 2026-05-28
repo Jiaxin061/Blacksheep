@@ -67,7 +67,11 @@ const SignupScreen = ({ navigation }) => {
         Alert.alert(
           '✅ Success',
           `Account created successfully!\n\nYour IC number: ${formData.icNumber}\n\nPlease login to continue.`,
+<<<<<<< HEAD
           [{ text: 'Login Now', onPress: () => navigation.navigate('UserLogin') }]
+=======
+          [{ text: 'Login Now', onPress: () => navigation.navigate('Login') }]
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         );
       } else {
         Alert.alert('Error', response.message || 'Signup failed');
@@ -237,7 +241,11 @@ const SignupScreen = ({ navigation }) => {
           {/* Login Link */}
           <View style={styles.loginContainer}>
             <Text style={styles.loginText}>Already have an account? </Text>
+<<<<<<< HEAD
             <TouchableOpacity onPress={() => navigation.navigate('UserLogin')}>
+=======
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
               <Text style={styles.loginLink}>Sign In</Text>
             </TouchableOpacity>
           </View>

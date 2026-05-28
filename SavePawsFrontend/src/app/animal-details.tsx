@@ -37,28 +37,68 @@ type RootStackParamList = {
 export default function AnimalDetailsScreen() {
     const navigation = useNavigation<any>();
     const route = useRoute<RouteProp<RootStackParamList, 'AnimalDetail'>>();
+<<<<<<< HEAD
     
     // id is extracted from route.params
     const { id } = route.params || {};  
     
+=======
+
+    // Support both id and animalId from different navigation sources
+    const { id, animalId } = route.params || {};
+    const effectiveId = id || animalId;
+
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     const [animal, setAnimal] = useState<Animal | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+<<<<<<< HEAD
         if (id) {
+=======
+        if (effectiveId) {
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             fetchAnimalDetails();
         } else {
             setError("No ID provided");
             setLoading(false);
         }
+<<<<<<< HEAD
     }, [id]);
+=======
+    }, [effectiveId]);
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
     const fetchAnimalDetails = async () => {
         try {
             setError(null);
+<<<<<<< HEAD
             const response = await axios.get(`${API_BASE_URL}/api/animals/${id}`);
             setAnimal(response.data);
+=======
+            const response = await axios.get(`${API_BASE_URL}/api/donation-animals/${effectiveId}`);
+
+            // Map backend data to component expected shape if needed
+            const data = response.data;
+            // Detect if this is from "animals" table (has species/image_url) vs "animal_profile" (type/photoURL)
+            // and normalize it.
+            const normalizedAnimal = {
+                ...data,
+                // If it's the management animal, map fields to what this view expects
+                animalID: data.id || data.animalID,
+                type: data.species || data.type,
+                photoURL: data.image_url || data.photoURL,
+                story: data.description || data.story,
+                // Default funding fields if missing (management animals might not have them)
+                fundingGoal: data.fundingGoal || 0,
+                amountRaised: data.amountRaised || 0,
+                status: data.status || 'Available',
+                name: data.name
+            };
+
+            setAnimal(normalizedAnimal);
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         } catch (err: any) {
             console.error("Error fetching animal details:", err);
             if (err.response?.status === 404) {
@@ -75,7 +115,11 @@ export default function AnimalDetailsScreen() {
     const handleDonate = () => {
         if (animal) {
             // FIXED: Using React Navigation standard .navigate() with flat params
+<<<<<<< HEAD
             navigation.navigate("AdoptionRequest", {
+=======
+            navigation.navigate("Donation", {
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                 animalID: animal.animalID.toString(),
                 animalName: animal.name,
             });
@@ -130,10 +174,17 @@ export default function AnimalDetailsScreen() {
                                     animal.status === "Active"
                                         ? colors.primary
                                         : animal.status === "Funded"
+<<<<<<< HEAD
                                         ? colors.primaryDark
                                         : animal.status === "Adopted"
                                         ? colors.success
                                         : colors.neutralDark,
+=======
+                                            ? colors.primaryDark
+                                            : animal.status === "Adopted"
+                                                ? colors.success
+                                                : colors.neutralDark,
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                             },
                         ]}
                     >
