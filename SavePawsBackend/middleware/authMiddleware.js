@@ -77,10 +77,6 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 // Middleware to verify user authentication
 const authenticateUser = async (req, res, next) => {
   try {

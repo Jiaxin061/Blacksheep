@@ -224,7 +224,7 @@ exports.createReward = async (req, res, next) => {
         const rewardID = `rew_${Date.now()}`;
 
         await db.query(
-        console.log("✅ Inserting reward:", { rewardID, title, partnerName, category, pointsRequired, validityMonths });
+        console.log("✅ Inserting reward:", { rewardID, title, partnerName, category, pointsRequired, validityMonths }));
 
         await query(
             `INSERT INTO reward_item 
