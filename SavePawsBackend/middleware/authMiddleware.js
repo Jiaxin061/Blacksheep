@@ -5,19 +5,11 @@ const Admin = require('../models/Admin');
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this-in-production';
 
 // Middleware to verify JWT token
-<<<<<<< HEAD
-const verifyToken = (req, res, next) => {
-  try {
-    // Get token from header
-    const authHeader = req.headers.authorization;
-    
-=======
 const verifyToken = async (req, res, next) => {
   try {
     // Get token from header
     const authHeader = req.headers.authorization;
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({
         success: false,
@@ -28,28 +20,6 @@ const verifyToken = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     // Verify token
-<<<<<<< HEAD
-    const decoded = jwt.verify(token, JWT_SECRET);
-    
-    // Attach user info to request
-    req.userId = decoded.id;
-    req.userEmail = decoded.email;
-    req.userType = decoded.type;
-    req.userRole = decoded.role; // For admins
-
-    next();
-  } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({
-        success: false,
-        message: 'Token expired. Please login again.'
-      });
-    }
-    
-    return res.status(401).json({
-      success: false,
-      message: 'Invalid token. Please login again.'
-=======
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
 
@@ -103,7 +73,6 @@ const verifyToken = async (req, res, next) => {
     return res.status(500).json({
       success: false,
       message: 'Authentication error'
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     });
   }
 };
@@ -125,11 +94,6 @@ const authenticateUser = async (req, res, next) => {
 
       // Get full user data
       const user = await User.getById(req.userId);
-<<<<<<< HEAD
-      
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       if (!user) {
         return res.status(401).json({
           success: false,
@@ -172,11 +136,6 @@ const authenticateAdmin = async (req, res, next) => {
 
       // Get full admin data
       const admin = await Admin.getById(req.userId);
-<<<<<<< HEAD
-      
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       if (!admin) {
         return res.status(401).json({
           success: false,
@@ -230,40 +189,22 @@ const requireAdminOrAbove = (req, res, next) => {
 const optionalAuth = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return next(); // Continue without authentication
     }
 
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, JWT_SECRET);
-<<<<<<< HEAD
-    
-    req.userId = decoded.id;
-    req.userEmail = decoded.email;
-    req.userType = decoded.type;
-    
-=======
 
     req.userId = decoded.id;
     req.userEmail = decoded.email;
     req.userType = decoded.type;
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     if (decoded.type === 'user') {
       req.user = await User.getById(decoded.id);
     } else if (decoded.type === 'admin') {
       req.admin = await Admin.getById(decoded.id);
     }
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     next();
   } catch (error) {
     // Continue without authentication even if token is invalid

@@ -47,11 +47,7 @@ const AdminLoginScreen = ({ navigation }) => {
 
         const adminName = response.admin.first_name || response.admin.full_name || response.admin.email?.split('@')[0] || 'Admin';
         Alert.alert('Success', `Welcome, ${adminName}!`);
-<<<<<<< HEAD
-        navigation.replace('AdminHome');
-=======
         navigation.replace('AdminDashboard');
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       } else {
         Alert.alert('Error', response.message || 'Invalid admin credentials');
       }
@@ -88,11 +84,7 @@ const AdminLoginScreen = ({ navigation }) => {
             <View style={styles.noticeContent}>
               <Text style={styles.noticeTitle}>Secure Access Required</Text>
               <Text style={styles.noticeText}>
-<<<<<<< HEAD
-                This area is restricted to authorized administrators only. 
-=======
                 This area is restricted to authorized administrators only.
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                 All access attempts are logged.
               </Text>
             </View>
@@ -138,13 +130,8 @@ const AdminLoginScreen = ({ navigation }) => {
             </View>
 
             {/* Login Button */}
-<<<<<<< HEAD
-            <TouchableOpacity 
-              style={[styles.loginButton, loading && styles.buttonDisabled]} 
-=======
             <TouchableOpacity
               style={[styles.loginButton, loading && styles.buttonDisabled]}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
               onPress={handleAdminLogin}
               disabled={loading}
             >
@@ -158,11 +145,7 @@ const AdminLoginScreen = ({ navigation }) => {
           {/* Back to User Login */}
           <TouchableOpacity
             style={styles.backLink}
-<<<<<<< HEAD
-            onPress={() => navigation.navigate('UserLogin')}
-=======
             onPress={() => navigation.navigate('Login')}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           >
             <Text style={styles.backArrow}>←</Text>
             <Text style={styles.backText}>Back to User Login</Text>

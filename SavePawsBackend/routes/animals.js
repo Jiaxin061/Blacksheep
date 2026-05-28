@@ -3,13 +3,6 @@ const router = express.Router();
 const animalsController = require("../controllers/animalsController");
 const { query } = require("../config/database");
 
-<<<<<<< HEAD
-// GET /api/animals - Get all active animals (donation animals - animal_profile table)
-router.get("/", animalsController.getAllAnimals);
-
-// GET /api/animals/search/filter - Search and filter adoption animals (animals table)
-router.get("/search/filter", async (req, res) => {
-=======
 console.log('🐾 animals.js routes loading...');
 
 // GET /api/animals/adoption/:id - Get adoption animal by ID (animals table)
@@ -73,7 +66,6 @@ router.get("/", async (req, res) => {
 // GET /api/animals/search/filter - Search and filter adoption animals (animals table)
 router.get("/search/filter", async (req, res) => {
   console.log('🐾 Accessing /api/animals/search/filter');
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   try {
     const { keyword, species, status, gender, minAge, maxAge } = req.query;
 
@@ -143,11 +135,6 @@ router.get("/search/filter", async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-// GET /api/animals/:id - Get animal by ID (donation animals - animal_profile table)
-// NOTE: This route must come AFTER /search/filter to avoid route conflicts
-router.get("/:id", animalsController.getAnimalById);
-=======
 
 // GET /api/animals/:id - Get animal by ID (donation animals - animal_profile table)
 // NOTE: This route must come AFTER /search/filter to avoid route conflicts
@@ -272,7 +259,6 @@ router.get("/:id", async (req, res) => {
     });
   }
 });
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 module.exports = router;
 

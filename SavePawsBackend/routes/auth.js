@@ -4,42 +4,6 @@ const authController = require('../controllers/authController');
 const { authenticateUser, authenticateAdmin } = require('../middleware/authMiddleware');
 const { query } = require('../config/database');
 
-<<<<<<< HEAD
-// ==================== MYDIGITALID ROUTE ====================
-
-/**
- * GET /api/auth/users/:id
- * Get user by ID (for MyDigitalID login)
- */
-router.get('/users/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const sql = 'SELECT id, ic_number, email, first_name, last_name, phone_number FROM users WHERE id = ?';
-    const results = await query(sql, [id]);
-
-    if (results.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
-    }
-
-    res.json({
-      success: true,
-      user: results[0]
-    });
-  } catch (error) {
-    console.error('Get user error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
-});
-
-=======
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 // ==================== USER ROUTES ====================
 
 /**

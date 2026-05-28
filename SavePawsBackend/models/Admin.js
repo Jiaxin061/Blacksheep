@@ -12,15 +12,6 @@ class Admin {
   }
 
   // Get admin by ID
-<<<<<<< HEAD
-static async getById(id) {
-    const sql = `
-        SELECT 
-            id, 
-            email, 
-            first_name, 
-            last_name, 
-=======
   static async getById(id) {
     const sql = `
         SELECT 
@@ -28,7 +19,6 @@ static async getById(id) {
             username,
             email, 
             full_name, 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             role, 
             is_active, 
             created_at, 
@@ -38,18 +28,6 @@ static async getById(id) {
     `;
     const results = await query(sql, [id]);
     return results[0];
-<<<<<<< HEAD
-}
-
-// Get admin by email (for login)
-static async getByEmail(email) {
-    // We must explicitly select 'password' here for the login process to work.
-    // Only select columns that exist in the database
-    const sql = 'SELECT id, email, password, role, is_active FROM admins WHERE email = ?'; 
-    const results = await query(sql, [email]);
-    return results[0];
-}
-=======
   }
 
   // Get admin by email (for login)
@@ -60,7 +38,6 @@ static async getByEmail(email) {
     const results = await query(sql, [email]);
     return results[0];
   }
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
   // Get admin by username (for login)
   static async getByUsername(username) {
@@ -73,21 +50,13 @@ static async getByEmail(email) {
   static async create(adminData) {
     const sql = `
       INSERT INTO admins 
-<<<<<<< HEAD
-      (username, email, password, full_name, role) // Changed: password_hash -> password
-=======
       (username, email, password_hash, full_name, role) 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       VALUES (?, ?, ?, ?, ?)
     `;
     const params = [
       adminData.username,
       adminData.email,
-<<<<<<< HEAD
-      adminData.password, // Changed: adminData.password_hash -> adminData.password
-=======
       adminData.password,
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       adminData.full_name,
       adminData.role || 'admin'
     ];
@@ -114,15 +83,9 @@ static async getByEmail(email) {
   }
 
   // Update password
-<<<<<<< HEAD
-  static async updatePassword(id, password) { // Changed: password_hash -> password in function argument
-    const sql = 'UPDATE admins SET password = ? WHERE id = ?'; // Changed: password_hash -> password
-    const result = await query(sql, [password, id]); // Changed: password_hash -> password in argument list
-=======
   static async updatePassword(id, password) {
     const sql = 'UPDATE admins SET password_hash = ? WHERE id = ?';
     const result = await query(sql, [password, id]);
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     return result.affectedRows > 0;
   }
 

@@ -159,19 +159,6 @@ const AdminEvidenceViewScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-<<<<<<< HEAD
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.backIcon}>←</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>View Evidence</Text>
-        <View style={{ width: 44 }} />
-      </View>
-=======
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
         {/* Task Info */}

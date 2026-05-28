@@ -223,35 +223,25 @@ exports.createReward = async (req, res, next) => {
 
         const rewardID = `rew_${Date.now()}`;
 
-<<<<<<< HEAD
         await db.query(
-=======
         console.log("✅ Inserting reward:", { rewardID, title, partnerName, category, pointsRequired, validityMonths });
 
         await query(
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             `INSERT INTO reward_item 
             (rewardID, title, partnerName, category, description, imageURL, pointsRequired, validityMonths, terms, quantity)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [rewardID, title, partnerName, category, description, imageURL, pointsRequired, validityMonths, terms, quantity]
         );
 
-<<<<<<< HEAD
-=======
         console.log("✅ Reward created successfully:", rewardID);
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         res.status(201).json({
             success: true,
             message: "Reward created successfully",
             data: { rewardID }
         });
     } catch (error) {
-<<<<<<< HEAD
-        console.error("Error creating reward:", error);
-=======
         console.error("❌ Error creating reward:", error);
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         next(error);
     }
 };
@@ -259,21 +249,6 @@ exports.createReward = async (req, res, next) => {
 /**
  * Update Reward
  */
-<<<<<<< HEAD
-/**
- * Update Reward
- */
-exports.updateReward = async (req, res, next) => {
-    try {
-        const { rewardID } = req.params;
-        const {
-            description, pointsRequired, validityMonths,
-            terms, quantity, status
-        } = req.body;
-
-        // Image Handling
-        let imageURL = req.body.imageURL;
-=======
 
 exports.updateReward = async (req, res, next) => {
     try {
@@ -289,36 +264,17 @@ exports.updateReward = async (req, res, next) => {
 
         // Image Handling
         let imageURL = req.body.imageURL || null;
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         if (req.file) {
             imageURL = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
         }
 
         // Auto-archive logic if quantity becomes 0
         let newStatus = status;
-<<<<<<< HEAD
-        if (quantity !== undefined && parseInt(quantity) === 0) {
-=======
         if (quantity !== null && quantity === 0) {
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             newStatus = 'Archived';
         }
 
         // Dynamic Query Construction to handle optional image update
-<<<<<<< HEAD
-        let query = `UPDATE reward_item SET description = ?, pointsRequired = ?, validityMonths = ?, terms = ?, quantity = ?, status = ?`;
-        let params = [description, pointsRequired, validityMonths, terms, quantity, newStatus];
-
-        if (imageURL) {
-            query += `, imageURL = ?`;
-            params.push(imageURL);
-        }
-
-        query += ` WHERE rewardID = ?`;
-        params.push(rewardID);
-
-        await db.query(query, params);
-=======
         let sql = `UPDATE reward_item SET description = ?, pointsRequired = ?, validityMonths = ?, terms = ?, quantity = ?, status = ?`;
         let params = [description, pointsRequired, validityMonths, terms, quantity, newStatus];
 
@@ -331,7 +287,6 @@ exports.updateReward = async (req, res, next) => {
         params.push(rewardID);
 
         await query(sql, params);
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
         res.json({
             success: true,
@@ -352,11 +307,7 @@ exports.deleteReward = async (req, res, next) => {
         const { rewardID } = req.params;
 
         // Check for redemptions
-<<<<<<< HEAD
-        const [redemptions] = await db.query(
-=======
         const redemptions = await query(
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             "SELECT COUNT(*) as count FROM redemption_record WHERE rewardID = ?",
             [rewardID]
         );
@@ -368,11 +319,7 @@ exports.deleteReward = async (req, res, next) => {
             });
         }
 
-<<<<<<< HEAD
-        await db.query("DELETE FROM reward_item WHERE rewardID = ?", [rewardID]);
-=======
         await query("DELETE FROM reward_item WHERE rewardID = ?", [rewardID]);
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
         res.json({
             success: true,
@@ -383,8 +330,6 @@ exports.deleteReward = async (req, res, next) => {
         next(error);
     }
 };
-<<<<<<< HEAD
-=======
 
 /**
  * Get All Rewards (Admin)
@@ -404,4 +349,3 @@ exports.getAllRewards = async (req, res, next) => {
         next({ status: 500, message: "Failed to fetch rewards" });
     }
 };
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0

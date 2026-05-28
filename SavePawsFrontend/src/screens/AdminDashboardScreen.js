@@ -9,11 +9,8 @@ import {
   Alert,
   ActivityIndicator,
   RefreshControl,
-<<<<<<< HEAD
-=======
   StatusBar,
   Platform,
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 } from 'react-native';
 import ApiService from '../services/api';
 
@@ -37,17 +34,10 @@ const AdminDashboardScreen = ({ navigation }) => {
   const fetchStatistics = async () => {
     try {
       const response = await ApiService.getAllReports();
-<<<<<<< HEAD
-      
-      if (response.success && response.reports) {
-        const reports = response.reports;
-        
-=======
 
       if (response.success && response.reports) {
         const reports = response.reports;
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         // Calculate statistics
         const statsData = {
           total: reports.length,
@@ -58,11 +48,6 @@ const AdminDashboardScreen = ({ navigation }) => {
           critical: reports.filter(r => r.urgency_level === 'critical').length,
           high: reports.filter(r => r.urgency_level === 'high').length,
         };
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         setStats(statsData);
       }
     } catch (error) {
@@ -85,13 +70,8 @@ const AdminDashboardScreen = ({ navigation }) => {
       'Are you sure you want to logout?',
       [
         { text: 'Cancel', style: 'cancel' },
-<<<<<<< HEAD
-        { 
-          text: 'Logout', 
-=======
         {
           text: 'Logout',
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           style: 'destructive',
           onPress: () => navigation.replace('Landing')
         }
@@ -100,39 +80,6 @@ const AdminDashboardScreen = ({ navigation }) => {
   };
 
   const quickActions = [
-<<<<<<< HEAD
-    { 
-      icon: '📊', 
-      title: 'View Reports', 
-      desc: 'Review all submitted reports', 
-      screen: 'AdminViewReport',
-      badge: stats.total 
-    },
-    { 
-      icon: '🚑', 
-      title: 'Rescue Tasks', 
-      desc: 'Assign & track rescues', 
-      screen: 'ManageRescueTasks',
-      badge: stats.critical + stats.high 
-    },
-    { 
-      icon: '🚫', 
-      title: 'Blacklist', 
-      desc: 'Manage blacklisted users', 
-      screen: 'BlacklistManagement'
-    },
-    { 
-      icon: '💰', 
-      title: 'Donation Portal', 
-      desc: 'Manage donations & animals', 
-      screen: 'AdminDonationDashboard'
-    },
-    { 
-      icon: '❤️', 
-      title: 'Adoption Requests', 
-      desc: 'Review and manage adoption applications', 
-      screen: 'AdminAdoptionList'
-=======
     {
       icon: '📊',
       title: 'View Reports',
@@ -182,7 +129,6 @@ const AdminDashboardScreen = ({ navigation }) => {
       title: 'Community Management',
       desc: 'Moderate community posts',
       screen: 'AdminCommunityManagement'
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     },
   ];
 
@@ -210,11 +156,7 @@ const AdminDashboardScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-<<<<<<< HEAD
-      <ScrollView 
-=======
       <ScrollView
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         refreshControl={
@@ -287,17 +229,10 @@ const AdminDashboardScreen = ({ navigation }) => {
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionsGrid}>
             {quickActions.map((action, index) => (
-<<<<<<< HEAD
-              <TouchableOpacity 
-                key={index} 
-                style={styles.actionCard}
-                onPress={() => action.screen && navigation.navigate(action.screen)}
-=======
               <TouchableOpacity
                 key={index}
                 style={styles.actionCard}
                 onPress={() => action.screen && navigation.navigate(action.screen, { isAdmin: true })}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
               >
                 <View style={styles.actionIcon}>
                   <Text style={styles.actionEmoji}>{action.icon}</Text>
@@ -362,12 +297,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 24,
-<<<<<<< HEAD
-    paddingVertical: 16,
-=======
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 16 : 16,
     paddingBottom: 16,
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     backgroundColor: '#14b8a6',
   },
   adminBadge: {
