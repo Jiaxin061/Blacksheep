@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "savepawsapp",
+    "slug": "savepawsapp",
+    "version": "1.0.0",
+    "sdkVersion": "51.0.0",
+    "platforms": [
+      "ios",
+      "android"
+<<<<<<< HEAD
+=======
+    ],
+    "plugins": [
+      "expo-font"
+>>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
+    ]
+  }
+}
