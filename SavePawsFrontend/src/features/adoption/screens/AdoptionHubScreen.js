@@ -17,13 +17,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import animalService from '../../animals/services/animalService';
 import adoptionService from '../services/adoptionService';
 
-<<<<<<< HEAD
-const HEADER_MAX_HEIGHT = 260;
-const HEADER_MIN_HEIGHT = Platform.OS === 'ios' ? 90 : 70;
-const SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 export default function AdoptionHubScreen({ navigation }) {
   const [animals, setAnimals] = useState([]);
@@ -32,12 +25,6 @@ export default function AdoptionHubScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
 
-<<<<<<< HEAD
-  const scrollY = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    loadData();
-=======
 
 
   useEffect(() => {
@@ -46,7 +33,6 @@ export default function AdoptionHubScreen({ navigation }) {
     navigation.setOptions({
       headerRight: () => null,
     });
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   }, []);
 
   const loadData = async () => {
@@ -63,11 +49,7 @@ export default function AdoptionHubScreen({ navigation }) {
         setUserRequests(requestedAnimalIds);
       }
     } catch (err) {
-<<<<<<< HEAD
-      console.error('Error loading user requests:', err);
-=======
       // console.error('Error loading user requests:', err);
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     }
   };
 
@@ -95,11 +77,7 @@ export default function AdoptionHubScreen({ navigation }) {
   };
 
   const handleAnimalPress = (animal) => {
-<<<<<<< HEAD
-    navigation.navigate('AnimalDetails', {
-=======
     navigation.navigate('AnimalDetailView', {
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       animalId: animal.id,
       isAdmin: false
     });
@@ -116,32 +94,6 @@ export default function AdoptionHubScreen({ navigation }) {
     return statusColors[status] || statusColors.available;
   };
 
-<<<<<<< HEAD
-  // Animation Interpolations
-  const headerHeight = scrollY.interpolate({
-    inputRange: [0, SCROLL_DISTANCE],
-    outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
-    extrapolate: 'clamp',
-  });
-
-  const imageOpacity = scrollY.interpolate({
-    inputRange: [0, SCROLL_DISTANCE / 2],
-    outputRange: [1, 0],
-    extrapolate: 'clamp',
-  });
-
-  const imageTranslate = scrollY.interpolate({
-    inputRange: [0, SCROLL_DISTANCE],
-    outputRange: [0, -50],
-    extrapolate: 'clamp',
-  });
-
-  const titleScale = scrollY.interpolate({
-    inputRange: [0, SCROLL_DISTANCE],
-    outputRange: [1, 0.8],
-    extrapolate: 'clamp',
-  });
-=======
   const renderHeader = () => (
     <View style={styles.customHeader}>
       <TouchableOpacity
@@ -166,7 +118,6 @@ export default function AdoptionHubScreen({ navigation }) {
       </TouchableOpacity>
     </View>
   );
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
   const renderAnimalItem = ({ item }) => {
     const isRequested = userRequests.has(item.id);
@@ -224,51 +175,10 @@ export default function AdoptionHubScreen({ navigation }) {
     );
   };
 
-<<<<<<< HEAD
-  const renderHeader = () => (
-    <Animated.View style={[styles.headerContainer, { height: headerHeight }]}>
-      <LinearGradient
-        colors={['#E91E63', '#C2185B', '#880E4F']}
-        style={styles.headerGradient}
-      >
-        <Animated.Text
-          style={[
-            styles.headerIcon,
-            {
-              opacity: imageOpacity,
-              transform: [{ translateY: imageTranslate }]
-            }
-          ]}
-        >
-          ❤️
-        </Animated.Text>
-
-        <Animated.Text style={[styles.headerTitle, { transform: [{ scale: titleScale }] }]}>
-          Adoption Hub
-        </Animated.Text>
-
-        <Animated.View style={{ opacity: imageOpacity }}>
-          <Text style={styles.headerSubtitle}>
-            Find your perfect companion and give them a loving home
-          </Text>
-          <Text style={styles.headerCount}>
-            {animals.length} {animals.length === 1 ? 'Animal' : 'Animals'} Available
-          </Text>
-        </Animated.View>
-      </LinearGradient>
-    </Animated.View>
-  );
-
-  if (loading) {
-    return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#E91E63" />
-=======
   if (loading) {
     return (
       <View style={styles.centerContainer}>
         <ActivityIndicator size="large" color="#14b8a6" />
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         <Text style={styles.loadingText}>Loading available animals...</Text>
       </View>
     );
@@ -287,15 +197,8 @@ export default function AdoptionHubScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-<<<<<<< HEAD
-      <StatusBar barStyle="light-content" backgroundColor="#E91E63" />
-
-      {renderHeader()}
-
-=======
       <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
       {renderHeader()}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       {animals.length === 0 ? (
         <View style={styles.centerContainer}>
           <Text style={styles.emptyText}>No animals available for adoption at the moment</Text>
@@ -312,25 +215,12 @@ export default function AdoptionHubScreen({ navigation }) {
           renderItem={renderAnimalItem}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContainer}
-<<<<<<< HEAD
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-            { useNativeDriver: false } // layout properties like height don't support native driver
-          )}
-          scrollEventThrottle={16}
-=======
           onScroll={null}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           refreshControl={
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-<<<<<<< HEAD
-              tintColor="#E91E63"
-              progressViewOffset={HEADER_MAX_HEIGHT} // start spinner below transparent header if needed
-=======
               tintColor="#14b8a6"
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             />
           }
           showsVerticalScrollIndicator={false}
@@ -396,11 +286,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     padding: 16,
-<<<<<<< HEAD
-    paddingTop: HEADER_MAX_HEIGHT + 16, // Push list down by max header height
-=======
     paddingTop: 16,
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   },
   animalCard: {
     backgroundColor: '#fff',
@@ -472,11 +358,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   adoptButton: {
-<<<<<<< HEAD
-    backgroundColor: '#E91E63',
-=======
     backgroundColor: '#14b8a6',
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -496,11 +378,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-<<<<<<< HEAD
-    paddingTop: HEADER_MAX_HEIGHT, // Ensure loading overlaps properly
-=======
     paddingTop: 0,
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   },
   loadingText: {
     marginTop: 12,
@@ -527,11 +405,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   retryButton: {
-<<<<<<< HEAD
-    backgroundColor: '#E91E63',
-=======
     backgroundColor: '#14b8a6',
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
@@ -541,8 +415,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
-<<<<<<< HEAD
-=======
   customHeader: {
     flexDirection: 'row',
     backgroundColor: '#fff',
@@ -571,6 +443,5 @@ const styles = StyleSheet.create({
   activeTabText: {
     color: '#fff',
   },
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 });
 

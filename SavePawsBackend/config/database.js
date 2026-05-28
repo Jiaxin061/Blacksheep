@@ -5,14 +5,14 @@ require('dotenv').config();
 const dbConfigWithoutDB = {
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || 'weilam0815',
+  password: process.env.DB_PASSWORD || '',
   port: process.env.DB_PORT || 3306,
 };
 
 // Database configuration WITH database name
 const dbConfig = {
   ...dbConfigWithoutDB,
-  database: process.env.DB_NAME || 'savepaws',
+  database: process.env.DB_NAME || 'savepaws_db',
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -27,7 +27,7 @@ const testConnection = async () => {
     // First, connect without database name
     const tempConnection = await mysql.createConnection(dbConfigWithoutDB);
     // Create database if it doesn't exist
-    const dbName = process.env.DB_NAME || 'savepaws';
+    const dbName = process.env.DB_NAME || 'savepaws_db';
     await tempConnection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
     console.log(`✅ Database '${dbName}' ready!`);
 

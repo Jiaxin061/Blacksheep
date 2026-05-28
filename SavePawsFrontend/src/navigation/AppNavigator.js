@@ -1,26 +1,18 @@
 import React from 'react';
-<<<<<<< HEAD
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-=======
 import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { NavigationContainer, useNavigationState, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 // Import Screens - ONLY FILES THAT EXIST
 import LandingScreen from '../screens/LandingScreen';
 import UserHomeScreen from '../screens/UserHomeScreen';
 import ReportAnimalScreen from '../screens/ReportAnimalScreen';
 import ViewReportsScreen from '../screens/ViewReportsScreen';
-<<<<<<< HEAD
-=======
 import CommunityPage from '../screens/CommunityPage';
 import CommunityCreatePostPage from '../screens/CommunityCreatePostPage';
 import CommunityPostDetailsPage from '../screens/CommunityPostDetailsPage';
 import AIAssistantPage from '../screens/aiAssistantPage';
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 import AcceptRescueTaskScreen from '../screens/AcceptRescueTaskScreen';
 import MyRescueTaskDetailScreen from '../screens/Myrescuetaskdetailscreen';
 import UserLoginScreen from '../screens/Userloginscreen';
@@ -44,16 +36,6 @@ import BlacklistManagementScreen from '../screens/BlacklistManagementScreen';
 import DonationHomeScreen from '../screens/DonationHomeScreen';
 import AdminDonationDashboardScreen from '../screens/AdminDonationDashboardScreen';
 
-<<<<<<< HEAD
-// Donation Portal Navigation Screens
-import AnimalListScreen from '../screens/AnimalListScreen';
-import AnimalDetailsScreen from '../screens/AnimalDetailsScreen';
-import DonationImpactScreen from '../screens/DonationImpactScreen';
-import RewardsCatalogueScreen from '../screens/RewardsCatalogueScreen';
-import AdminAnimalsScreen from '../screens/AdminAnimalsScreen';
-import AdminFundAllocationScreen from '../screens/AdminFundAllocationScreen';
-import AdminRewardsScreen from '../screens/AdminRewardsScreen';
-=======
 // Module 4: Donation Portal Navigation Screens
 import AnimalListScreen from '../screens/AnimalListScreen';
 import AnimalDetailsScreen from '../screens/AnimalDetailsScreen';
@@ -77,15 +59,11 @@ import AdminRewardsScreen from '../screens/AdminRewardsScreen';
 import AdminRewardsEditScreen from '../screens/AdminRewardsEditScreen';
 import AdminRewardsAddScreen from '../screens/AdminRewardsAddScreen';
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 // Adoption Screens
 import AdoptionHubScreen from '../features/adoption/screens/AdoptionHubScreen';
 import AdoptionRequestScreen from '../features/adoption/screens/AdoptionRequestScreen';
 import AdminAdoptionListScreen from '../features/adoption/screens/AdminAdoptionListScreen';
-<<<<<<< HEAD
-import AdminAdoptionDetailScreen from '../features/adoption/screens/AdminAdoptionDetailScreen'; 
-=======
 import AdminAdoptionManagerScreen from '../features/adoption/screens/AdminAdoptionManagerScreen';
 import AdminAdoptionDetailScreen from '../features/adoption/screens/AdminAdoptionDetailScreen';
 import AnimalDetail from '../features/animals/components/AnimalDetail';
@@ -109,7 +87,6 @@ import VolunteerRegistrationScreen from '../screens/volunteerRegistrationPage';
 import VolunteerContributionScreen from '../screens/volunteerContributionPage';
 import VolunteerEventListScreen from '../screens/volunteerEventListPage';
 import VolunteerEventDetailsScreen from '../screens/volunteerEventDetailsPage';
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 const Stack = createStackNavigator();
 
@@ -120,25 +97,6 @@ const COLORS = {
 };
 
 const AppNavigator = () => {
-<<<<<<< HEAD
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Landing"
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: COLORS.primary,
-          },
-          headerTintColor: COLORS.white,
-          headerTitleStyle: {
-            fontWeight: 'bold',
-            fontSize: 18,
-          },
-          headerTitleAlign: 'center',
-        }}
-      >
-        {/* Landing Screen */}
-=======
   const initialRoute = 'Landing';
 
   return (
@@ -217,21 +175,13 @@ const NavigationContent = ({ initialRoute }) => {
         }}
       >
         {/* Landing & Auth */}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         <Stack.Screen
           name="Landing"
           component={LandingScreen}
           options={{ headerShown: false }}
         />
-<<<<<<< HEAD
-
-        {/* User Screens */}
-        <Stack.Screen
-          name="UserLogin"
-=======
         <Stack.Screen
           name="Login"
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           component={UserLoginScreen}
           options={{ headerShown: false }}
         />
@@ -243,18 +193,10 @@ const NavigationContent = ({ initialRoute }) => {
         <Stack.Screen
           name="ForgotPassword"
           component={ForgotPasswordScreen}
-<<<<<<< HEAD
-          options={{ 
-            title: 'Forgot Password',
-            headerShown: true,
-          }}
-        />
-=======
           options={{ title: 'Reset Password' }}
         />
 
         {/* User & Generic Screens */}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         <Stack.Screen
           name="UserHome"
           component={UserHomeScreen}
@@ -263,47 +205,21 @@ const NavigationContent = ({ initialRoute }) => {
         <Stack.Screen
           name="ReportAnimal"
           component={ReportAnimalScreen}
-<<<<<<< HEAD
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="ViewReport"
-          component={ViewReportsScreen}
-          options={{ headerShown: false }}
-=======
           options={{ title: 'Report Animal' }}
         />
         <Stack.Screen
           name="ViewReports"
           component={ViewReportsScreen}
           options={{ title: 'All Reports' }}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         />
         <Stack.Screen
           name="AcceptRescueTask"
           component={AcceptRescueTaskScreen}
-<<<<<<< HEAD
-          options={{ headerShown: false }}
-=======
           options={{ title: 'Available Tasks' }}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         />
         <Stack.Screen
           name="MyRescueTaskDetail"
           component={MyRescueTaskDetailScreen}
-<<<<<<< HEAD
-          options={{ 
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Profile"
-          component={UserHomeScreen}
-          options={{ title: 'Profile' }}
-        />
-
-        {/* Admin Screens - ONLY EXISTING FILES */}
-=======
           options={{ title: 'My Task' }}
         />
         <Stack.Screen
@@ -348,58 +264,12 @@ const NavigationContent = ({ initialRoute }) => {
           component={AdminRegistrationDetailsPage}
           options={{ headerShown: false }}
         />
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         <Stack.Screen
           name="AdminLogin"
           component={AdminLoginScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-<<<<<<< HEAD
-          name="AdminHome"
-          component={AdminDashboardScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="AdminDashboard"
-          component={AdminDashboardScreen}
-          options={{ headerShown: false }}
-        />
-        {/* AdminViewReport - Uses AdminManageScreen (has view + manage) */}
-        <Stack.Screen
-          name="AdminViewReport"
-          component={AdminViewReportScreen}
-          options={{ headerShown: false }}
-        />
-        {/* AdminManageReport - Uses AdminManageScreen (same screen) */}
-        <Stack.Screen
-          name="AdminManageReport"
-          component={AdminViewReportScreen}
-          options={{ headerShown: false }}
-        />
-        {/* ManageRescueTasks - Correct component name! */}
-        <Stack.Screen
-          name="ManageRescueTasks"
-          component={ManageRescueTasksScreen}
-          options={{ headerShown: false }}
-        />
-
-        <Stack.Screen
-          name="ViewReports"           // ✅ This exact name!
-          component={ViewReportsScreen}
-          options={{
-            title: 'My Reports',
-          }}
-        />
-
-        {/* Module 3: Rescue Task Update Module */}
-        <Stack.Screen
-          name="AdminEvidenceView"
-          component={AdminEvidenceViewScreen}
-          options={{
-            headerShown: false,
-          }}
-=======
           name="AdminDashboard"
           component={AdminDashboardScreen}
           options={{ headerShown: false }} // Custom header in screen
@@ -419,28 +289,10 @@ const NavigationContent = ({ initialRoute }) => {
           name="AdminEvidenceView"
           component={AdminEvidenceViewScreen}
           options={{ title: 'View Evidence' }}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         />
         <Stack.Screen
           name="UserRescueHistory"
           component={UserRescueHistoryScreen}
-<<<<<<< HEAD
-          options={{
-            title: 'Rescue History',
-            headerShown: true,
-            headerBackTitleVisible: false,
-          }}
-        />
-        <Stack.Screen
-          name="BlacklistManagement"
-          component={BlacklistManagementScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-
-        {/* Donation Portal Screens */}
-=======
           options={{ title: 'My Rescue Task' }}
         />
 
@@ -451,53 +303,27 @@ const NavigationContent = ({ initialRoute }) => {
         />
 
         {/* Module 4: Donation Portal */}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         <Stack.Screen
           name="DonationHome"
           component={DonationHomeScreen}
           options={{
             title: 'Donation Portal',
-<<<<<<< HEAD
-            headerShown: true,
-=======
             headerShown: true, // Show header for back button
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           }}
         />
         <Stack.Screen
           name="AdminDonationDashboard"
           component={AdminDonationDashboardScreen}
           options={{
-<<<<<<< HEAD
-            title: 'Donation Dashboard',
-            headerShown: true,
-          }}
-        />
-
-        {/* Donation Portal Navigation Screens */}
-        <Stack.Screen
-          name="AnimalList"
-          component={AnimalListScreen}
-          options={{
-            title: 'Animals Needing Help',
-=======
             title: 'Donation Management',
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             headerShown: true,
           }}
         />
         <Stack.Screen
-<<<<<<< HEAD
-          name="AnimalDetails"
-          component={AnimalDetailsScreen}
-          options={{
-            title: 'Animal Profile',
-=======
           name="Donation"
           component={DonationScreen}
           options={{
             title: 'Make a Donation',
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             headerShown: true,
           }}
         />
@@ -505,21 +331,11 @@ const NavigationContent = ({ initialRoute }) => {
           name="DonationImpact"
           component={DonationImpactScreen}
           options={{
-<<<<<<< HEAD
-            title: 'Your Donation Impact',
-=======
             title: 'Our Impact',
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             headerShown: true,
           }}
         />
         <Stack.Screen
-<<<<<<< HEAD
-          name="RewardsCatalogue"
-          component={RewardsCatalogueScreen}
-          options={{
-            title: 'Reward Catalogue',
-=======
           name="DonationImpactDetail"
           component={DonationImpactDetailScreen}
           options={{
@@ -573,7 +389,6 @@ const NavigationContent = ({ initialRoute }) => {
           component={AnimalDetailsScreen}
           options={{
             title: 'Animal Details',
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             headerShown: true,
           }}
         />
@@ -586,8 +401,6 @@ const NavigationContent = ({ initialRoute }) => {
           }}
         />
         <Stack.Screen
-<<<<<<< HEAD
-=======
           name="AdminAddAnimal"
           component={AdminAddAnimalScreen}
           options={{
@@ -660,7 +473,6 @@ const NavigationContent = ({ initialRoute }) => {
 
         {/* Admin Fund Allocation */}
         <Stack.Screen
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           name="AdminFundAllocation"
           component={AdminFundAllocationScreen}
           options={{
@@ -669,8 +481,6 @@ const NavigationContent = ({ initialRoute }) => {
           }}
         />
         <Stack.Screen
-<<<<<<< HEAD
-=======
           name="AdminFundAllocationDetail"
           component={AdminFundAllocationDetailScreen}
           options={{ title: 'Allocation Summary' }}
@@ -693,7 +503,6 @@ const NavigationContent = ({ initialRoute }) => {
           options={{ title: 'Allocation Details' }}
         />
         <Stack.Screen
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           name="AdminRewards"
           component={AdminRewardsScreen}
           options={{
@@ -701,8 +510,6 @@ const NavigationContent = ({ initialRoute }) => {
             headerShown: true,
           }}
         />
-<<<<<<< HEAD
-=======
         <Stack.Screen
           name="AdminRewardsEdit"
           component={AdminRewardsEditScreen}
@@ -719,7 +526,6 @@ const NavigationContent = ({ initialRoute }) => {
             headerShown: true,
           }}
         />
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
         {/* Adoption Screens */}
         <Stack.Screen
@@ -739,8 +545,6 @@ const NavigationContent = ({ initialRoute }) => {
           }}
         />
         <Stack.Screen
-<<<<<<< HEAD
-=======
           name="AdoptionHistory"
           component={AdoptionHistoryScreen}
           options={{
@@ -765,7 +569,6 @@ const NavigationContent = ({ initialRoute }) => {
           }}
         />
         <Stack.Screen
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           name="AdminAdoptionList"
           component={AdminAdoptionListScreen}
           options={{
@@ -774,8 +577,6 @@ const NavigationContent = ({ initialRoute }) => {
           }}
         />
         <Stack.Screen
-<<<<<<< HEAD
-=======
           name="AdminAdoptionManager"
           component={AdminAdoptionManagerScreen}
           options={{
@@ -784,7 +585,6 @@ const NavigationContent = ({ initialRoute }) => {
           }}
         />
         <Stack.Screen
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           name="AdminAdoptionDetail"
           component={AdminAdoptionDetailScreen}
           options={{
@@ -792,13 +592,6 @@ const NavigationContent = ({ initialRoute }) => {
             headerShown: true,
           }}
         />
-<<<<<<< HEAD
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
-
-=======
         <Stack.Screen
           name="AnimalDetailView"
           component={AnimalDetail}
@@ -898,5 +691,4 @@ const styles = StyleSheet.create({
   },
 });
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 export default AppNavigator;
