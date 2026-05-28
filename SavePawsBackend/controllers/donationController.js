@@ -2,17 +2,11 @@ const db = require("../config/database");
 const paypalService = require("../services/paypalService");
 
 exports.processDonation = async (req, res, next) => {
-<<<<<<< HEAD
-  const connection = await db.getConnection();
-
-  try {
-=======
   let connection;
 
   try {
     const pool = db.getPool();
     connection = await pool.getConnection();
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     await connection.beginTransaction();
 
     // Get userID from auth middleware (required now)
@@ -21,11 +15,7 @@ exports.processDonation = async (req, res, next) => {
 
     if (!userID) {
       await connection.rollback();
-<<<<<<< HEAD
-      connection.release();
-=======
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       return res.status(401).json({
         success: false,
         message: "Authentication required. Please provide userID.",
@@ -44,11 +34,7 @@ exports.processDonation = async (req, res, next) => {
       !donor_email
     ) {
       await connection.rollback();
-<<<<<<< HEAD
-      connection.release();
-=======
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       return res.status(400).json({
         success: false,
         message: "All fields are required",
@@ -59,11 +45,7 @@ exports.processDonation = async (req, res, next) => {
     const requestedAmount = parseFloat(donation_amount);
     if (isNaN(requestedAmount) || requestedAmount <= 0) {
       await connection.rollback();
-<<<<<<< HEAD
-      connection.release();
-=======
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       return res.status(400).json({
         success: false,
         message: "Invalid donation amount",
@@ -74,11 +56,7 @@ exports.processDonation = async (req, res, next) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(donor_email)) {
       await connection.rollback();
-<<<<<<< HEAD
-      connection.release();
-=======
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       return res.status(400).json({
         success: false,
         message: "Invalid email format",
@@ -97,11 +75,7 @@ exports.processDonation = async (req, res, next) => {
 
     if (animals.length === 0) {
       await connection.rollback();
-<<<<<<< HEAD
-      connection.release();
-=======
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       return res.status(404).json({
         success: false,
         message: "Animal not found",
@@ -112,11 +86,7 @@ exports.processDonation = async (req, res, next) => {
 
     if (animal.status !== "Active") {
       await connection.rollback();
-<<<<<<< HEAD
-      connection.release();
-=======
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       return res.status(400).json({
         success: false,
         message: "Donations for this animal are closed.",
@@ -131,11 +101,7 @@ exports.processDonation = async (req, res, next) => {
     // Check if funding goal is already reached
     if (remainingAmount <= 0) {
       await connection.rollback();
-<<<<<<< HEAD
-      connection.release();
-=======
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       return res.status(400).json({
         success: false,
         message: "This animal has already reached its funding goal",
@@ -162,11 +128,7 @@ exports.processDonation = async (req, res, next) => {
 
     if (!paymentResult.success) {
       await connection.rollback();
-<<<<<<< HEAD
-      connection.release();
-=======
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       return res.status(400).json({
         success: false,
         message: paymentResult.message || "Payment processing failed",
@@ -229,11 +191,7 @@ exports.processDonation = async (req, res, next) => {
     }
 
     await connection.commit();
-<<<<<<< HEAD
-    connection.release();
-=======
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
     // Build response message
     let successMessage = "Donation processed successfully";
@@ -256,22 +214,14 @@ exports.processDonation = async (req, res, next) => {
       fundingGoalReached: statusUpdated,
     });
   } catch (error) {
-<<<<<<< HEAD
-    await connection.rollback();
-    connection.release();
-=======
     if (connection) await connection.rollback();
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     console.error("Error processing donation:", error);
     next({
       status: 500,
       message: "Failed to process donation",
     });
-<<<<<<< HEAD
-=======
   } finally {
     if (connection) connection.release();
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   }
 };
 
