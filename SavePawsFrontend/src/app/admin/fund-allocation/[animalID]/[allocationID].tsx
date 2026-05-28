@@ -71,19 +71,11 @@ interface AllocationDetail {
 
 export default function AllocationDetailScreen() {
   const router = useRouter();
-<<<<<<< HEAD
-  const { animalID, allocationID, mode } = useLocalSearchParams<{
-    animalID: string;
-    allocationID: string;
-    mode?: string;
-  }>();
-=======
   const params = useLocalSearchParams();
   const { animalID, allocationID, mode } = params;
 
   console.log("🔍 AllocationDetailScreen Params:", JSON.stringify(params));
   console.log("🆔 IDs:", { animalID, allocationID, mode });
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
   // View State
   const [allocation, setAllocation] = useState<AllocationDetail | null>(null);
@@ -122,13 +114,6 @@ export default function AllocationDetailScreen() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const loadAllocation = useCallback(async () => {
-<<<<<<< HEAD
-    if (!allocationID) return;
-    try {
-      setError(null);
-      const data = await fetchAllocationDetail(allocationID);
-      setAllocation(data);
-=======
     if (!allocationID) {
       console.log("❌ No allocationID provided to loadAllocation");
       setError("No Allocation ID provided");
@@ -154,7 +139,6 @@ export default function AllocationDetailScreen() {
           },
         });
       }
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     } catch (err: any) {
       console.error("Allocation detail fetch error:", err);
       setError(
@@ -171,14 +155,9 @@ export default function AllocationDetailScreen() {
     if (!animalID) return;
     try {
       const data = await fetchAllocationByAnimal(animalID);
-<<<<<<< HEAD
-      setAmountRaised(data?.summary?.amountRaised ?? 0);
-      setCurrentRemaining(data?.summary?.remaining ?? 0);
-=======
       // Parse as numbers to prevent string concatenation
       setAmountRaised(parseFloat(data?.summary?.amountRaised) || 0);
       setCurrentRemaining(parseFloat(data?.summary?.remaining) || 0);
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     } catch (e) {
       console.error("Failed to load financials", e);
     }
@@ -192,19 +171,12 @@ export default function AllocationDetailScreen() {
 
   // Auto-enter edit mode if requested via params
   useEffect(() => {
-<<<<<<< HEAD
-    if (mode === 'edit' && allocation && !isEditing) {
-      enterEditMode();
-    }
-  }, [mode, allocation]);
-=======
     // Only enter edit mode if mode is set AND we have data AND we aren't already editing
     if (mode === 'edit' && allocation && !isEditing) {
       console.log("✏️ Entering Edit Mode via Params");
       enterEditMode();
     }
   }, [mode, allocation]); // Removed isEditing from deps to avoid loop logic
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
   // Initialize fields when entering edit mode
   const enterEditMode = async () => {
@@ -297,15 +269,6 @@ export default function AllocationDetailScreen() {
   };
 
   // --- Real-time Calculations ---
-<<<<<<< HEAD
-  // Max Donation Available = (Current Unallocated DB Remaining) + (Amount allocated by THIS record)
-  // We approximate this dynamically
-  const totalCostVal = parseFloat(amount) || 0;
-
-  // existing.amount is the donation-covered portion of the current record
-  const currentAllocationUsage = allocation?.amount || 0;
-  const maxDonationFunds = currentRemaining + currentAllocationUsage;
-=======
   // Max Donation Available = (Current Unallocated DB Remaining) + (Amount already covered by donations in THIS record)
   // We approximate this dynamically
   const totalCostVal = parseFloat(amount) || 0;
@@ -313,7 +276,6 @@ export default function AllocationDetailScreen() {
   // Use donationCoveredAmount (not total amount) to get the donation portion of current allocation
   const currentAllocationUsage = parseFloat(allocation?.donationCoveredAmount?.toString() || allocation?.amount?.toString() || '0') || 0;
   const maxDonationFunds = parseFloat(currentRemaining.toString()) + parseFloat(currentAllocationUsage.toString());
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
   const coveredByDonations = Math.min(totalCostVal, Math.max(0, maxDonationFunds));
   const outstandingAmount = Math.max(0, totalCostVal - coveredByDonations);
@@ -414,11 +376,7 @@ export default function AllocationDetailScreen() {
 
     Alert.alert(
       "Delete Allocation",
-<<<<<<< HEAD
-      `Are you sure you want to delete this allocation of RM${allocation.amount.toFixed(2)}? This action cannot be undone.`,
-=======
       `Are you sure you want to delete this allocation of RM${Number(allocation.amount ?? 0).toFixed(2)}? This action cannot be undone.`,
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       [
         { text: "Cancel", style: "cancel" },
         {
@@ -517,11 +475,7 @@ export default function AllocationDetailScreen() {
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Total Cost</Text>
             <Text style={styles.amountValue}>
-<<<<<<< HEAD
-              RM{(allocation.totalCost || allocation.amount).toFixed(2)}
-=======
               RM{Number(allocation.totalCost ?? allocation.amount ?? 0).toFixed(2)}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             </Text>
           </View>
 
@@ -536,11 +490,7 @@ export default function AllocationDetailScreen() {
                     Covered by Donations:
                   </Text>
                   <Text style={styles.fundingBreakdownValue}>
-<<<<<<< HEAD
-                    RM{(allocation.donationCoveredAmount || 0).toFixed(2)}
-=======
                     RM{Number(allocation.donationCoveredAmount ?? 0).toFixed(2)}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                   </Text>
                 </View>
 
@@ -557,11 +507,7 @@ export default function AllocationDetailScreen() {
                           styles.externalCoveredValue,
                         ]}
                       >
-<<<<<<< HEAD
-                        RM{allocation.externalCoveredAmount!.toFixed(2)}
-=======
                         RM{Number(allocation.externalCoveredAmount ?? 0).toFixed(2)}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                       </Text>
                     </View>
                     {allocation.externalFundingSource && (
@@ -779,37 +725,21 @@ export default function AllocationDetailScreen() {
             <Text style={styles.fundingBreakdownTitle}>Updated Breakdown</Text>
             <View style={styles.fundingBreakdownRow}>
               <Text style={styles.fundingBreakdownLabel}>Total Cost:</Text>
-<<<<<<< HEAD
-              <Text style={styles.fundingBreakdownValue}>RM{totalCostVal.toFixed(2)}</Text>
-            </View>
-            <View style={styles.fundingBreakdownRow}>
-              <Text style={styles.fundingBreakdownLabel}>Covered by Donations:</Text>
-              <Text style={[styles.fundingBreakdownValue, { color: colors.primary }]}>RM{coveredByDonations.toFixed(2)}</Text>
-=======
               <Text style={styles.fundingBreakdownValue}>RM{Number(totalCostVal ?? 0).toFixed(2)}</Text>
             </View>
             <View style={styles.fundingBreakdownRow}>
               <Text style={styles.fundingBreakdownLabel}>Covered by Donations:</Text>
               <Text style={[styles.fundingBreakdownValue, { color: colors.primary }]}>RM{Number(coveredByDonations ?? 0).toFixed(2)}</Text>
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
             </View>
             {outstandingAmount > 0 ? (
               <View style={styles.fundingBreakdownRow}>
                 <Text style={styles.fundingBreakdownLabel}>Outstanding (External):</Text>
-<<<<<<< HEAD
-                <Text style={[styles.fundingBreakdownValue, { color: colors.warning }]}>RM{outstandingAmount.toFixed(2)}</Text>
-=======
                 <Text style={[styles.fundingBreakdownValue, { color: colors.warning }]}>RM{Number(outstandingAmount ?? 0).toFixed(2)}</Text>
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
               </View>
             ) : (
               <Text style={[styles.fundingStatusText, { color: colors.success, marginTop: 4 }]}>Fully Covered by Donations</Text>
             )}
-<<<<<<< HEAD
-            <Text style={styles.hint}>Available Donation Balance: RM{maxDonationFunds.toFixed(2)}</Text>
-=======
             <Text style={styles.hint}>Available Donation Balance: RM{Number(maxDonationFunds ?? 0).toFixed(2)}</Text>
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
           </View>
         </View>
 

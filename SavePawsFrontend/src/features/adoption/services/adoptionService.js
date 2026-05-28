@@ -114,8 +114,6 @@ export const adoptionService = {
       }
     }
   },
-<<<<<<< HEAD
-=======
 
   // UC025: Get my adoption updates
   getMyAdoptionUpdates: async () => {
@@ -167,7 +165,6 @@ export const adoptionService = {
       throw error;
     }
   }
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 };
 
 export default adoptionService;

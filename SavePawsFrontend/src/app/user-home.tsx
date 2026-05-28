@@ -31,17 +31,11 @@ export default function UserHomeScreen() {
   const fetchData = async () => {
     try {
       // 1. Fetch Animals (for preview section)
-<<<<<<< HEAD
-      const animalsRes = await axios.get(`${API_BASE_URL}/api/animals`);
-      // Filter only Active and take top 2 for preview
-      const activeAnimals = animalsRes.data
-=======
       // 1. Fetch Animals (for preview section)
       const animalsRes = await axios.get(`${API_BASE_URL}/api/donation-animals`);
       const animalsData = animalsRes.data || [];
       // Filter only Active and take top 2 for preview
       const activeAnimals = animalsData
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
         .filter((a: any) => a.status === 'Active')
         .slice(0, 2);
       setPreviewAnimals(activeAnimals);
@@ -94,17 +88,10 @@ export default function UserHomeScreen() {
         contentContainerStyle={styles.scrollContent}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       >
-<<<<<<< HEAD
-        <View style={styles.header}>
-          <Text style={styles.welcomeText}>Welcome Back!</Text>
-          <Text style={styles.subText}>Ready to make a difference today?</Text>
-        </View>
-=======
         {/* <View style={styles.header}>
           <Text style={styles.welcomeText}>Welcome Back!</Text>
           <Text style={styles.subText}>Ready to make a difference today?</Text>
         </View> */}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
         {/* SECTION 1: Animals Needing Donation (Preview) */}
         <View style={styles.section}>
@@ -182,27 +169,6 @@ export default function UserHomeScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-<<<<<<< HEAD
-
-      {/* MOCK BOTTOM NAVIGATION BAR */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push("/")}>
-          <Ionicons name="home-outline" size={24} color={colors.textSecondary} />
-          <Text style={styles.navText}>Home</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push("/animal-list")}>
-          <Ionicons name="paw" size={24} color={colors.primary} />
-          <Text style={[styles.navText, { color: colors.primary }]}>Donate</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem} onPress={() => router.push("/donation-impact")}>
-          <Ionicons name="heart-outline" size={24} color={colors.textSecondary} />
-          <Text style={styles.navText}>Impact</Text>
-        </TouchableOpacity>
-      </View>
-=======
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     </View>
   );
 }
@@ -211,20 +177,12 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
   scrollContent: { paddingBottom: 80 },
-<<<<<<< HEAD
-  header: { padding: 20, paddingTop: 60, backgroundColor: colors.surface, marginBottom: 10 },
-=======
   header: { padding: 20, paddingTop: 20, backgroundColor: colors.surface, marginBottom: 10 },
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   welcomeText: { fontSize: 24, fontWeight: "bold", color: colors.textPrimary },
   subText: { fontSize: 16, color: colors.textSecondary, marginTop: 4 },
 
   section: { padding: 20, paddingTop: 0, marginBottom: 10 },
-<<<<<<< HEAD
-  sectionHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 15 },
-=======
   sectionHeader: { paddingTop: 20, flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 15 },
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   sectionTitle: { fontSize: 20, fontWeight: "bold", color: colors.textPrimary },
   seeAllText: { fontSize: 16, color: colors.primary, fontWeight: "600" },
 
@@ -242,17 +200,6 @@ const styles = StyleSheet.create({
   impactButton: { backgroundColor: "white", borderRadius: 8, paddingVertical: 12, alignItems: "center" },
   impactButtonText: { color: colors.primary, fontWeight: "bold", fontSize: 16 },
 
-<<<<<<< HEAD
-  bottomNav: {
-    position: "absolute", bottom: 0, left: 0, right: 0,
-    backgroundColor: colors.surface, flexDirection: "row", justifyContent: "space-around",
-    paddingVertical: 10, borderTopWidth: 1, borderTopColor: colors.border, elevation: 8
-  },
-  navItem: { alignItems: "center" },
-  navText: { fontSize: 12, marginTop: 4, color: colors.textSecondary },
-
-=======
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   // New Reward Card Styles
   rewardCard: {
     backgroundColor: colors.primaryDark, // Teal theme (approx #0E7F78)

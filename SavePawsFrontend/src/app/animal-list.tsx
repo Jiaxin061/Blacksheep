@@ -1,18 +1,4 @@
 import axios from "axios";
-<<<<<<< HEAD
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import {
-    ActivityIndicator,
-    Alert,
-    FlatList,
-    Image,
-    RefreshControl,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-=======
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import {
@@ -25,7 +11,6 @@ import {
   Text,
   TouchableOpacity,
   View,
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 } from "react-native";
 import { API_BASE_URL } from "../config/api";
 import { colors } from "../theme/colors";
@@ -44,11 +29,7 @@ interface Animal {
 }
 
 export default function AnimalListScreen() {
-<<<<<<< HEAD
-  const router = useRouter();
-=======
   const navigation = useNavigation<any>();
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -57,11 +38,7 @@ export default function AnimalListScreen() {
   const fetchAnimals = async () => {
     try {
       setError(null);
-<<<<<<< HEAD
-      const response = await axios.get(`${API_BASE_URL}/api/animals`);
-=======
       const response = await axios.get(`${API_BASE_URL}/api/donation-animals`);
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       setAnimals(response.data);
     } catch (err: any) {
       console.error("Error fetching animals:", err);
@@ -96,11 +73,7 @@ export default function AnimalListScreen() {
     return (
       <TouchableOpacity
         style={styles.card}
-<<<<<<< HEAD
-        onPress={() => router.push(`/animal-details?id=${item.animalID}`)}
-=======
         onPress={() => navigation.navigate("AnimalDetails", { id: item.animalID.toString() })}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       >
         <Image
           source={{ uri: getImageUrl(item.photoURL) }}

@@ -137,11 +137,7 @@ export default function FundAllocationIndex() {
                     Allocated RM{item.totalAllocated.toFixed(2)}
                   </Text>
                   <Text style={styles.remainingText}>
-<<<<<<< HEAD
-                    Remaining RM{item.remaining.toFixed(2)}
-=======
                     Remaining RM{Math.max(0, item.remaining).toFixed(2)}
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                   </Text>
                 </View>
               </View>
@@ -149,14 +145,7 @@ export default function FundAllocationIndex() {
                 style={styles.manageButton}
                 activeOpacity={0.9}
                 onPress={() =>
-<<<<<<< HEAD
-                  router.push({
-                    pathname: "/admin/fund-allocation/[animalID]",
-                    params: { animalID: item.animalID.toString() },
-                  })
-=======
                   router.push(`/admin/fund-allocation/${item.animalID}`)
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
                 }
               >
                 <Text style={styles.manageButtonText}>Manage Allocation</Text>
