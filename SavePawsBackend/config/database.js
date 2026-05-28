@@ -26,30 +26,16 @@ const testConnection = async () => {
   try {
     // First, connect without database name
     const tempConnection = await mysql.createConnection(dbConfigWithoutDB);
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     // Create database if it doesn't exist
     const dbName = process.env.DB_NAME || 'savepaws_db';
     await tempConnection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
     console.log(`✅ Database '${dbName}' ready!`);
-<<<<<<< HEAD
-    
-    await tempConnection.end();
-    
-    // Now create pool with database name
-    pool = mysql.createPool(dbConfig);
-    
-=======
 
     await tempConnection.end();
 
     // Now create pool with database name
     pool = mysql.createPool(dbConfig);
 
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     // Test the connection
     const connection = await pool.getConnection();
     console.log('✅ Database connected successfully!');

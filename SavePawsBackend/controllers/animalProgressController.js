@@ -1,19 +1,11 @@
-<<<<<<< HEAD
-const db = require("../config/database");
-=======
 const { pool, query } = require("../config/database");
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
 
 /**
  * Log admin activity
  */
 const logActivity = async (adminID, actionType, entityType, entityID, description, oldValues, newValues) => {
   try {
-<<<<<<< HEAD
-    await db.query(
-=======
     await query(
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       `INSERT INTO admin_activity_log 
         (adminID, actionType, entityType, entityID, description, oldValues, newValues)
       VALUES (?, ?, ?, ?, ?, ?, ?)`,
@@ -39,11 +31,7 @@ exports.getProgressUpdates = async (req, res, next) => {
   try {
     const { animalID } = req.params;
 
-<<<<<<< HEAD
-    const [updates] = await db.query(
-=======
     const [updates] = await query(
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       `SELECT 
         apu.updateID,
         apu.animalID,
@@ -102,11 +90,7 @@ exports.getProgressUpdates = async (req, res, next) => {
  * Create progress update
  */
 exports.createProgressUpdate = async (req, res, next) => {
-<<<<<<< HEAD
-  const connection = await db.getConnection();
-=======
   const connection = await pool.getConnection();
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
   try {
     await connection.beginTransaction();
 

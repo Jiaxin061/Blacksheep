@@ -12,11 +12,6 @@ exports.getAllReports = async (req, res) => {
     };
 
     const reports = await Report.getAll(filters);
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     res.json({
       success: true,
       count: reports.length,
@@ -69,21 +64,12 @@ exports.submitReport = async (req, res) => {
       urgency_level,
       animal_condition,
       description,
-<<<<<<< HEAD
-      location_latitude,
-      location_longitude,
-      location_address,
-      photo_url,
-      reporter_name,
-      reporter_phone
-=======
       latitude,
       longitude,
       location,
       photo_url,
       reporter_name,
       reporter_contact
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     } = req.body;
 
     // Validation
@@ -95,11 +81,7 @@ exports.submitReport = async (req, res) => {
     }
 
     // Validate animal type
-<<<<<<< HEAD
-    const validTypes = ['dog', 'cat', 'other'];
-=======
     const validTypes = ['dog', 'cat', 'bird', 'rabbit', 'other']; // Added types from frontend
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
     if (!validTypes.includes(animal_type)) {
       return res.status(400).json({
         success: false,
@@ -107,22 +89,8 @@ exports.submitReport = async (req, res) => {
       });
     }
 
-<<<<<<< HEAD
-    // Validate urgency level
-    const validUrgency = ['low', 'medium', 'high', 'critical'];
-    if (urgency_level && !validUrgency.includes(urgency_level)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid urgency level'
-      });
-    }
-
-    // Check if location is provided
-    if (!location_latitude || !location_longitude) {
-=======
     // Check if location is provided
     if (!latitude || !longitude) {
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       return res.status(400).json({
         success: false,
         message: 'Location coordinates are required'
@@ -131,19 +99,6 @@ exports.submitReport = async (req, res) => {
 
     // Create report data
     const reportData = {
-<<<<<<< HEAD
-      user_id: req.userId || null, // Will be null for anonymous reports
-      animal_type,
-      urgency_level: urgency_level || 'medium',
-      animal_condition,
-      description,
-      location_latitude,
-      location_longitude,
-      location_address,
-      photo_url,
-      reporter_name: reporter_name || (req.user ? `${req.user.first_name} ${req.user.last_name}` : null),
-      reporter_phone: reporter_phone || (req.user ? req.user.phone_number : null),
-=======
       user_id: req.userId || req.body.userID || req.body.user_id || null, // Will be null for anonymous reports
       animal_type,
       animal_condition,
@@ -154,7 +109,6 @@ exports.submitReport = async (req, res) => {
       photo_url,
       reporter_name: reporter_name || (req.user ? `${req.user.first_name} ${req.user.last_name}` : null),
       reporter_contact: reporter_contact || (req.user ? req.user.phone_number : null),
->>>>>>> 39011196545436b3524b23d6b65c10c1f47f06e0
       status: 'pending'
     };
 
